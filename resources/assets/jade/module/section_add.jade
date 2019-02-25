@@ -1,0 +1,42 @@
+//部门管理新建
+template
+    .modal.fade#sectionadd
+        .modal-dialog.modal-lg
+            .modal-content
+                .modal-header
+                    button.close(type='button', data-dismiss='modal', aria-label='Close')
+                        span(aria-hidden='true') ×
+                    h4.modal-title 新建科室
+                .modal-body
+                    form.form-horizontal(role='form')
+                        .form-group
+                            label.col-sm-2.control-label 名称：
+                            .col-sm-10
+                                input.form-control(type="text" v-model="data.name")
+
+                .modal-footer
+                    button.btn.btn-default(type='button', data-dismiss='modal') 取消
+                    button.btn.btn-primary(type='button', v-on:click="add()") 添加
+block js
+    script(type="text/javascript").
+        export default {
+            data(){
+                return {
+                    data:{}
+                };
+            },
+            methods: {
+                add(){
+                    this.$http.post('section/add', this.data).then(function (res) {
+                        if (res.data.status == 1) {
+                            layer.msg(res.data.msg);
+                            this.$set('data',{});
+                            this.$dispatch("add");
+                            $("#sectionadd").modal("hide");
+                        } else {
+                            layer.msg(res.data.msg);
+                        }
+                    });
+                },
+            }
+        }

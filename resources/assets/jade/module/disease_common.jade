@@ -1,0 +1,76 @@
+template
+    .modal.fade#diseasecommon
+        .modal-dialog
+            .modal-content
+                .modal-header
+                    button.close(type='button', data-dismiss='modal', aria-label='Close')
+                        span(aria-hidden='true') ×
+
+                .modal-body
+                    form.form-horizontal(role='form')
+                        .form-group
+                            label.col-sm-1.control-label(for='')
+                                span 名称：
+                            .col-sm-5
+                                span {{data.disease.name}}
+                        .form-group
+                            label.col-sm-1.control-label(for='')
+                                span 图标：
+                            .col-sm-5
+                                input#shareimgs(type="file" name="file")
+                                img#image(v-bind:src="data.icon")
+
+                .modal-footer
+                     button.btn.btn-default(type='button', data-dismiss='modal') 取消
+                     button.btn.btn-primary(type='button', data-dismiss='modal',@click="save()") 保存
+
+
+script(type='text/javascript').
+    export default {
+        props:['id'],
+        ready(){
+            this.upload();
+        },
+        data(){
+            return {
+                data:{},
+            };
+        },
+        methods:{
+            save(){
+                this.$http({url: 'disease_common/'+this.id,method:"put",params:{param:this.data}}).then(function (res) {
+                    if (res.data.status == 1) {
+                        $('#diseasecommon').modal('hide');
+                        this.$dispatch('update');
+                    }
+                });
+            },
+            getDetail(id){
+                this.$http({url:'disease_common/'+id}).then(function (res) {
+                    this.data = res.data.data;
+                });
+            },
+            upload(){
+                var self = this;
+                layui.use('upload', function () {
+                    layui.upload({
+                        url: '/api/upload/add'
+                        , elem: '#shareimgs'
+                        , method: 'post'
+                        , success: function (res) {
+                            layer.msg('图片准备就绪~~~');
+                            //$('#image').attr('src',res.data);
+                            self.data.icon = res.data;
+                        }
+                    });
+                });
+            },
+        },
+        watch:{
+            'id':function(value){
+                if(value>0){
+                    this.getDetail(value);
+                }
+            }
+        }
+    }

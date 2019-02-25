@@ -1,0 +1,45 @@
+//覆盖
+template
+    .modal.fade#express_company
+        .modal-dialog
+            .modal-content
+                .modal-header
+                    button.close(type='button', data-dismiss='modal', aria-label='Close')
+                        span(aria-hidden='true') ×
+                    h4.modal-title 快递公司
+                .modal-body
+                    .find_table_box.table-responsive
+                        table.table.table-bordered
+                            thead
+                                tr
+                                    th 快递公司
+                                    th 快递公司编号
+                            tbody(v-if="data.resultcode == 200")
+                                tr(v-for="l in data.result")
+                                    td {{l.com}}
+                                    td {{l.no}}
+                            tbody(v-if="data.resultcode != 200")
+                                tr
+                                    td {{data.reason}}
+
+block js
+    script(type="text/javascript").
+        export default {
+            created(){
+                this.getData();
+            },
+            data(){
+                return {
+                    data: {}
+                };
+            },
+            methods: {
+                getData(){
+                    this.$http.get('express/company').then(function (res) {
+                        this.data = res.data;
+                    })
+                }
+            }
+        }
+
+

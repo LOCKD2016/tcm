@@ -1,0 +1,143 @@
+extends ../layout/layout
+block nav
+block body
+    .tit_nav
+        .container.clearfix
+            .pull-left 医生列表
+            //.pull-right
+                a.btn.btn-sm.btn-primary(@click="exportData()") 导出管理
+    .search_box
+        dl
+            dt 筛选
+            dd.row
+                .col-sm-2
+                    select.form-control(v-model="status",@change="getDate()")
+                        option(value=3 selected) 状态
+                        option(value=1) 在职
+                        option(value=2) 离职
+                        option(value=0) 待审核
+                        option(value=4) 通过
+                .col-sm-2
+                    select.form-control(v-model="source",@change="getDate()")
+                        option(value=0 selected) 来源
+                        option(value=2) 注册
+                        option(value=1) 云中医
+                .col-sm-3
+                    .input-group
+                        input#seaItem.form-control.auto_inp(type="search" v-model="name" placeholder="输入医生姓名、手机号搜索")
+                        .input-group-btn(@click="getDate()")
+                            .btn.btn-default
+                                i.icon-search
+                .col-sm-2
+                    span 共 {{total}} 条记录
+
+
+    .user_table_box.table-responsive
+        table.table.table-bordered.check_list
+            thead
+                tr
+                    th.col-sm-1 序号
+                    th.col-sm-1 头像
+                    th.col-sm-1 医生姓名
+                    th.col-sm-1 手机号
+                    th.col-sm-1 医师资格证
+                    th.col-sm-1 网诊
+                    th.col-sm-1 状态
+                    th.col-sm-1 来源
+                    th.col-sm-1 操作
+
+            tbody
+                tr(v-for="(index,doc) in data")
+                    td {{page*10 +index-9}}
+                    td
+                        img.doc_headimg(v-bind:src="doc.photoSUrl")
+                    td {{doc.name}}
+                    td {{doc.mobile}}
+                    td(v-if="doc.source !=1 && doc.qualification_auth ==1") 未上传
+                    td(v-else) 上传
+                    td {{doc.net_chat}}
+                    td {{doc.status}}
+                    td(v-if="doc.source ==1") 云中医
+                    td(v-else) 注册
+                    td
+                        span(@click="doc_detail(doc.id)") 详情
+                        span(v-if="doc.blacklist ==1",@click="blackList(doc.id,doc.blacklist)") 未拉黑
+                        span.doc_red(v-else,@click="blackList(doc.id,doc.blacklist)") 已拉黑
+        nav
+            ul.pagination
+                paginate(:cur.sync="cur",:all.sync="all",v-on:btn-click="listen",v-if="cur")
+
+block js
+    script(type="text/javascript").
+        export default{
+            created(){
+                this.page = this.$route.params.id;
+                this.getDate();
+            },
+            ready(){
+                headNav(0);
+            },
+            data(){
+                return{
+                    data:{},
+                    cur: 0,
+                    all: 0,
+                    total: 0,
+                    status: 3,
+                    source: 0,
+                    name: ''
+                }
+            },
+            events: {
+                update(){
+                    this.getDate();
+                }
+            },
+            methods:{
+                blackList(id,black){
+                    this.$http({
+                        url: 'doctor/update/'+id,
+                        method: 'PUT',
+                        params: {saveType: 'blackList', params:{black:black}}
+                    }).then(function (res) {
+                        layer.msg(res.data.msg);
+                        if(res.data.errcode ==200){
+                            this.getDate();
+                        }
+                    })
+                },
+                getDate(page=''){
+                    if(page){
+                        this.page = page;
+                    }
+                    this.$http({url:'doctor/list',method:'GET',params:{page:this.page,status:this.status,source:this.source,name:this.name}}).then(function (res) {
+                        this.$set('data',res.data.data);
+                        var pagination = res.data.meta.pagination;
+                        this.$set('cur', pagination.current_page);
+                        this.$set('all', pagination.total_pages);
+                        this.$set('total', pagination.total);
+                    })
+                },
+                exportData(){
+                    this.searchs.name = this.name;
+                    this.searchs.type = this.type;
+                    this.$http({
+                        url: 'export/export',
+                        method: 'GET',
+                        params: {search: this.searchs}
+                    }).then(function (res) {
+                        if (res.data.status == 1) {
+                            location.href = "/api/upload/download/" + res.data.name;
+                        }
+                    })
+                },
+                doc_detail(id){
+                    this.$router.go({name: 'doc_detail', params: {id: id}});
+                },
+                listen(data){
+                    this.getDate(data);
+                    this.$router.go({name: 'doctor', params: {id: data}});
+                }
+
+            }
+        }

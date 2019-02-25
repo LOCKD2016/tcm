@@ -1,0 +1,70 @@
+//物流状态
+template
+    .modal.fade#addlogistics
+        .modal-dialog
+            .modal-content
+                .modal-header
+                    button.close(type='button', data-dismiss='modal', aria-label='Close')
+                        span(aria-hidden='true') ×
+                    h4.modal-title 物流状态
+                .modal-body
+                    form.form-horizontal(role='form')
+                        .form-group
+                            label.col-sm-2.control-label
+                                span 物流公司：
+                            .col-sm-10
+                                select.form-control(v-model="express_company")
+                                    option(value="sf" selected) 顺丰快递
+                        .form-group
+                            label.col-sm-2.control-label
+                                span 物流单号：
+                            .col-sm-10
+                                input.form-control(type="text" placeholder="请输入物流单号" v-model="express_number")
+                .modal-footer
+                    button.btn.btn-default(type='button', data-dismiss='modal') 取消
+                    button.btn.btn-primary(type='button',@click="addSend(data)") 添加
+
+block js
+    script(type="text/javascript").
+        export default {
+            props: ['id'],
+            created(){
+                this.id = this.$route.params.id;
+            },
+            data(){
+                return {
+                    send: {},
+                    express_number:'',
+                    express_company:0,
+                    send_status:0,
+                    data:{},
+                };
+            },
+            methods: {
+                addSend(data){
+                    this.data.id = this.id;
+                    this.data.express_number = this.express_number;
+                    this.data.express_company = this.express_company;
+                    this.$http.post('deal/addsend', data).then(function (res) {
+                        if (res.data.status == 1) {
+                            layer.msg(res.data.msg);
+                            this.$set('send', '');
+                            $("#addlogistics").modal("hide");
+                            this.$dispatch("update");
+                        }else{
+                            layer.msg(res.data.msg);
+                        }
+                    }, function (res) {
+                        var data = res.data;
+                        errorMsg(data.errors);
+                    });
+                },
+                goback(){
+                    this.$router.go("/send_list");
+                },
+            },
+            watch: {
+
+            }
+
+        }

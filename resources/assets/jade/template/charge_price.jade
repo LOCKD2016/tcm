@@ -1,0 +1,213 @@
+extends ../layout/layout
+block nav
+block body
+    .tit_nav
+        .container.clearfix
+            .pull-left 划价收费
+    .search_box
+        dl
+            dd.row
+                .form-group.clearfix(style="margin-bottom:0;")
+                    div(style="float:left")
+                        span
+                        | 患者：
+                    .div(style="float:left;width:20%;margin:0 20px;")
+                        input.form-control(type="text",v-model="userName")
+
+                    div(style="float:left")
+                        span
+                        | 医师：
+                    .div(style="float:left;width:20%;margin:0 20px;")
+                        input.form-control(type="text",v-model="doctorName")
+
+                    div(style="float:left;")
+                        .input-group
+                            .input-group-btn(@click="getDate(1)")
+                                .btn.btn-default
+                                    i.icon-search
+    .user_table_box.table-responsive
+        table.table.table-bordered.check_list
+            thead
+                tr
+                    th.col-sm-1(style="width:5%") 序号
+                    th.col-sm-1(style="width:5%") 患者
+                    th.col-sm-1(style="width:5%") 医师
+                    th.col-sm-1(style="width:5%") 药材费
+                    th.col-sm-1(style="width:5%") 调剂费
+                    th.col-sm-1 订单状态
+                    //th.col-sm-1 药方状态
+                    //th.col-sm-1(style="width:10%") 状态操作时间
+                    //th.col-sm-1(style="width:5%") 划价人
+                    //th.col-sm-1(style="width:5%") 退款人
+                    //th.col-sm-1 退款备注
+                    th.col-sm-1(style="width:10%") 开方时间
+                    th.col-sm-1(style="width:10%") 操作
+            tbody
+                tr(v-for="(index,val) in data")
+                    td {{page*10 +index-9}}
+                    td {{val.user.realname}}
+                    td {{val.doctor.name}}
+                    td {{val.medicine_price}}
+                    td {{val.dispensing_price}}
+                    td {{val.order.status}}
+                    //td {{val.priceStatus}}
+                    //td {{val.is_price == 0 ? '' : val.price_time}}
+                    //td {{val.price_time}}
+                    //td {{val.admin.user_name}}
+                    //td {{val.refund_admin_name}}
+                    //td {{val.refund_remark}}
+                    td {{val.created_at}}
+                    td
+                        span(@click="detail(val)") 查看
+                        //span(v-if="val.send == 0",@click="_send(val.id,val.send,val.is_price)") 未发送
+                        //span(v-else) 已发送
+                        //span(@click="refund(val.order)") 退款
+                        //span(@click="layOpen(val.id)") 退款备注
+
+        nav
+            ul.pagination
+                paginate(:cur.sync="cur",:all.sync="all",v-on:btn-click="listen",v-if="cur")
+    price_detail(:val.sync="val")
+    refund(:order.sync="order")
+block js
+    script(type="text/javascript").
+        import price_detail from  './module/price_detail.vue'
+        import refund from  './module/refund.vue'
+        export default{
+            components: {
+                price_detail,
+                refund
+            },
+            created(){
+                this.page = this.$route.params.id;
+                this.getDate();
+            },
+            ready(){
+                headNav(0);
+            },
+            data(){
+                return {
+                    id: 0,
+                    data: {},
+                    order: {},
+                    can_price: 0,
+                    cur: 0,
+                    all: 0,
+                    total: 0,
+                    userName: '',
+                    doctorName: '',
+                    registration_no: '',
+                    val: {
+                        user:'',
+                        doctor:'',
+                        admin:'',
+                        recipe_head:'',
+                        recipe:''
+
+                    },
+                    date_time: ''
+                }
+            },
+            events: {
+                update(){
+                    this.getDate();
+                }
+            },
+            methods: {
+                remark(id, content){
+                    this.$http({
+                        url: 'recipe/refund_remark/' + id,
+                        method: "PUT",
+                        params: {remark: content}
+                    }).then(function (res) {
+                        if (res.data.errcode == 200) {
+                            this.getDate(this.cur);
+                        }
+                    });
+                    layer.closeAll();
+                },
+                layOpen(id){
+                    var vue = this;
+                    layer.open({
+                        title: '<b>添加备注</b>',
+                        type: 1,
+                        area: ['500px', '300px'],
+                        fixed: false, //不固定
+                        scrollbar: false,//禁止出现滚动条
+                        btn: ['保存并关闭', '直接关闭'],
+                        maxmin: true,
+                        content: '<textarea id="remark" class="layer_open" ></textarea>',
+                        yes: function () {
+                            var content = $("#remark").val();
+                            vue.remark(id, content);
+                        },
+                        btn2: function (index, layero) {
+                            layer.close(index);
+                        }
+                    });
+                },
+                family_detail(fid){
+                    window.open('/admin/family_detail/' + fid);
+                },
+                refund(order){
+                    this.order = order;
+                    $('#refund').modal('show');
+                },
+                _send(id, send, is_price){
+                    if(is_price == 0){
+                        layer.msg('药方未划价');
+                    }
+                    var vue = this;
+                    if (send == 0) {
+                        var msg = '是否确定发送？';
+                    } else {
+                        var msg = '是否确定取消发送？';
+                    }
+                    var data = {};
+                    data.send = 1;
+                    layer.confirm(msg, {
+                        btn: ['确定', '取消'] //按钮
+                    }, function () {
+                        vue.$http({url: 'prescription/setprice/' + id, method: "PUT", params: {data}}).then(function (res) {
+                            layer.msg(res.data.msg);
+                            if (res.data.status) {
+                                this.getDate();
+                            }
+                        });
+                    })
+
+                },
+                getDate(page=''){
+                    if (page) {
+                        this.page = page;
+                    }
+                    this.$http({
+                        url: 'prescription/pricelist',
+                        method: 'GET',
+                        params: {
+                            can_price: this.can_price,
+                            page: this.page,
+                            userName: this.userName,
+                            doctorName: this.doctorName,
+                            registration_no: this.registration_no,
+                            date_time: this.date_time
+                        }
+                    }).then(function (res) {
+                        this.$set('data', res.data.data);
+                        var pagination = res.data.meta.pagination;
+                        this.$set('cur', pagination.current_page);
+                        this.$set('all', pagination.total_pages);
+                        this.$set('total', pagination.total);
+                    })
+                },
+                detail(val){
+                    this.val = val;
+                    $('#price_detail').modal('show');
+                },
+                listen(data){
+                    this.getDate(data);
+                    this.$router.go({name: 'charge_price', params: {id: data}});
+                }
+
+            }
+        }

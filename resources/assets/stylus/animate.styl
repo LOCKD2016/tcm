@@ -1,0 +1,56 @@
+bg()
+    top 0
+    right 0
+    bottom 0
+    left 0
+    position absolute
+    background-size 100% 100%
+
+pos($w,$h)
+    width $w
+    height $h
+    position absolute
+    background-position center
+    background-repeat no-repeat
+    background-size contain
+
+
+
+xc()
+    position absolute
+    left 50%
+    -webkit-transform translateX(-50%)
+    transform translateX(-50%)
+
+
+trsn($d)
+    -webkit-transition $d
+    transition $d
+
+
+
+
+
+
+@keyframes warn
+    10%
+        background-color red
+    30%
+        background-color #fff
+    70%
+        background-color #f60
+    100%
+        background-color #fff
+
+
+
+@keyframes alpha
+    70%
+        opacity .5
+    100%
+        opacity 1
+
+
+@keyframes anim-spe
+    to
+        transform rotate(1turn)

@@ -1,0 +1,77 @@
+extends ../layout/layout
+block head
+    -var bodyclass='p_my_address'
+block banner
+    header
+        a.left(href="my.html")
+            i.icon-arrow-left
+        .center 收货地址
+block body
+    .address_list(v-for="(it,ind) in lists" v-bind:type="it.type")
+        .phone {{it.phone}}
+        .name {{it.name}}
+        .addr {{it.address}}
+        .clearfix
+            .left(@click="defType(ind,it.id)")
+                i.icon-check-c
+                span 默认地址
+            .right
+                .btn.btn-o(@click="dets(it.id)") 编辑
+                .btn.btn-o(@click="dels(it.id)") 删除
+
+    a.btn.btn-block(href="my_address_det.html")
+        i.icon-plus
+        span 增加新地址
+block js
+    script(type='text/javascript').
+        var vMyAddr = new Vue({
+            el: '#wrap',
+            data: {
+                lists:[
+                    {
+                        name: '古力果',
+                        phone: 1330454545,
+                        address: 34,
+                        id: 344,
+                        type: 1
+                    },
+                    {
+                        name: '古力果',
+                        phone: 345,
+                        address: 34,
+                        id: 344,
+                        type: 0
+                    },
+                    {
+                        name: '古力果',
+                        phone: 345,
+                        address: 34,
+                        id: 344,
+                        type: 0
+                    }
+                ]
+            },
+            methods:{
+                defType:function(i,id){
+                    var _self = this;
+                    for(var xs in _self.lists){
+                        if(xs==i){
+                            _self.lists[xs].type = 1
+                        }else{
+                            _self.lists[xs].type = 0
+                        }
+                    }
+                    //AJAX id
+                }
+                ,dets:function(id){
+                    location.href="my_address_det.html?id="+id
+                }
+                ,dels:function(id){
+                    var yes = confirm('确定要删除吗？');
+                    if(yes){
+                        console.log(id);
+                    }
+                }
+
+            }
+        });

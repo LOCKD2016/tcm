@@ -1,0 +1,64 @@
+extends ../layout/layout
+block head
+    -var bodyclass='p_my'
+    -var navs = 2
+block banner
+    include ../module/foot
+block body
+    .banner
+        .avatar(v-bind:style="bg(info.headimgurl)")
+        .nickname {{info.nickname}}
+        .vip
+            i.icon-vip
+            span(v-if="vip") VIP卡
+            span(v-else) 去绑定
+            i.icon-arrow-right
+    ul.nav.nav-tabs
+        li
+            h4 {{comment}}
+            p 待评价
+        li(v-if="vip")
+            h4 {{vip}}
+            p 卡余额
+        li
+            h4 {{integral}}
+            p 积分
+    .tips
+        i.icon-sound
+        span {{msg}}
+    -var mnv=['我的订单','就诊人','收货地址管理']
+    -var mlk=['order','family','address']
+    ul.list-group
+        each vd , i in mnv
+            li
+                a(href="my_#{mlk[i]}.html")=vd
+                i.icon-arrow-right
+
+block js
+    script(type='text/javascript').
+        var vMy = new Vue({
+            el: '#wrap',
+            data:{
+                integral: 345,
+                comment: 34,
+                vip: 344,
+                msg: '需要圾',
+                id: 1,
+                info: {}
+            },
+            created(){
+                this.getProfile();
+
+            },
+            methods:{
+                bg:function(url){
+                    return 'background-image:url('+url+')'
+                },
+                getProfile(){
+                    var _this = this;
+                    $.get('/weixin/profile/'+this.id).then(function (res){
+                        _this.info = res;
+                    });
+                }
+            }
+        });

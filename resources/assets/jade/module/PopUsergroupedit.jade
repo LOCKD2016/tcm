@@ -1,0 +1,90 @@
+template
+    .modal.fade#usergroupedit
+        .modal-dialog.modal-lg
+            .modal-content
+                .modal-header
+                    button.close(type='button', data-dismiss='modal', aria-label='Close')
+                        span(aria-hidden='true') ×
+                    h4.modal-title 权限配置
+                .modal-body
+                    ul.nav.nav-tabs
+                        li.active
+                            a(href="#tab3" role="tab" data-toggle="tab") 新增用户组
+                        li
+                            a(href="#tab4" role="tab" data-toggle="tab") 权限配置
+                    .tab-content
+                        .tab-pane.fade.in.active#tab3
+
+                            .form-group
+                                label(for='') 用户组名称
+                                input.form-control(type='text', placeholder='投资团队',v-model="roles.name")
+                            .form-group
+                                label(for='') 用户组标识
+                                input.form-control(type='text', placeholder='用户组标识',v-model="roles.display_name")
+                            .form-group
+                                label(for='') 描述
+                                textarea.form-control(placeholder='除了描述之外的其他功能',rows=3,v-model="roles.description")
+                        .tab-pane.fade#tab4
+                            .permission_set#priTree1
+
+                .modal-footer
+                    button.btn.btn-default(type='button', data-dismiss='modal') 取消
+                    //button.btn.btn-primary(type='button' ,v-on:click="del(roles.id)") 删除组123
+                    button.btn.btn-primary(type='button',v-on:click="addRole(roles)") 保存并修改
+block js
+    script(type="text/javascript").
+        import {errorMsg} from  '../../common.js';
+        export  default{
+            props: ['id'],
+            created(){
+                this.getRole(this.id);
+            },
+            data(){
+                return {
+                    roles: {},
+                    data: {},
+                    datas: {},
+                }
+            },
+            methods: {
+                getRole(id){
+                    if (id > 0) {
+                        this.$http.get('role/' + id).then(function (res) {
+                            this.$set('roles', res.data.data);
+                            getRolesTree(this.roles.auth);
+                        });
+                    }
+                },
+                addRole(roles){
+                    this.data = window.obj;
+                    this.$set('roles.auth', this.data);
+                    this.$http.put('role/' + this.id, roles).then(function (res) {
+                        layer.msg(res.data.msg);
+                        this.$dispatch("refreshList");
+                        $("#usergroupedit").modal("hide");
+                    }, function (res) {
+                        var data = res.data;
+                        errorMsg(data.errors);
+                    })
+                },
+                del(id){
+                    this.$http.delete('role/' + id).then(function (res) {
+                        if (res.data.status == 1) {
+                            layer.msg(res.data.msg);
+                            this.$dispatch("refreshList");
+                        } else {
+                            layer.msg(res.data.msg);
+                        }
+                    })
+                }
+            }, watch: {
+                id(newValue, oldValue){
+                    this.getRole(newValue);
+                    this.$set('datas', {});
+                }
+            }
+        }
+
+
+
+

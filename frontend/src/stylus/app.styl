@@ -1,0 +1,58 @@
+@charset "UTF-8"
+$tmh = rgba(0,0,0,.2)
+$tms = rgba(0,0,0,.8)
+$btm = rgba(180,180,180,.5)
+$tmb = rgba(255,255,255,.2)
+$lan = #1480db
+$sl = #3b5599
+$hon = #ef4356
+$jba = #056eba
+$jbb = #4e3d9b
+$jv = #e27b01
+$he = #af8d60
+$he2 = #d0bfa8
+$lv = #80be1d
+$qi = #31bbd7
+$hui = #8e8e8e
+$huis = #5a5a5a
+$zi = #8495c2
+$bor = #ddd
+$head_h = .7rem
+$nav_h = 1rem
+$foot_h = .85rem
+@import 'com'
+@import 'animate'
+@import 'icon'
+@import 'select'
+@import 'swiper'
+@import 'calendar'
+@import 'doctor'
+@import 'home'
+@import 'store'
+@import 'chat'
+@import 'my'
+@import 'cropimg'
+ul
+  padding-left 0
+for $i in 1..8
+  .home_nav
+    .box
+      .ico{$i}
+        background-image url('/static/img/h_nav'+$i+'.png') !important
+  .tabs_box[show=\" {$i}\"]
+    .nav li:nth-child( {$i})
+      background $jv
+      color #fff
+    .tcons .tabs_con:nth-child( {$i})
+      display block
+  .switch[show=\" {$i}\"]
+    li:nth-child( {$i})
+      background-color $jv
+      color #fff
+
+
+.wxlong
+  text-align: center;
+  margin-top: 0.5rem;
+  img
+    width 10%

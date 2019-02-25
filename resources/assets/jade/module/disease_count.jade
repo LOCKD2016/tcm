@@ -1,0 +1,50 @@
+template
+    .modal.fade#disease_count
+        .modal-dialog
+            .modal-content
+                .modal-header
+                    button.close(type='button', data-dismiss='modal', aria-label='Close')
+                        span(aria-hidden='true') ×
+                    h4.modal-title 疾病统计
+                .modal-body
+                    .user_table_box.table-responsive
+                        table.table.table-bordered.check_list
+                            thead
+                                tr
+                                    th.col-sm-1 疾病
+                                    th.col-sm-1 痊愈数
+                                    th.col-sm-1 明显好转
+                                    th.col-sm-1 好转
+                                    th.col-sm-1 没变化
+
+                            tbody
+                                tr(v-if="data.length",v-for="val in data")
+                                    td {{val[0]}}
+                                    td {{val[1]}}
+                                    td {{val[2]}}
+                                    td {{val[3]}}
+                                    td {{val[4]}}
+
+script(type='text/javascript').
+    export default {
+        props: ['doctor_id'],
+        data(){
+            return {
+                data: {}
+            };
+        },
+        methods: {
+            save(){
+                this.$http.get('doctor/disease/' + this.doctor_id).then(function (res) {
+                    this.$set('data',res.data.disease);
+                });
+            },
+        },
+        watch: {
+            'doctor_id': function (value) {
+                if(value){
+                    this.save();
+                }
+            }
+        }
+    }

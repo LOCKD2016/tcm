@@ -1,0 +1,80 @@
+extends ../layout/layout
+block head
+    -var bodyclass='p_my_order'
+block banner
+    header
+        a.left(href="my.html")
+            i.icon-arrow-left
+        .center 我的订单
+
+block body
+    .order_list(v-for="(it,ind) in lists")
+        .mark(v-bind:type="it.c_type")
+        .head(v-html="cT(it.status)")
+        .main(v-if="it.type==1" @click="det(it.id)")
+            .clearfix
+                .left 就诊人
+                .right {{it.patient}}
+            .doctors
+                .avatar(v-bind:style="bg(it.img)")
+                h3 {{it.doctors}}
+                p {{it.doctors_title}}
+                .price_a 诊费：¥ {{it.price_a}}
+                .price_b 挂号费：¥ {{it.price_b}}
+            .hospital
+                i.icon-location
+                h3 {{it.hospital}}
+                p {{it.hospital_addr}}
+        .main(v-else @click="det(it.id)")
+            .doctors.commodity
+                .avatar(v-bind:style="bg(it.img)")
+                h3 {{it.commodity}}
+                .price_a ¥ {{it.price_a}}
+                .price_b ¥ {{it.price_b}}
+        .foot
+            .price
+                span 总价：￥
+                b {{it.price}}
+            .btn.btn-o.btn-jv(v-if="it.type==2") 填写问诊单
+            div(v-else)
+                a.btn.btn-o.btn-jv(href="prescription.html") 查看药方
+                .btn.btn-o(v-if="it.c_type==2") 追问
+                .btn.btn-o 评价
+
+
+
+
+block js
+    script(type='text/javascript').
+        var vMyOrder = new Vue({
+            el: '#wrap',
+            data: {
+                lists:[
+
+                ]
+            },
+            methods:{
+                det:function(id){
+                    location.href = 'my_order_det.html?id='+id
+                },
+                bg:function(url){
+                    if(url) return 'background-image:url('+url+')'
+                },
+                cT:function(i){
+                    switch (i){
+                        case 1:
+                            return '已完成';
+                        break;
+                        case 2:
+                            return '不在线';
+                        break;
+                        case 3:
+                            return '商城';
+                        break;
+                        case 4:
+                            return '推荐';
+                        break;
+                    }
+                }
+            }
+        });

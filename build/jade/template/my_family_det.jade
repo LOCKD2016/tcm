@@ -1,0 +1,148 @@
+extends ../layout/layout
+block head
+    -var bodyclass='p_myfmld'
+block banner
+    header
+        .left(onclick="save()")
+            i.icon-arrow-left
+        .center 个人资料
+
+block body
+    ul.list-group
+        li
+            a 头像
+            .val
+                .avatar(v-bind:style="bg(avatar)")
+            i.icon-arrow-right
+        li
+            a 昵称
+            .val
+                input(type="text" maxlength="11" placeholder="请输入" v-model="nickname")
+            i.icon-arrow-right
+    ul.list-group
+        li
+            a 姓名
+            .val
+                input(type="text" maxlength="6" placeholder="请输入" v-model="name" v-if="pId" readonly="")
+                input(type="text" maxlength="6" placeholder="请输入" v-model="name" v-else)
+            i.icon-arrow-right
+        li
+            a 性别
+            .val {{sex}}
+            select(onchange="setChang(this,1)" onblur="setChang(this,1)" v-if="!pId")
+                option 男
+                option 女
+            i.icon-arrow-right
+        li
+            a 年龄
+            .val
+                input(type="tel" maxlength="3" placeholder="请输入" v-model="age")
+            i.icon-arrow-right
+        li
+            a 手机号码
+            .val
+                input(type="tel" maxlength="11" placeholder="请输入" v-model="phone")
+            i.icon-arrow-right
+        li
+            a 身份证号
+            .val
+                input(type="text" maxlength="18" placeholder="请输入" v-model="id_number")
+            i.icon-arrow-right
+        li
+            a 身高
+            .val.cm
+                input(type="tel" maxlength="3" placeholder="" v-model="height")
+            i.icon-arrow-right
+        li
+            a 体重
+            .val.kg
+                input(type="tel" maxlength="3" placeholder="" v-model="weight")
+            i.icon-arrow-right
+        li
+            a 国籍
+            .val {{country}}
+            select(onchange="setChang(this,2)" onblur="setChang(this,2)")
+                option(v-for="it in comCountry") {{it}}
+            i.icon-arrow-right
+        li(onclick="setAddr('#city')")
+            a 常居住地
+            .val#city {{add_province}} {{add_city}} {{add_area}}
+            i.icon-arrow-right
+    .tips
+        i.icon-warning
+        span 请认真填写，有助于医生为您更好的服务
+
+block js
+    script(type='text/javascript' src="../js/areaData_v2.js")
+    script(type='text/javascript' src="../js/iscroll.js")
+    script(type='text/javascript' src="../js/iosSelect.js")
+    script(type='text/javascript').
+        var pId = $api.GetParam('id');
+        var vMyFamilyDet = new Vue({
+            el: 'wrap',
+            data: {
+                avatar:null,
+                nickname:null,
+                name:null,
+                sex:'男',
+                age:null,
+                phone:null,
+                id_number:null,
+                height:null,
+                weight:null,
+                country:null,
+                add_province:null,
+                add_city:null,
+                add_area:null
+            },
+            methods:{
+                bg:function(url){
+                    if(url) return 'background-image:url('+url+')'
+                }
+            }
+        });
+        function setChang(o,t){
+            if(t==1){
+                vMyFamilyDet.sex = $(o).val()
+            }else{
+                vMyFamilyDet.country = $(o).val()
+            }
+        }
+        function setAddr(obj, call) {
+            $('input').blur();
+            var levelId1 = $(obj).attr('data-province-code');
+            var levelId2 = $(obj).attr('data-city-code');
+            var levelId3 = $(obj).attr('data-district-code');
+            var iosSelect = new IosSelect(3, [iosProvinces, iosCitys, iosCountys],
+                    {
+                        title: '地址选择',
+                        itemHeight: 40,
+                        relation: [1, 1, 0, 0],
+                        oneLevelId: levelId1,
+                        twoLevelId: levelId2,
+                        threeLevelId: levelId3,
+                        callback: function (selectOneObj, selectTwoObj, selectThreeObj) {
+                            $(obj).attr('data-province-code', selectOneObj.id)
+                                    .attr('data-city-code', selectTwoObj.id)
+                                    .attr('data-district-code', selectThreeObj.id);
+                            //vCont.info.add_city = selectOneObj.value + ' ' + selectTwoObj.value + ' ' + selectThreeObj.value;
+                            vMyFamilyDet.add_province = selectOneObj.value;
+                            vMyFamilyDet.add_city = selectTwoObj.value;
+                            vMyFamilyDet.add_area = selectThreeObj.value;
+                            if (call) {
+                                call([selectOneObj.id, selectTwoObj.id, selectThreeObj.id]);
+                            }
+                        }
+                    });
+        }
+        function save(){
+            if(!vMyFamilyDet.nickname){
+                $api.pop('昵称不能为空');
+                return false
+            }
+            if(!vMyFamilyDet.name){
+                $api.pop('姓名不能为空');
+                return false
+            }
+            location.href="my_family.html"
+        }

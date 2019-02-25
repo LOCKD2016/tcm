@@ -1,0 +1,93 @@
+extends ../layout/layout
+block nav
+    .tit_nav
+        .container
+            .pull-left 权限设置
+
+            .pull-right
+                a.btn.btn-primary.btn-sm
+                    i.icon-checkmark
+                    span 保存并修改
+                a.btn.btn-primary.btn-sm
+                    i.icon-cross
+                    span 取消
+                a.btn.btn-primary.btn-sm
+                    i.icon-bin
+                    span 删除组
+block body
+    .bg_cor
+        form(role='form')
+            .form-group
+                label(for='') 用户组
+                input.form-control(type='text', placeholder='投资团队')
+            .form-group
+                label(for='') 描述
+                textarea.form-control(placeholder='除了描述之外的其他功能',rows=3)
+            .form-group
+                label(for='') 权限设置
+                .set_box
+                    ul.list-unstyled
+                        li
+                            label
+                                input(type="checkbox")
+                                span 首页
+                            ul
+                                -var nt=["桌面","任务看板","动态","待办","通讯录","首页","日志","帮助"]
+                                each mt,i in nt
+                                    li
+                                        input(type="checkbox")
+                                        span=mt
+
+                    ul.list-unstyled
+                        li
+                            label
+                                input(type="checkbox")
+                                span 事件
+                            ul
+                                -var nt=["最新","工作周报","检索"]
+                                each mt,i in nt
+                                    li
+                                        input(type="checkbox")
+                                        span=mt
+                    ul.list-unstyled
+                        li
+                            label
+                                input(type="checkbox")
+                                span 项目
+                            ul
+                                -var nt=["浏览","新增","导入","导出"]
+                                each mt,i in nt
+                                    li
+                                        input(type="checkbox")
+                                        span=mt
+                                li
+                                    label
+                                        input(type="checkbox")
+                                        span 查看
+                                    ul
+                                        -var nt=["概况","详情","投资","财务","股本","通讯录","权限"]
+                                        each mt,i in nt
+                                            li
+                                                input(type="checkbox")
+                                                span=mt
+                    ul.list-unstyled
+                        li
+                            label
+                                input(type="checkbox")
+                                span 投资
+                            ul
+                                -var nt=["浏览","新增","导入","导出"]
+                                each mt,i in nt
+                                    li
+                                        input(type="checkbox")
+                                        span=mt
+                                li
+                                    label
+                                        input(type="checkbox")
+                                        span 查看
+                                    ul
+                                        -var nt=["概况","详情","投资","财务","股本","通讯录","权限"]
+                                        each mt,i in nt
+                                            li
+                                                input(type="checkbox")
+                                                span=mt

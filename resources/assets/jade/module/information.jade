@@ -1,0 +1,75 @@
+//覆盖
+template
+    .modal.fade#information
+        .modal-dialog
+            .modal-content
+                .modal-header
+                    button.close(type='button', data-dismiss='modal', aria-label='Close')
+                        span(aria-hidden='true') ×
+                    h4.modal-title 修改门店
+                .modal-body
+                    form.form-horizontal(role='form',v-if="val.type ==0")
+                        .form-group
+                            label.col-sm-3.control-label(for='') 痊愈：
+                            .col-sm-8
+                                input.form-control(type='text' ,v-model="val.info.N1")
+                        .form-group
+                            label.col-sm-3.control-label(for='') 明显好转：
+                            .col-sm-8
+                                input.form-control(type='text' ,v-model="val.info.N2")
+                        .form-group
+                            label.col-sm-3.control-label(for='') 好转：
+                            .col-sm-8
+                                input.form-control(type='text' ,v-model="val.info.N3")
+                        .form-group
+                            label.col-sm-3.control-label(for='') 没变化：
+                            .col-sm-8
+                                input.form-control(type='text' ,v-model="val.info.N4")
+                    form.form-horizontal(role='form',v-if="val.type ==1")
+                        .form-group
+                            label.col-sm-3.control-label(for='') 免费取消次数：
+                            .col-sm-8
+                                input.form-control(type='text' ,v-model="val.info.M")
+                        .form-group
+                            label.col-sm-3.control-label(for='') 免费取消预约时间N：
+                            .col-sm-8
+                                input.form-control(type='text' ,v-model="val.info.N")
+                        .form-group
+                            label.col-sm-3.control-label(for='') 24h < 实际时间 < N：
+                            .col-sm-8
+                                input.form-control(type='text' ,v-model="val.info.N1")
+                        .form-group
+                            label.col-sm-3.control-label(for='') 12h < 实际时间 < 24：
+                            .col-sm-8
+                                input.form-control(type='text' ,v-model="val.info.N2")
+                        .form-group
+                            label.col-sm-3.control-label(for='') 12h > 实际时间：
+                            .col-sm-8
+                                input.form-control(type='text' ,v-model="val.info.N3")
+                        .form-group
+                            label.col-sm-3.control-label(for='') 实际时间 > 预约时间：
+                            .col-sm-8
+                                input.form-control(type='text' ,v-model="val.info.N4")
+                .modal-footer
+                    button.btn.btn-default(type='button', data-dismiss='modal') 取消
+                    button.btn.btn-primary(type='button', v-on:click="save()") 保存
+
+script(type='text/javascript').
+    export default {
+        props:['val'],
+        data(){
+            return {
+               data:{}
+            };
+        },
+        methods:{
+            save(){
+                this.$http.post('config',this.val).then(function(res){
+                    if(res.data.status){
+                        this.$dispatch('refreshList');
+                        $('#information').modal('hide');
+                    }
+                })
+            },
+        }
+    }

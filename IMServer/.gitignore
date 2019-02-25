@@ -1,0 +1,12 @@
+/vendor/
+/.idea/
+*.lock
+*.log
+/cache/
+/log/
+/logs/
+/client/uploads/
+/framework
+/webroot/uploads/
+/webroot/config.js
+/configs/docker-compose.yaml

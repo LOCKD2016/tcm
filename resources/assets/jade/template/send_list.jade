@@ -1,0 +1,287 @@
+extends ../layout/layout
+block nav
+    .tit_nav
+        .container.clearfix
+            .pull-left 发货列表
+            .pull-right
+                a.btn.btn-sm.btn-primary(@click="exportData()") 导出管理
+block body
+    .search_box#searchList
+        dl
+            dt 查询：
+            dd.row
+                .col-sm-2
+                    .input-group
+                        input#seaItem.form-control.auto_inp(type="search" v-model="mobile" placeholder="输入手机号搜索")
+                        .input-group-btn(@click="getSend()")
+                            .btn.btn-default
+                                i.icon-search
+                .col-sm-2
+                    .input-group
+                        input.form-control.auto_inp(type="search" v-model="number" placeholder="输入订单编号搜索")
+                        .input-group-btn(@click="getSend()")
+                            .btn.btn-default
+                                i.icon-search
+                .col-sm-2
+                    select.form-control.first(v-model="city" name="city")
+                        option(value=0 selected) 请选择地区
+                        option(v-for="city in cities", track-by="$index",v-bind:value="city.province" ) {{city.province}}
+                .col-sm-2
+                    select.form-control(v-model="status")
+                        option(value=0 selected) 请选择购买类型
+                        option(value=1) 成人男
+                        option(value=2) 成人女
+                        option(value=3) 儿童
+                .col-sm-2
+                    select.form-control(v-model="shipping_status")
+                        option(value=5 selected) 请选择发货状态
+                        option(value=0) 未发货
+                        option(value=1) 已发货
+        dl
+            dt 查询：
+            dd.row
+                .col-sm-2(style="width:500px;")
+                    input.form-control.pull-left.time_date(style="width:200px",type="text",readonly,name="startTime",@click.stop="open($event,'picker2')",v-model="calendar.items.picker2.value",placeholder='请输入开始时间')
+                    span.pull-left.zhi  --
+                    input.form-control.pull-left.time_date(style="width:200px",type="text",readonly,name="endTime",@click.stop="open($event,'picker3')",v-model="calendar.items.picker3.value",placeholder='请输入结束时间')
+                    calendar(
+                    :show.sync="calendar.show",
+                    :type="calendar.type",
+                    :value.sync="calendar.value",
+                    :x="calendar.x",
+                    :y="calendar.y",
+                    :begin.sync="calendar.begin",
+                    :end.sync="calendar.end",
+                    :range.sync="calendar.range",
+                    :months="calendar.months")
+
+                .col-sm-2
+                    span 共 {{total}} 条记录
+
+
+    .user_table_box.table-responsive
+        table.table.table-bordered
+            thead
+                tr
+                    th 序号
+                    th 药名
+                    th 敷贴类型
+                    th 敷贴数量
+                    th 购买类型
+                    th 订单编号
+                    th 用户昵称
+                    th 收货人
+                    th 联系方式
+                    th.col-sm-2 收货地址
+                    th 发货状态
+                    th 快递单号
+                    //th.col-sm-1 用户备注
+                    th.col-sm-1 管理员备注
+                    th 操作
+            tbody
+                tr(v-for ="(index,send) in sends")
+                    td {{index+1}}
+                    td {{send.goods_name}}
+                    td {{send.type}}
+                    td {{send.num}}
+                    td {{send.goods_type}}
+                    td {{send.order_sn}}
+                    td {{send.nickname}}
+                    td {{send.consignee}}
+                    td {{send.mobile}}
+                    td {{send.province}}{{send.city}}{{send.district}}{{send.address}}
+                    td {{send.shipping_status}}
+                    td {{send.express_number}}
+                    //td {{send.postscript}}
+                    td {{send.note}}
+                    td
+                        span(v-if="send.shipping_status == '未发货'",@click="addlogistics(send.id)") 添加物流
+                        //span(v-else,@click="allogistics(send.id)") 物流进度
+                        span(v-if="send.shipping_status == '已发货'",@click="updateLogistics(send.id)") 修改物流
+                        //span.del(@click="SendDelete(send.id)") 删除
+                        span(@click="noteAdd(send.id)") 备注
+
+
+
+    paginate(:cur.sync="cur",:all.sync="all",v-on:btn-click="listen",v-if="cur",v-on:gopage="listen")
+    pop-addlogistics(:id.sync="id")
+    //pop-allogistics(:id.sync="id")
+    pop-logisticsupdate(:id.sync="id")
+    pop-Dealnote(:id.sync="id")
+
+block js
+    script(type="text/javascript").
+        import calendar from "../../js/calendar.vue"//
+        export default {
+            components: {
+                calendar
+            },
+            created(){
+                this.page = this.$route.params.id;
+                this.getSend();
+                this.getCity();
+            },
+            ready(){
+                headNav(3);
+            },
+            data(){
+                return {
+                    sends:{},
+                    cur:'',
+                    all:'',
+                    total:'',
+                    mobile: '',
+                    status: '',
+                    number: '',
+                    startTime:'',
+                    endTime:'',
+                    city: 0,
+                    shipping_status: 5,
+                    search: {},
+                    id:'',
+                    cities:{},
+                    express_company:'',
+                    calendar: {
+                        show: false,
+                        x: 0,
+                        y: 0,
+                        picker: "",
+                        type: "date",
+                        value: "",
+                        begin: "",
+                        end: "",
+                        //weeks: [],
+                        months: [],
+                        range: false,
+                        items: {
+                            // 日期时间模式、、
+                            picker3: {
+                                type: "datetime",
+                                value: "",
+                                sep: "-",
+                            }, picker2: {
+                                type: "datetime",
+                                value: "",
+                                sep: "-",
+                            },
+                        }
+                    }
+                };
+            },
+            events: {
+                update(){
+                    this.getSend();
+                }
+            },
+            methods:{
+                noteAdd(id){
+                    this.$set('id', id);
+                    $("#dealnote").modal("show");
+                },
+                getSend(page=''){
+                    if (page) {
+                        this.page = page;
+                    }
+                    this.search.number = this.number;
+                    this.search.mobile = this.mobile;
+                    this.search.city = this.city;
+                    this.search.status = this.status;
+                    this.search.shipping_status = this.shipping_status;
+                    this.search.startTime = this.startTime;
+                    this.search.endTime = this.endTime;
+                    this.$http({url: 'deal/send', method: 'GET', params: {page: this.page,search:this.search}}).then(function (res) {
+                        this.$set('sends', res.data.data);
+                        var pagination = res.data.meta.pagination;
+                        this.$set('cur', pagination.current_page);
+                        this.$set('all', pagination.total_pages);
+                        this.$set('total', pagination.total);
+                    });
+                },
+                getCity(){
+                    this.$http({
+                        url: 'deal/sendcity',
+                        method: 'GET',
+                    }).then(function (res) {
+                        this.$set('cities', res.data);
+                    });
+                },
+                exportData(){
+                    this.search.number = this.number;
+                    this.search.mobile = this.mobile;
+                    this.search.city = this.city;
+                    this.search.status = this.status;
+                    this.$http({
+                        url: 'export/send',
+                        method: 'GET',
+                        params: {search: this.search}
+                    }).then(function (res) {
+                        if (res.data.status == 1) {
+                            location.href = "/api/upload/download/" + res.data.name;
+                        }
+                    })
+                },
+                addlogistics(id){
+                    this.$set('id', id);
+                    $("#addlogistics").modal("show");
+                },
+                allogistics(id){
+                    this.$set('id', id);
+                    $("#allogistics").modal("show");
+                },
+                updateLogistics(id){
+                    this.$set('id', id);
+                    $("#logisticsupdate").modal("show");
+                },
+                listen(data){
+                    this.getSend(data);
+                    this.$router.go({name: 'send_list', params: {id: data}});
+                },
+                open(e, type) {
+                    // 设置类型123
+                    this.calendar.picker = type;
+                    this.calendar.type = this.calendar.items[type].type;
+                    this.calendar.range = this.calendar.items[type].range;
+                    this.calendar.begin = this.calendar.items[type].begin;
+                    this.calendar.end = this.calendar.items[type].end;
+                    this.calendar.value = this.calendar.items[type].value;
+                    // 可不用写
+                    this.calendar.sep = this.calendar.items[type].sep;
+                    this.calendar.weeks = this.calendar.items[type].weeks;
+                    this.calendar.months = this.calendar.items[type].months;
+
+                    this.calendar.show = true;
+                    this.calendar.x = e.target.offsetLeft;
+                    this.calendar.y = e.target.offsetTop + e.target.offsetHeight + 8;
+                }
+            },
+            watch: {
+                city(){
+                    this.getSend();
+                },
+                status(){
+                    this.getSend();
+                },
+                shipping_status(){
+                    this.getSend();
+                },
+                startTime(){
+                    this.getSend();
+                },
+                endTime(){
+                    this.getSend();
+                },
+                'calendar.items.picker2.value': function (newvalue, oldValue) {
+                    if (newvalue != oldValue) {
+                        this.$set('startTime', newvalue);
+                    }
+                },
+                'calendar.items.picker3.value': function (newvalue, oldValue) {
+                    if (newvalue != oldValue) {
+                        this.$set('endTime', newvalue);
+                    }
+                },
+                'calendar.value': function (value) {
+                    this.calendar.items[this.calendar.picker].value = value
+                }
+            }
+        }

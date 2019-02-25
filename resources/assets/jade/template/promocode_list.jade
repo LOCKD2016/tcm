@@ -1,0 +1,93 @@
+extends ../layout/layout
+block nav
+block body
+    .tit_nav
+        .container.clearfix
+            .pull-left 优惠码列表
+
+    .user_table_box.table-responsive
+        table.table.table-bordered.check_list
+            thead
+                tr
+                    th.col-sm-1 序号
+                    th.col-sm-2 活动名称
+                    th.col-sm-2 优惠金额
+                    th.col-sm-3 有效期
+                    th.col-sm-1 数量
+                    th.col-sm-1 发放数量
+                    th.col-sm-1 操作
+
+            tbody
+                tr(v-for="(index,code) in codes")
+                    td {{index+1}}
+                    td {{code.name}}
+                    td ￥{{code.discount}}
+                    td {{code.start_time}} - {{code.end_time}}
+                    td {{code.total}}
+                    td {{code.num}}
+                    td
+                        span(v-if="code.end_time < code.nowtime && code.num < code.total", @click="fail(code.id)") 发放
+                        span(v-if="code.num >= code.total && code.end_time > code.nowtime", @click="no(code.id)") 发放
+                        span(v-if="code.end_time < code.nowtime && code.num >= code.total", @click="fail(code.id)") 发放
+                        span(v-if="code.end_time > code.nowtime && code.num < code.total", @click="sendCode(code.id)") 发放
+
+        nav
+            ul.pagination
+                paginate(:cur.sync="cur",:all.sync="all",v-on:btn-click="listen",v-if="cur",v-on:gopage="listen")
+
+    pop-sendcode(:id.sync="id")
+
+block js
+    script(type="text/javascript").
+        export default{
+            created(){
+                this.page = this.$route.params.id;
+                this.getCode();
+            },
+        ready(){
+                headNav(4);
+            },
+            data(){
+                return{
+                    codes:{},
+                    cur:'',
+                    all:'',
+                    id:''
+                }
+            },
+            watch:{
+            },
+            events: {
+                update(){
+                    this.getCode(this.cur);
+                }
+            },
+            methods:{
+                sendCode(id){
+                    this.$set('id', id);
+                    $("#sendcode").modal("show");
+                },
+                no(){
+                    layer.msg('活动优惠码已发完');
+                },
+                fail(){
+                    layer.msg('活动优惠码已过期');
+                },
+                getCode(page=''){
+                    if (page) {
+                        this.page = page;
+                    }
+                    this.$http({url:'promo/list',method:'GET',params:{page:this.page,search:this.searchs}}).then(function (res) {
+                        this.$set('codes',res.data.data);
+                        var pagination = res.data.meta.pagination;
+                        this.$set('cur', pagination.current_page);
+                        this.$set('all', pagination.total_pages);
+                    })
+                },
+                listen(data){
+                    this.getCode(data);
+                    this.$router.go({name: 'promocode_list', params: {id: data}});
+                }
+
+            }
+        }

@@ -1,0 +1,126 @@
+extends ../layout/layout
+block nav
+    .tit_nav
+        .container.clearfix
+            .pull-left 数据管理
+block body
+    label 评论
+    table.table.table-bordered
+        thead
+            tr
+                th 痊愈
+                th 明显好转
+                th 好转
+                th 没变化
+                th 操作
+        tbody
+            tr
+                td {{com.info.N1}}
+                td {{com.info.N2}}
+                td {{com.info.N3}}
+                td {{com.info.N4}}
+                td
+                    span(v-on:click="edit_com(com)") 修改
+    label 预约
+    table.table.table-bordered
+        thead
+            tr
+                th 免费取消次数
+                th 免费取消预约时间N(小时)
+                th 24h < 实际时间 < N
+                th 12h < 实际时间 < 24
+                th 12h > 实际时间
+                th 实际时间 > 预约时间
+                th 操作
+        tbody
+            tr
+                td {{sub.info.M}}
+                td {{sub.info.N}}
+                td {{sub.info.N1}}
+                td {{sub.info.N2}}
+                td {{sub.info.N3}}
+                td {{sub.info.N4}}
+                td
+                    span(v-on:click="edit_com(sub)") 修改
+    label 邮费
+    table.table.table-bordered
+        thead
+            tr
+                th 地区
+                th 首价(元)
+                th 首重(Kg)
+                th 续重(元/Kg)
+                th 操作
+        tbody
+            tr(v-for="val in area")
+                td {{val.name}}
+                td {{val.initiate_price}}
+                td {{val.initiate_weight}}
+                td {{val.continue_price}}
+                td
+                    span(v-on:click="edit_area(val)") 修改
+    nav
+        ul.pagination
+            paginate(:cur.sync="cur",:all.sync="all",v-on:btn-click="listen",v-if="cur",v-on:gopage="listen")
+    information(:val.sync="val")
+    area(:area_val.sync="area_val")
+block js
+    script(type="text/javascript").
+        import information from "./module/information.vue"
+        import area from "./module/area.vue"
+        export default {
+            components: {
+                information,
+                area
+            },
+            created(){
+                this.getData();
+                this.getArea(1);
+            },
+            ready(){
+                headNav(5);
+            },
+            data(){
+                return{
+                    sub:{},
+                    com:{},
+                    area:{},
+                    area_val:{},
+                    cur:0,
+                    all:0,
+                    val:{}
+                }
+            },
+            events: {
+                refreshList(){
+                    this.getData();
+                }
+            },
+            methods: {
+                edit_area(val){
+                    this.area_val = val;
+                    $('#area').modal('show');
+                },
+                getArea(page){
+                    this.$http({url:'area',params:{page:page}}).then(function(res){
+                        this.$set('area',res.data.data.data);
+                        this.$set('cur', res.data.data.current_page);
+                        this.$set('all', res.data.data.last_page);
+                    });
+                },
+                edit_com(val){
+                    this.val = val;
+                    $('#information').modal("show");
+                },
+                getData(){
+                    this.$http({url: 'config' ,method:'get'}).then(function(res){
+                        this.$set('com',res.data.data[0]);
+                        this.$set('sub',res.data.data[1]);
+                    })
+                },
+                listen(data){
+                    this.getArea(data);
+                    //this.$router.go({name: 'comment_admin', params: {id: data}});
+                }
+            }
+        }

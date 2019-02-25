@@ -1,0 +1,150 @@
+extends ../layout/layout
+block head
+    -var bodyclass='p_doctor'
+block banner
+    #head
+        header
+            a.left(href="index.html")
+                i.icon-arrow-left
+            .center
+                span {{title}}
+                sub
+                    span 北京
+                    i.icon-arrow-down
+            a.right(href="search.html")
+                i.icon-search
+        .top_nav
+            -var nv = ['医馆','诊费','专科','时间']
+            .calendars
+            ul
+                each vm,i in nv
+                    li
+                        .tog_btn(onclick="navTog(#{i})")
+                            span=vm
+                            i.icon-triangle-down
+                        .drop
+                            .bg(onclick="navClose()")
+                            -if(i==0)
+                                .box
+                                    .hosp_li(v-bind:class="hospital_set==null?'active':''" @click="hospital_set=null")
+                                        h3 不限
+                                        i.icon-check-c
+                                    .hosp_li(v-for="(it,ind) in hospital" v-bind:class="ind==hospital_set?'active':''" @click="hospital_set=ind")
+                                        h3 {{it.name}}
+                                        p {{it.addr}}
+                                        i.icon-check-c
+                            -else if(i==1)
+                                .box.clearfix
+                                    .prices(v-bind:class="prices_set==null?'active':''" @click="prices_set=null") 不限
+                                    .prices(v-for="(it,ind) in prices" v-bind:class="ind==prices_set?'active':''" @click="prices_set=ind") {{it}}
+                            -else if(i==2)
+                                .box.clearfix
+                                    .department(v-bind:class="department_set==null?'active':''" @click="department_set=null") 不限
+                                    .department(v-for="(it,ind) in department" v-bind:class="ind==department_set?'active':''" @click="department_set=ind") {{it}}
+
+
+block body
+    .panel
+        .doctor_list(v-for="(it,ind) in lists")
+            .link(@click="det(it.id)")
+                .avatar(v-bind:style="bg(it.img)")
+                h3
+                    span {{it.doctors}}
+                    sub {{it.doctors_title}}
+                    label(v-bind:class="it.online_a==1?'active':''") 门诊预约
+                    label(v-bind:class="it.online_b==1?'active':''") 在线咨询
+                h5 {{it.hospital}}
+                p 擅长：{{it.adept}}
+                .price ￥{{it.price}}
+                h6
+                    span 患者推荐指数
+                    .stars(v-bind:show="it.star")
+                        i.icon-nav1
+                        i.icon-nav1
+                        i.icon-nav1
+                        i.icon-nav1
+                        i.icon-nav1
+            .btn.btn-jv(@click="order(it.id)") 预约
+
+
+
+block js
+    script(type='text/javascript' src="../js/datepicker.js")
+    script(type='text/javascript' src="../js/calendar.js")
+    script(type='text/javascript').
+        function navTog(i){
+            if(i==3&&!$('.top_nav li').eq(3).hasClass('active')){
+                $('.calendar').addClass('active')
+            }else{
+                $('.calendar').removeClass('active')
+            }
+            $('.top_nav li').eq(i).toggleClass('active').siblings().removeClass('active');
+        }
+        function navClose(){
+            $('.calendar').removeClass('active');
+            $('.top_nav li').removeClass('active');
+        }
+        function goSearch(){
+            var parm={
+                hospital: vTopNav.hospital_set,
+                prices: vTopNav.prices_set,
+                times: vTopNav.times
+            };
+            console.log(parm)
+        }
+        var vTopNav = new Vue({
+            el: '#head',
+            data: {
+                title:$api.GetParam('type')==1?'门诊预约':'在线咨询',
+                hospital_set:0,
+                hospital:[
+
+                ],
+                prices_set:0,
+                prices:['100-199','200-299','300-399','400+'],
+                department_set:0,
+                department:['内科','外科','全科','蒙人科'],
+                times:[]
+            },
+            methods:{
+            }
+        });
+        var vOrder = new Vue({
+            el: '#wrap',
+            data: {
+                lists:[
+
+                ]
+            },
+            methods:{
+                det:function(id){
+                    location.href = 'doctor_det.html?id='+id
+                },
+                order:function(id){
+                    if($api.GetParam('type')==1){
+                        location.href = 'doctor_outline.html?id='+id
+                    }else{
+                        location.href = 'doctor_online.html?id='+id
+                    }
+                },
+                bg:function(url){
+                    if(url) return 'background-image:url('+url+')'
+                },
+                cT:function(i){
+                    switch (i){
+                        case 1:
+                            return '已完成';
+                            break;
+                        case 2:
+                            return '不在线';
+                            break;
+                        case 3:
+                            return '商城';
+                            break;
+                        case 4:
+                            return '推荐';
+                            break;
+                    }
+                }
+            }
+        });

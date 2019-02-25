@@ -1,0 +1,59 @@
+//权限配置
+template
+    .modal.fade#usergroup
+        .modal-dialog.modal-lg
+            .modal-content
+                .modal-header
+                    button.close(type='button', data-dismiss='modal', aria-label='Close')
+                        span(aria-hidden='true') ×
+                    h4.modal-title 权限配置
+                .modal-body
+                    ul.nav.nav-tabs
+                        li.active
+                            a(href="#tab1" role="tab" data-toggle="tab") 新增用户组
+                        li
+                            a(href="#tab2" role="tab" data-toggle="tab") 权限配置
+                    .tab-content
+                        .tab-pane.fade.in.active#tab1
+                            .form-group
+                                label(for='') 用户组名称
+                                input.form-control(type='text', placeholder='输入组名称',v-model="roles.name")
+                            .form-group
+                                label(for='') 用户组标识
+                                input.form-control(type='text', placeholder='用户组标识',v-model="roles.display_name")
+                            .form-group
+                                label(for='') 描述
+                                textarea.form-control(placeholder='除了描述之外的其他功能',rows=3,v-model="roles.description")
+                        .tab-pane.fade#tab2
+                            .permission_set#priTree
+                .modal-footer
+                    button.btn.btn-default(type='button', data-dismiss='modal') 取消
+                    button.btn.btn-primary(type='button',v-on:click="getRole(roles)") 保存并修改
+block js
+    script(type="text/javascript").
+        import {errorMsg} from  '../../common.js';
+        export  default{
+            data(){
+                return {
+                    roles:{},
+                }
+            },
+            methods:{
+                getRole(role){
+                    this.$set('roles.auth',window.datas);
+                    this.$http.post('role',role).then(function(res){
+                        layer.msg(res.data.msg);
+                        this.$dispatch("refreshList");
+                        this.$dispatch("count");
+                        $('#usergroup').modal('hide');
+                    },function(res){
+                        console.log(res);
+                        errorMsg(res.data.errors);
+                    })
+                },
+            }
+        }
+
+
+
+

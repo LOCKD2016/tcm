@@ -1,0 +1,109 @@
+extends ../layout/layout
+block head
+    -var bodyclass='p_chat'
+block banner
+    header
+        a.left(href="index.html")
+            i.icon-arrow-left
+        .center 某某某
+    footer.foot_inp
+        textarea
+        .btn.btn-jv 发送
+block body
+    .chat_body
+        .chat_li(v-for="(it,ind) in lists")
+            .time(v-if="ind==0") {{dateFormat(it.time)}}
+            .time(v-else-if="sT(ind)") {{dateFormat(it.time)}}
+            .msg(v-bind:class="it.self?'self':''")
+                .avatar(v-if="it.self" v-bind:style="bg(user.avatar)")
+                .avatar(v-else  v-bind:style="bg(doctors.avatar)")
+
+                .cont.bor.link(v-if="it.title")
+                    h3
+                        i.icon-help
+                        span {{it.title}}
+                    p {{it.cont}}
+                    h5
+                        span 点击查看详情
+                        i.icon-arrow-right
+
+                .cont.bor(v-else)
+                    p {{it.cont}}
+
+
+
+
+block js
+    script(type='text/javascript').
+        $('footer.foot_inp textarea').focus(function(){
+            setTimeout(function(){
+                $('body').scrollTop(100000);
+            },400);
+        });
+        $('footer.foot_inp .btn').click(function(){
+            var txt = $('footer.foot_inp textarea').val();
+            if($api.isEmpty(txt)){
+                $api.pop('没有输入内容')
+            }else{
+
+                vChat.lists.push({title:'',self:true,cont:txt,time:(new Date()).Format("yyyy-MM-dd hh:mm:ss")});
+                $('footer.foot_inp textarea').val('');
+            }
+        });
+
+        var vChat = new Vue({
+            el: '#wrap',
+            data: {
+                user:{
+                    id: 1223,
+                    name: '陈余良',
+                    avatar: ''
+                },
+                doctors:{
+                    id: 1223,
+                    name: '陈余良',
+                    avatar: 'http://tva3.sinaimg.cn/crop.0.0.199.199.50/83e058b1gw1f4er6ey1pij205k05kjrd.jpg'
+                },
+                lists:[
+                    {
+                        title:'个性化问诊单',
+                        self:false,
+                        id:23423,
+                        cont:'请尽快填写问诊单，方便我了解您的病情。',
+                        time:'2016-12-30 12:00:00'
+                    },
+                    {
+                        title:'个性化问诊单个性化问诊单个性化问诊单个性化问诊单',
+                        self:true,
+                        id:23423,
+                        cont:'我已填写完成，请尽快查看。',
+                        time:'2016-12-30 13:34:00'
+                    },
+                    {
+                        title:'处方',
+                        self:false,
+                        id:23423,
+                        cont:'我给你制定了治疗方案。',
+                        time:'2017-02-30 12:34:00'
+                    }
+                ]
+            },
+            methods:{
+                det:function(id){
+                    location.href = 'order_det.html?id='+id
+                },
+                bg:function(url){
+                    if(url) return 'background-image:url('+url+')'
+                },
+                sT:function(i){
+                    //显示时间，间隔太近不显示
+                    var _self = this,ts = dateDiff(_self.lists[i-1].time,_self.lists[i].time);
+                    //console.log(ts);
+                    if(ts>0.01){
+                        return true
+                    }else{
+                        return false
+                    }
+                }
+            }
+        });

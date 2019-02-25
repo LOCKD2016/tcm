@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>泰和国医</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no" />
+    <script>
+        //控制页面字体
+        var is_mob=false;
+        (function (doc, win) {
+            var docEl = doc.documentElement,
+                    resizeEvt = 'orientationchange' in window ? 'orientationchange' : 'resize',
+                    recalc = function () {
+                        var clientWidth = docEl.clientWidth;
+                        if (clientWidth >= 640) {
+                            $('html').removeClass('is_mob');
+                            is_mob=false;
+                        }else{
+                            $('html').addClass('is_mob');
+                            is_mob=true;
+                        }
+                        if (!clientWidth) return;
+                        docEl.style.fontSize = 100 * (clientWidth / 640) + 'px';
+                    };
+            if (!doc.addEventListener) return;
+            win.addEventListener(resizeEvt, recalc, false);
+            doc.addEventListener('DOMContentLoaded', recalc, false);
+        })(document, window);
+        document.addEventListener('touchmove',function(e){
+            if(e.target.tagName=='BODY'||e.target.tagName=='HTML'){
+                e.preventDefault();
+            }
+        });
+    </script>
+</head>
+
+<body class="p_home">
+    <div id="app"></div>
+    <!-- built files will be auto injected -->
+    <div class="calendars"></div>
+    <div class="loader_bg"><b class="loader"></b></div>
+    <div id="popBox"></div>
+
+    <script type="text/javascript" src="static/js/jquery-2.1.4.min.js"></script>
+    <script type="text/javascript" src="static/js/swiper-3.3.1.min.js"></script>
+    <script type="text/javascript" src="static/js/tcmuser.js"></script>
+    <script type="text/javascript" src="static/js/datepicker.js"></script>
+    <script type="text/javascript" src="static/js/calendar.js"></script>
+    <script type="text/javascript" src="static/js/time.js"></script>
+    <script type="text/javascript" src="static/js/iosSelect.js"></script>
+    <script type="text/javascript" src="static/js/iscroll.js"></script>
+    <script type="text/javascript" src="static/js/areaData_v2.js"></script>
+    <script type="text/javascript" src="static/js/cropimg.min.js?v1"></script>
+    <script type="text/javascript" src="static/js/mui.min.js"></script>
+    <script type="text/javascript" src="static/js/chat.js"></script>
+    <script type="text/javascript" src="static/js/video.js"></script>
+    <script type="text/javascript" src="static/js/calen.js"></script>
+    <script type="text/javascript" src="static/js/echarts.min.js"></script>
+    <script type="text/javascript" src="../script/com.js"></script>
+    <script>
+        var wx = null;
+        apiready = function () {
+            wx = api.require('wx');
+            wx.isInstalled(function(ret, err) {
+                if (ret.installed) {
+                    TCM.$store.commit("setWxInstall", true);
+                } else {
+                    TCM.$store.commit("setWxInstall", false);
+                }
+            });
+        };
+    </script>
+</body>
+
+</html>

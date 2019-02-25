@@ -1,0 +1,26 @@
+<!DOCTYPE html><html><head><title>泰和国医</title><meta charset=utf-8><link rel="shortcut icon" href=/favicon.ico type=image/x-icon><link rel=stylesheet href="//cache.amap.com/lbs/static/main.css?v=1.0"><meta name=viewport content="width=device-width,minimum-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover"><script>//控制页面字体
+        var is_mob=false;
+        (function (doc, win) {
+            var docEl = doc.documentElement,
+                    resizeEvt = 'orientationchange' in window ? 'orientationchange' : 'resize',
+                    recalc = function () {
+                        var clientWidth = docEl.clientWidth;
+                        if (clientWidth >= 640) {
+                            $('html').removeClass('is_mob');
+                            is_mob=false;
+                        }else{
+                            $('html').addClass('is_mob');
+                            is_mob=true;
+                        }
+                        if (!clientWidth) return;
+                        docEl.style.fontSize = 100 * (clientWidth / 640) + 'px';
+                    };
+            if (!doc.addEventListener) return;
+            win.addEventListener(resizeEvt, recalc, false);
+            doc.addEventListener('DOMContentLoaded', recalc, false);
+        })(document, window);
+        document.addEventListener('touchmove',function(e){
+            if(e.target.tagName=='BODY'||e.target.tagName=='HTML'){
+                e.preventDefault();
+            }
+        });</script><link href=/static/css/app.369d89602ce24afff9be4d9a1a96ffc5.css rel=stylesheet></head><body class=p_home><div id=app></div><div class=calendars></div><div class=loader_bg><b class=loader></b></div><div id=popBox></div><script type=text/javascript src="//webapi.amap.com/maps?v=1.3&key=e6194e0dc6b86508db9284634e8254d1&plugin=AMap.Autocomplete"></script><script type=text/javascript src=/static/js/jquery-2.1.4.min.js></script><script type=text/javascript src=/static/js/swiper-3.3.1.min.js></script><script type=text/javascript src=//res.wx.qq.com/open/js/jweixin-1.3.2.js></script><script type=text/javascript src=/static/js/app.js></script><script type=text/javascript src=/static/js/datepicker.js></script><script type=text/javascript src=/static/js/calendar.js></script><script type=text/javascript src=/static/js/time.js></script><script type=text/javascript src=/static/js/iosSelect.js></script><script type=text/javascript src=/static/js/iscroll.js></script><script type=text/javascript src=/static/js/areaData_v2.js></script><script type=text/javascript src=/static/js/cropimg.min.js?v1></script><script type=text/javascript src=/static/js/mui.min.js></script><script type=text/javascript src=/static/js/chat.js></script><script type=text/javascript src=/static/js/calen.js></script><script type=text/javascript src=/static/js/echarts.min.js></script><script type=text/javascript src=/static/js/manifest.36ad229005673bf4e29f.js></script><script type=text/javascript src=/static/js/vendor.eda770ceb044707e2b8b.js></script><script type=text/javascript src=/static/js/app.ccf1b484284ceeaeb28d.js></script></body></html>

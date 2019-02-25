@@ -1,0 +1,62 @@
+//物流状态
+template
+    .modal.fade#see_express
+        .modal-dialog
+            .modal-content
+                .modal-header
+                    button.close(type='button', data-dismiss='modal', aria-label='Close')
+                        span(aria-hidden='true') ×
+                    h4.modal-title 物流状态
+                .modal-body
+                    form.form-horizontal(role='form')
+                        .form-group
+                            label.col-sm-2.control-label
+                                span 物流公司：
+                            .col-sm-10
+                                input.form-control(type="text" v-model="order.express_company")
+                        .form-group
+                            label.col-sm-2.control-label
+                                span 物流单号：
+                            .col-sm-10
+                                input.form-control(type="text" v-model="order.express_number")
+                        .form-group
+                            label.col-sm-2.control-label
+                                span 快递进度：
+                            .col-sm-10(v-if="data.resultcode == 200")
+                                .lists(v-for="mes in list")
+                                    p.time {{mes.datetime}}
+                                    p {{mes.remark}}
+                            .col-sm-10(v-if="data.resultcode != 200")
+                                .lists
+                                    p {{data.reason}}
+
+
+block js
+    script(type="text/javascript").
+        export default {
+            props: ['order'],
+            watch:{
+                order(){
+                    this.getData();
+                }
+            },
+            data(){
+                return {
+                    data: {},
+                    list: []
+                };
+            },
+            methods: {
+                getData(){
+                    this.$http.get('express/see/'+this.order.id).then(function (res) {
+                        this.data = res.data;
+                        if(res.data.result && res.data.result.status){
+                            this.list = res.data.result.list;
+                        }
+                    })
+                }
+
+            }
+        }
+
+

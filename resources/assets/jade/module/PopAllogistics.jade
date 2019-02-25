@@ -1,0 +1,89 @@
+//物流状态
+template
+    .modal.fade#allogistics
+        .modal-dialog
+            .modal-content
+                .modal-header
+                    button.close(type='button', data-dismiss='modal', aria-label='Close')
+                        span(aria-hidden='true') ×
+                    h4.modal-title 物流状态
+                .modal-body
+                    form.form-horizontal(role='form')
+                        .form-group
+                            label.col-sm-2.control-label
+                                span 物流公司：
+                            .col-sm-10
+                                input.form-control(type="text" v-model="send.logistics")
+                        .form-group
+                            label.col-sm-2.control-label
+                                span 物流单号：
+                            .col-sm-10
+                                input.form-control(type="text" v-model="send.logistics_number")
+                        //.form-group
+                        //    label.col-sm-2.control-label
+                        //        //span(@click="getExp(send.deal_id)") 物流进度：
+                        //        span 物流进度：
+                        //    .col-sm-10(v-if="exp.resultcode == 200")
+                        //        .lists(v-for="mes in exp.result.list")
+                        //            p.time {{mes.datetime}}
+                        //            p {{mes.remark}}
+                        //    .col-sm-10(v-if="exp.resultcode != 200")
+                        //        .lists
+                        //            p {{exp.reason}}
+
+
+//block js
+//    script(type="text/javascript").
+//        export default {
+//            props: ['id'],
+//            created(){
+//                this.id = this.$route.params.id;
+//            },
+//            data(){
+//                return {
+//                    send: {},
+//                    exp:{},
+//                    reason:{},
+//                };
+//            },
+//
+//            methods: {
+//                getSendDetail(id){
+//                    if (id > 0) {
+//                        this.$http.get('deal/sendetail/' + id).then(function (res) {
+//                            this.$set('send', res.data.data);
+//                        });
+//                    }
+//                },
+//                //getExp(id){
+//                //    if (id > 0) {
+//                //        this.$http.get('deal/getExp/' + id).then(function (res) {
+//                //            this.$set('exp', res.data);
+//                //        });
+//                //    }
+//                //},
+//                addSend(send){
+//                    this.$http.post('addsend', send).then(function (res) {
+//                        if (res.data.status == 1) {
+//                            layer.msg(res.data.msg);
+//                            this.$set('send', '');
+//                        }
+//                    }, function (res) {
+//                        var data = res.data;
+//                        layer.msg(data.msg);
+//                    });
+//                    $("#allogistics").modal("hide");
+//                    this.$dispatch("update");
+//                },
+//                goback(){
+//                    this.$router.go("/else_deliver");
+//                },
+//            },
+//            watch: {
+//                id(newValue){
+//                    this.getSendDetail(newValue);
+//                    //this.getExp(newValue);
+//                },
+//            }
+//
+//        }

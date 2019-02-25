@@ -1,0 +1,114 @@
+.p_chat
+    #wrap
+        padding-bottom $foot_h
+
+.chat_body
+    min-height 10rem
+    padding .3rem 0
+    .time
+        margin 0 auto
+        font-size .16rem
+        background $hui
+        width 2rem
+        text-align center
+        border-radius .2rem
+        color #fff
+        line-height .3rem
+        height .25rem
+        opacity .5
+    .msg
+        margin .2rem
+        position relative
+        z-index 3
+        padding 0 0 0 .9rem
+        &.self
+            padding 0 .9rem 0 0
+            text-align right
+            .avatar
+                left auto
+                right 0
+            .cont
+                border-color $lv
+                color #fff
+                background $lv
+                &:before
+                &:after
+                    border-right-color transparent !important
+                    border-left-color $lv
+                    left auto
+                    right .6rem
+                &.link:after
+                    border-left-color $he
+
+                p
+                    white-space pre-wrap
+
+
+
+        .avatar
+            position absolute
+            left 0
+            z-index 6666
+            width .65rem
+            height .65rem
+        .cont
+            min-width 1rem
+            min-height .65rem
+            max-width 4.2rem
+            padding .15rem .2rem
+            border-radius .1rem
+            word-wrap break-word
+            word-break break-all
+            white-space pre-wrap
+            border .016px solid $bor
+            background #fff
+            display inline-table
+            text-align justify !important
+            line-height .32rem
+            // &:after
+            // &:before
+            //     content ''
+            //     position absolute
+            //     border .2rem solid transparent
+            //     border-right-color #fff
+            //     left .62rem
+            //     top .1rem
+            // &:before
+            //     border-right-color $bor
+            //     margin-left -.02rem
+            //     z-index -1
+            &.link
+                background #fff
+                border-color $he
+                padding 0
+                border 0
+                min-width 3rem
+                &:after
+                &:before
+                    top .06rem
+                    border-right-color $he
+                h3
+                    background $he
+                    color #fff
+                    border-radius .06rem .06rem 0 0
+                    padding .1rem .2rem .1rem .5rem
+                    ovt()
+                    max-width 4.2rem
+
+                p
+                    padding .1rem .2rem
+                    color #333
+                h5
+                    color #999
+                    padding 0 0 .1rem .2rem
+                h5
+                h3
+                    position relative
+                i
+                    position absolute
+                .icon-arrow-right
+                    right .1rem
+                    bottom .15rem
+                .icon-help
+                    left .1rem
+                    font-size .32rem

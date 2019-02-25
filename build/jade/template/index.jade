@@ -1,0 +1,101 @@
+extends ../layout/layout
+block head
+    -var bodyclass='p_home'
+    -var navs = 0
+block banner
+    header
+        .center 泰和国医
+        .right
+            span 北京
+            i.icon-arrow-down
+
+    include ../module/foot
+
+block body
+    .search_box
+        input(type="text" placeholder="搜索医生/医馆/疾病")
+        i.icon-search
+    .swiper.banner#banner
+        .swiper-container
+            .swiper-wrapper
+                a.swiper-slide(v-for="(it,index) in lunbo" v-if="index<5" v-bind:style="bg(it.pic)" v-bind:href="it.link")
+                    h4 {{it.txt}}
+
+
+            .swiper-pagination
+    -var vl=['门诊预约','在线咨询','一键复诊','健康商城','中医学习','我的医生']
+    .home_nav
+        each vd,i in vl
+            .box(onclick="togNav(#{i});")
+                .ico(class='i_h_n#{i + 1}')
+                p=vd
+
+block js
+    script(type="text/javascript" src="../js/swiper-3.3.1.min.js")
+    script(type="text/javascript").
+        var vBanner = new Vue({
+            el: '#banner',
+            data: {
+                lunbo:[
+                    {
+                        txt:'老人高血压如何预防',
+                        link:'',
+                        pic:"../img/banner01.jpg"
+                    },
+                    {
+                        txt:'老人高血压如何预防33',
+                        link:'',
+                        pic:"../img/banner02.jpg"
+                    },
+                    {
+                        txt:'老人高血压如何预防33',
+                        link:'',
+                        pic:"../img/banner03.jpg"
+                    },
+                    {
+                        txt:'老人高血压如何预防33',
+                        link:'',
+                        pic:"../img/banner04.jpg"
+                    }
+                ]
+            },
+            methods:{
+                bg:function(url){
+                    if(url) return 'background-image:url('+url+')'
+                }
+            }
+        });
+        function swpInit(){
+            var swiper = new Swiper('.swiper-container', {
+                autoplay: 3600,
+                pagination: '.swiper-pagination',
+                paginationClickable: true,
+                initialSlide: 0,
+                onSlideChangeEnd: function(swiper){
+                    //console.log(swiper.activeIndex);
+                }
+            });
+        }
+
+        $.get(comUrl + "ajax/index", function (data) {
+
+            setTimeout(function(){swpInit()},500);
+
+
+        }, "json");
+
+        function togNav(i){
+            switch (i){
+                case 0:
+                        location.href="doctor.html?type=1";
+                    break;
+                case 1:
+                        location.href="doctor.html?type=2";
+                    break;
+                case 3:
+                        //location.href="store.html";
+                        location.href="goods.html";
+                    break;
+            }
+        }
+

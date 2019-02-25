@@ -1,0 +1,110 @@
+template
+    .modal.fade#chat_detail
+        .modal-dialog
+            .modal-content
+                .modal-header
+                    button.close(type='button', data-dismiss='modal', aria-label='Close')
+                        span(aria-hidden='true') ×
+                    label.modal-title 详情
+                    form.form-horizontal(role='form')
+                        .form-group
+                            .col-sm-8
+                                p 订单编号： {{order.order_sn}}
+                                p 患  者： {{user.realname}}
+                                p 就诊医师： {{doctor.name}}
+                                p 类型： {{data.type}} {{data.first}}
+                    hr
+                    form.form-horizontal(role='form',v-if="message.message")
+                        label.modal-title  诊断内容
+                        .form-group
+                            .col-sm-8(v-for="val in message.message")
+                                span(v-if="val.type ==2")
+                                    label 医生 :
+                                    span {{doctor.name}}
+                                span(v-if="val.type ==1")
+                                    label 患者 :
+                                    span {{user.realname}}
+                                span &nbsp;&nbsp;{{val.created_at}}
+                                div(v-if="val.msg_type == 'text'")
+                                    div(v-bind:class="val.type ==3 ? 'message_font_color' : ''") {{val.content.text}}
+                                div(v-if="val.msg_type == 'audio'")
+                                    audio(v-bind:src="val.content.text")
+                                div(v-if="val.msg_type == 'image'")
+                                    span(onclick="window.open('http://oy3x9vo5r.bkt.clouddn.com/{{val.content.key}}')")  http://oy3x9vo5r.bkt.clouddn.com/{{val.content.key}}
+                                div(v-if="val.msg_type == 'card'" ,@click="card_detail(val.content.extra.ctype,val.content.extra.id)")
+                                    div(class="message_font_color",v-if="val.content.extra.ctype ==1")  个性问诊单
+                                    div(class="message_font_color",v-if="val.content.extra.ctype ==2")  标准问诊单
+                                    div(class="message_font_color",v-if="val.content.extra.ctype ==3")  处方问诊单
+                                    div(class="message_font_color",v-if="val.content.extra.ctype ==4")  用户填写个性问诊单
+
+                    hr
+                    form.form-horizontal(role='form',v-if="prescription")
+                        label.modal-title 处方 {{recipeHead.sum}} 副
+                        .form-group
+                            .col-sm-8
+                                span(v-for="val in prescription.recipe")
+                                    p {{val.name}} {{val.dosage}} {{val.unit}}  {{val.other}}
+                            .col-sm-8
+                                label 医嘱:
+                                span {{prescription.recipe_remark}}
+                    hr
+                    form.form-horizontal(role='form',v-if="prescriptionOrder")
+                        label.modal-title 其他
+                        .form-group
+                            .col-sm-8
+                                label 抓药
+                                span(v-if="prescription.tisane") 代煎{{prescription.recipe_head}}副
+                                span(v-else)  不代煎
+                            .col-sm-8
+                                label 订单号:
+                                span {{order.order_sn}}
+                            .col-sm-8(v-if="prescription.express")
+                                label 快递:
+                                span(v-if="prescription.express") {{prescriptionOrder.province}}{{prescriptionOrder.city}}{{prescriptionOrder.district}}{{prescriptionOrder.address}}
+                            .col-sm-8(v-else)
+                                label 自取
+
+script(type='text/javascript').
+    export default {
+        props:['id'],
+        data(){
+            return {
+                data:{},
+                user:{},
+                doctor:{},
+                order:{},
+                bespeak:{},
+                prescription:{},
+                recipeHead:{},
+                prescriptionOrder:{},
+                message:{},
+            };
+        },
+        methods:{
+            card_detail(ctype, id){
+                window.open('/admin/card_detail/' + ctype + '/' + id);
+            },
+            getDetail(id){
+                this.$http({url:'clinic/show/'+id}).then(function (res) {
+                    this.$set('data',res.data.data);
+                    this.bespeak = this.data.bespeak;
+                    this.order = this.bespeak.order;
+                    this.doctor = this.data.doctor;
+                    this.user = this.data.user;
+                    this.message = this.data.message;
+                    this.prescription = this.data.prescription;
+                    if(this.prescription){
+                        this.recipeHead = this.prescription.recipe_head;
+                        this.prescriptionOrder = this.prescription.order;
+                    }
+                });
+            }
+        },
+        watch:{
+            'id':function(value){
+                if(value>0){
+                    this.getDetail(value);
+                }
+            }
+        }
+    }

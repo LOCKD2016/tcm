@@ -1,0 +1,260 @@
+extends ../layout/layout
+block nav
+    .tit_nav
+        .container.clearfix
+            .pull-left 药品发货
+            .pull-right
+                a.btn.btn-sm.btn-primary(@click="exportCompany()") 查看快递公司
+                a.btn.btn-sm.btn-primary(@click="exportData()") 导出管理
+block body
+    .search_box
+        dl
+            dt 查询：
+            dd.row
+                .col-sm-2
+                    .input-group
+                        input.form-control.auto_inp(type="search" v-model="search.order_sn" placeholder="输入订单编号搜索")
+                .col-sm-2
+                    .input-group
+                        input.form-control.auto_inp(type="search" v-model="search.name" placeholder="输入患者姓名")
+                .col-sm-2
+                    .input-group
+                        input.form-control.auto_inp(type="search" v-model="search.user_name" placeholder="输入收货人姓名")
+                .col-sm-2
+                    .input-group
+                        select.form-control(v-model="search.cur_total")
+                            option(value=10) 10条每页
+                            option(value=20) 20条每页
+                            option(value=50) 50条每页
+                            option(value=100) 100条每页
+                        .input-group-btn(@click="getData()")
+                            .btn.btn-default
+                                i.icon-search
+
+                .col-sm-2
+                    span 共 {{total}} 条记录
+
+
+    .user_table_box.table-responsive
+        table.table.table-bordered
+            thead
+                tr
+                    th.col-sm-1 订单编号
+                    th.col-sm-1 患者
+                    th.col-sm-1 收货人
+                    th.col-sm-1 联系方式
+                    th.col-sm-1 收货地址
+                    th.col-sm-1 药品明细
+                    th.col-sm-1 煎药方式
+                    th.col-sm-1 快递单号
+                    //th.col-sm-1 状态
+                    //th.col-sm-1 提醒时间
+                    th.col-sm-1 备注
+                    th.col-sm-1 操作
+            tbody
+                tr(v-for ="val in data")
+                    td {{val.order_sn}}
+                    td {{val.user.realname}}
+                    td {{val.user_name}}
+                    td {{val.mobile}}
+                    td {{val.address}}
+                    td
+                        span(v-for="item in val.prescription.recipe")
+                            p {{item.name}} {{item.dosage}}g  {{item.other}}
+                    td {{val.prescription.tisane ==1 ? '代煎':'自煎'}}
+                    td {{val.express_number}}
+                    //td {{val.is_remind_txt}}
+                    //td {{val.remind_time}}
+                    td {{val.desc}}
+                    td
+                        span(@click="express(val.id)") 添加物流
+                        span(v-if='val.express_number' @click="see_express(val)") 查看物流
+                        //span(v-if="val.is_express ==1",@click="remind(val.id,val.is_remind)") 快递提醒
+                        //span(v-if="val.is_express ==0 && val.is_tisane ==1",@click="remind(val.id,val.is_remind)") 代煎提醒
+                        span(@click="remark(val.id,val.desc)") 备注
+
+
+    express_company
+    see_express(:order.sync="order")
+    paginate(:cur.sync="cur", :all.sync="all", v-on:btn-click="listen", v-if="cur" v-on:gopage="listen")
+
+block js
+    script(type="text/javascript").
+        export default {
+            created(){
+                this.page = this.$route.params.id;
+                this.getData();
+            },
+            ready(){
+                headNav(3);
+            },
+            data(){
+                return {
+                    id:'',
+                    data:{},
+                    cur:0,
+                    all:0,
+                    total:0,
+                    order:'',
+                    search: {
+                        type:'recipe',
+                        pay_status:1,
+                        express:1,
+                        cur_total:10
+                    }
+
+                };
+            },
+            events: {
+                update(){
+                    this.getData();
+                }
+            },
+            methods:{
+                remark(id, desc){
+                    var vue = this;
+                    layer.open({
+                        title: '<b>添加备注</b>',
+                        type: 1,
+                        area: ['500px', '300px'],
+                        fixed: false, //不固定
+                        scrollbar: false,//禁止出现滚动条
+                        btn: ['保存并关闭', '直接关闭'],
+                        maxmin: true,
+                        content: '<textarea id="remark" class="layer_open" >'+desc+'</textarea>',
+                        yes: function () {
+                            var content = $("#remark").val();
+                            vue.$http({
+                                url: 'order/update/' + id,
+                                method: "PUT",
+                                params: {desc: content}
+                            }).then(function (res) {
+                                if (res.data.errcode == 200) {
+                                    vue.getData(this.cur);
+                                    layer.closeAll();
+                                }
+                            });
+                        },
+                        btn2: function (index, layero) {
+                            layer.close(index);
+                        }
+                    });
+                },
+                remind(id,remind){
+                    this.$http({
+                        url: 'tisane/'+id+'/remind/' + remind,
+                        method: 'put'
+                    }).then(function (res) {
+                        if (res.data.errcode == 200) {
+                            this.getData(this.cur);
+                        } else {
+                            layer.msg(res.data.msg);
+                        }
+                    });
+                },
+                getData(page=''){
+                    if (page) {
+                        this.page = page;
+                    }
+                    this.$http({url: 'order/presendlist', method: 'GET', params: {page: this.page,search:this.search}}).then(function (res) {
+                        this.$set('data', res.data.data);
+                        var pagination = res.data.meta.pagination;
+                        this.$set('cur', pagination.current_page);
+                        this.$set('all', pagination.total_pages);
+                        this.$set('total', pagination.total);
+                    });
+                },
+                listen(data){
+                    this.getData(data);
+                    this.$router.go({name: 'send_recipe', params: {id: data}});
+                },
+                express(id){
+                    var vue = this;
+                    layer.open({
+                        title: '<b>快递信息</b>',
+                        type: 1,
+                        area: ['500px', '200px'],
+                        fixed: false, //不固定1
+                        scrollbar: false,//禁止出现滚动条
+                        btn: ['保存并关闭', '直接关闭'],
+                        maxmin: true,
+                        content: '<div style="color:red">* 填写前，可以点击页面右上角查看快递公司，必须正确填写快递公司编号</div>' +
+                            '<div >' +
+                        '<br><label style="margin-left:20px;margin-right:10px;">快递公司编号</label>' + '<input id="company" type="text">' +
+                        '</div>' + '<div >' +
+                        '<br><label style="margin-left:20px;margin-right:10px;">快递单号</label>' + '<input id="code" type="text">' +
+                        '</div>',
+                        yes: function () {
+                            var obj = {};
+                            obj.express_company = $.trim($("#company").val())?$.trim($("#company").val()):'顺丰';
+                            obj.express_number = $.trim($("#code").val());
+                            if (obj.express_company == '' || obj.express_number == '') {
+                                layer.msg('请填写完整信息');
+                                return;
+                            }
+                            vue.put_express(id, obj);
+                        },
+                        btn2: function (index, layero) {
+                            layer.close(index);
+                        }
+                    });
+                },
+                put_express(id, obj){
+                    this.$http({
+                        url: 'order/update/' + id,
+                        method: 'put',
+                        params: obj
+                    }).then(function (res) {
+                        if (res.data.errcode == 200) {
+                            this.getData(this.cur);
+                        } else {
+                            layer.msg(res.data.msg);
+                        }
+                    });
+                    layer.closeAll();
+                },
+                see_express(id){
+                    this.$set('order', id);
+                    $("#see_express").modal("show");
+                },
+                exportData(){
+                    var title = '药品发货统计';
+                    var head = [
+                        '订单编号',
+                        '患者',
+                        '收货人',
+                        '联系方式',
+                        '收货地址',
+                        '药品明细',
+                        '煎药方式',
+                        '快递单号',
+                        '备注',
+                    ];
+                    var width = {
+                        'A': 20,
+                        'B': 10,
+                        'C': 10,
+                        'D': 20,
+                        'E': 20,
+                        'F': 20,
+                        'G': 10,
+                        'H': 15,
+                        'I': 20
+                    };
+                    this.$http({
+                        url: 'exports/exports',
+                        method: 'post',
+                        params: {title: title, head: head, search:this.search, width: width,type:'send_recipe'}
+                    }).then(function (res) {
+                        if (res.data.errcode == 200) {
+                            location.href = "/api/upload/download/" + res.data.data;
+                        } else {
+                            layer.msg(res.data.msg);
+                        }
+                    });
+                },
+                exportCompany(){
+                    $("#express_company").modal("show");
+                }
+            }
+        }

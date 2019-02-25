@@ -1,0 +1,120 @@
+extends ../layout/layout
+block head
+    -var bodyclass='p_prescription'
+block banner
+    header
+        a.left(href="my_order.html")
+            i.icon-arrow-left
+        .center 我的药方
+    .btn.btn-fix
+        .left
+            span 总计：
+            b ￥234.3
+        .right 立即支付
+
+block body
+
+    .panel.prescription
+        .item
+            h3 计量
+            p 柴胡（24g） 黄岑（9g） 人参（9g） 甘草（9g，炙） 半夏（9g，洗） 生姜（9g，切） 大枣（3枚，炙）
+        .item
+            h3 煎服法
+            p 又七味，以水一斗二升，煮取六升，去滓，再煎取三升，温服一升，日三服。
+        .foot.clearfix
+            .left 药费：
+            .right ¥ {{price}}
+    .panel.list
+        .head 煎药方式
+        ul.main
+            li
+                i.icon-check
+                span 自煎
+            li.active
+                i.icon-check
+                span 代煎（ ¥ 5/剂 ）
+                .val X 7
+
+        .foot.clearfix
+            .left 煎药费用：
+            .right ¥ {{price}}
+
+    .panel.list
+        .head 煎药方式
+        ul.main
+            li
+                i.icon-check
+                span 自取
+            li.active
+                i.icon-check
+                span 快递（ ¥ 20 ）
+
+        .foot.clearfix
+            .left 送至：
+            .right
+                span 圣小桑，18300000000，北京市朝阳...
+                i.icon-arrow-right
+
+    .panel.list
+        .head 支付方式
+        ul.main
+            li
+                i.icon-check
+                span 会员卡
+                .val 余额 ￥0.00
+            li.active
+                i.icon-check
+                span 微信
+
+
+
+
+block js
+    script(type='text/javascript').
+        var vMyOrder = new Vue({
+            el: '#wrap',
+            data: {
+                id: 1,
+                type: 1,
+                c_type: 1,
+                status: 1,
+                patient: '压顶',
+                doctors: '陈余良',
+                doctors_title: '医师',
+                hospital: '北京市朝阳区高碑店华膳园国际传媒文化产业园3号楼A3',
+                hospital_addr: '北京市朝阳区高碑店华膳园国际传媒文化产业园3号楼A3',
+                price: 1231,
+                price_a: 123,
+                price_b: 131,
+                commodity: '猪皮膏药一百片',
+                img: 'http://wx3.sinaimg.cn/mw690/a8d43f7egy1ff00w56nvxj20p00dwjve.jpg'
+
+            },
+            methods:{
+                det:function(id){
+                    location.href = 'my_order_det.html?id='+id
+                },
+                bg:function(url){
+                    if(url) return 'background-image:url('+url+')'
+                },
+                cT:function(i){
+                    switch (i){
+                        case 1:
+                            return '已完成';
+                        break;
+                        case 2:
+                            return '不在线';
+                        break;
+                        case 3:
+                            return '商城';
+                        break;
+                        case 4:
+                            return '推荐';
+                        break;
+                    }
+                }
+            }
+        });
+        $('.list .main li').click(function(){
+            $(this).addClass('active').siblings().removeClass()
+        })

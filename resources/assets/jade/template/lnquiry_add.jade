@@ -1,0 +1,107 @@
+extends ../layout/layout
+block nav
+block body
+    .tit_nav
+        .container.clearfix
+            .pull-left 添加问诊单
+    .new_item
+        form.form-horizontal(role='form')
+            .form-group
+                label.col-sm-1.control-label(for='')
+                    span 类型：
+                .col-sm-1
+                    select.form-control(v-model='detail.type')
+                        option(value='0') 成人男
+                        option(value='1') 成人女
+                        option(value='2') 儿童
+            .form-group
+                label.col-sm-1.control-label(for='')
+                    span 标题：
+                .col-sm-5
+                    input.form-control(type="text" name='title' placeholder="请输入问诊单标题" v-model='detail.title')
+            .form-group
+                label.col-sm-1.control-label(for='')
+                    span 注意事项：
+                .col-sm-5
+                    input.form-control(type="text" name="attention" placeholder="请输入问诊单注意事项" v-model='detail.attention')
+            .form-group
+                label.col-sm-1.control-label(for='')
+                    span 说明：
+                .col-sm-5
+                    textarea.form-control(name="explain" placeholder="请输入问诊单说明" v-model="detail.explain")
+            .form-group
+                label.col-sm-1.control-label(for='')
+                    span 请勾选问诊单问题：
+            .form-group(v-for='q in questions')
+                .col-sm-6
+                    input(type="checkbox" value="{{q.id}}" v-model="checkedIds")
+                    span {{q.type}} {{q.question}}
+                .col-sm-1(v-if='q.id == 1 || q.id == 33',style='color:red') ＊
+            .form-group
+                .col-sm-2(style='color:red') 说明: 标记为 ＊ 的问题为必选项
+            .form-group.btn_box
+                button.btn.btn-default(type='button' @click="goback()") 取消
+                button.btn.btn-primary(type='button' @click="save()") 添加
+block js
+    script(type="text/javascript").
+        export default {
+            created(){
+                this.getQuestions();
+            },
+            data(){
+                return {
+                    questions: {},
+                    detail: {
+                        'type':0
+                    },
+                    checkedIds: []
+                }
+            },
+            methods: {
+                getQuestions(){
+                    this.$http.get('question/all').then(function (res){
+                        this.$set('questions',res.data.questions);
+                    })
+                },
+                goback(){
+                    this.$router.go('/lnquiry_list');
+                },
+                save(){
+                    if (!this.detail.title) {
+                        layer.msg('标题不能为空'); return false;
+                    }
+                    if (!this.detail.attention) {
+                        layer.msg('注意事项不能为空'); return false;
+                    }
+                    if (!this.detail.explain) {
+                        layer.msg('说明不能为空'); return false;
+                    }
+                    if (!this.checkedIds) {
+                        layer.msg('您还没有选择问题');
+                        return false;
+                    }
+                    //判断必选题选择了吗
+                    var firstpos = this.checkedIds.indexOf('1');
+                    var twopos = this.checkedIds.indexOf('33');
+                    console.log(this.checkedIds);
+                    console.log(twopos);
+                    console.log(firstpos);
+                    if(firstpos == -1 || twopos == -1){
+                        layer.msg('备注或必填资料题,您还没有选择,请选择!');
+                        return false;
+                    }
+                    var obj = {};
+                    var _this = this;
+                    obj.detail = this.detail;
+                    obj.detail.checkedIds = this.checkedIds;
+                    this.$http.post('lnquiry/store/', obj).then(function (res){
+                        if(res.data.status==1){
+                            layer.msg('添加成功');
+                            _this.$router.go('/lnquiry_list/1');
+                        }else{
+                            layer.msg(res.data.msg);
+                        }
+                    })
+                }
+            }
+        }

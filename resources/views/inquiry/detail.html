@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html class="p_my2">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0">
+    <meta name="format-detection" content="telephone=no">
+    <link rel="stylesheet" type="text/css" href="/app/app.css?v1503545913999">
+    <script type="text/javascript" src="/js/jquery-2.1.4.min.js"></script>
+    <script type="text/javascript" src="/app/vue.min.js?v1503545913999"></script>
+    <script type="text/javascript" src="/app/app.js?v1503545913999"></script>
+    <title>行知堂</title>
+</head>
+<body>
+<button onclick="zpFrame.done()" class="zpbrn btn btn-primary">保存</button>
+<div id="data" :class="{'noNew': isNew==false }" v-cloak class="inquiry_set sides_pd" style="margin-top:50px">
+    <div :class="{'buttonShow': buttonShow==true }" class="subject_box">
+        <!--单选-->
+        <div v-for="(item,index) in info" class="subject_list">
+            <div v-if="item.type=='radio'" class="select_list">
+                <div class="tit"><span>Q{{ index+1 }}</span>
+                    <textarea v-model="item.title" placeholder="单选题（点击输入题目标题)" @input="change($event)" v-if="buttonShow"></textarea>
+                    <textarea v-model="item.title" placeholder="单选题（点击输入题目标题)" @input="change($event)" v-else readonly></textarea><i v-on:click="info.splice(index,1)" class="icon-del"></i>
+                </div>
+                <div class="con">
+                    <ul>
+                        <li v-for="(option,key) in item.option"><i class="icon_sel icon-single-o"></i>
+                            <input type="text" v-model="option.val" placeholder="点击输入选项" v-if="buttonShow">
+                            <input type="text" v-model="option.val" placeholder="点击输入选项" v-else readonly><i v-show="key&gt;=2" v-on:click="item.option.splice(key,1)" class="icon-del"></i>
+                        </li>
+                    </ul>
+                    <p v-on:click="addOptionTpl(index)" class="aadBtn">+添加选项</p>
+                </div>
+            </div>
+            <!--多选-->
+            <div v-if="item.type=='checkbox'" class="select_list">
+                <div class="tit"><span>Q{{ index+1 }}</span>
+                    <textarea v-model="item.title" placeholder="多选题（点击输入题目标题）" @input="change($event)" v-if="buttonShow"></textarea>
+                    <textarea v-model="item.title" placeholder="多选题（点击输入题目标题）" @input="change($event)" v-else readonly></textarea><i v-on:click="info.splice(index,1)" class="icon-del"></i>
+                </div>
+                <div class="con">
+                    <ul>
+                        <li v-for="(option,key) in item.option"><i class="icon_sel icon-double-o"></i>
+                            <input type="text" v-model="option.val" placeholder="点击输入选项" v-if="buttonShow">
+                            <input type="text" v-model="option.val" placeholder="点击输入选项" v-else readonly><i v-show="key&gt;=2" v-on:click="item.option.splice(key,1)" class="icon-del"></i>
+                        </li>
+                    </ul>
+                    <p v-on:click="addOptionTpl(index)" class="aadBtn">+添加选项</p>
+                </div>
+            </div>
+            <!--填空题-->
+            <div v-if="item.type=='text'" class="fill_list">
+                <div class="tit"><span>Q{{ index+1 }}</span>
+                    <textarea v-model="item.title" placeholder="填空题（点击输入题目标题）" v-if="buttonShow"></textarea>
+                    <textarea v-model="item.title" placeholder="填空题（点击输入题目标题）" v-else readyonly></textarea><i v-on:click="info.splice(index,1)" class="icon-del"></i>
+                </div>
+                <div class="con">
+                    <textarea v-model="item.option" v-if="buttonShow"></textarea>
+                    <textarea v-model="item.option" v-else readonly></textarea>
+                </div>
+            </div>
+            <!--图片22-->
+            <div v-if="item.type=='photo'" class="pic_list">
+                <div class="tit"><span>Q{{ index+1 }}</span>
+                    <textarea v-model="item.title" placeholder="点击输入题目标题(示例图可上传也可不上传)" @input="change($event)" v-if="buttonShow"></textarea>
+                    <textarea v-model="item.title" placeholder="点击输入题目标题(示例图可上传也可不上传)" @input="change($event)" v-else readonly></textarea><i v-on:click="info.splice(index,1)" class="icon-del"></i>
+                </div>
+                <div class="con">
+                    <div v-for="(option,key) in item.option" :style="{backgroundImage: 'url(' + option + ')'}" v-on:click="upImg(key,index)" class="pic">
+                        <i v-show="option==''" class="icon-del2"></i>
+                        <span v-show="option==''">添加图片</span>
+                        <p v-show="option &amp;&amp; buttonShow" v-on:click="delImg(key,index)"><i class="icon-close2" style="font-size: 28px;">×</i></p>
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+    </div>
+    <input type="file" name="file" style="FILTER: alpha(opacity=0); moz-opacity: 0; opacity: 0;" accept="image/png,image/jpg"/>
+    <ul class="tab">
+        <li v-on:click="addDataTpl('radio')"><i class="icon-single"></i><span>单选</span></li>
+        <li v-on:click="addDataTpl('checkbox')"><i class="icon-double"></i><span>多选</span></li>
+        <li v-on:click="addDataTpl('text')"><i class="icon-problem-txt"></i><span>填空题</span></li>
+        <li v-on:click="addDataTpl('photo')"><i class="icon-pic"></i><span>图片</span></li>
+    </ul>
+</div>
+<script type="text/javascript" src="/app/my_inquiry_detail_f.js"></script>
+</body>
+</html>

@@ -1,0 +1,142 @@
+extends ../layout/layout
+block head
+    -var bodyclass='p_goods'
+block banner
+    header.tm
+        a.left(href="index.html")
+            i.icon-arrow-left
+        .center
+
+block body
+    #addressSet.pop
+        .box
+            .head 选择地址
+            .main
+                ul
+                    li(v-if="address.length<1")
+                        h3
+                            span 尚未添加收货地址，
+                            a(href="my_address_det.html?back=goods.html") 现在添加
+                    li(v-else v-for="(it,ind) in address" v-bind:class="address_set == ind? 'active':''" @click="setAddr(ind)")
+                        h4 {{it.name}}  {{it.phone}}
+                        p {{it.address}}
+                        i.icon-check-c
+            .foot(onclick="$('#addressSet').fadeOut()") 确定
+    .banner
+        h3 {{title}}
+    .abstract
+        pre {{abstract}}
+        h3 ￥ {{price}}
+
+
+    .btn.btn-fix(onclick="submit()")
+        .left
+            span.he ￥
+            b(v-html="priceAll()")
+        .right 预售
+
+
+    ul.list-group
+        li
+            span 类别
+            -var vn = ['成人男','成人女','儿童']
+            ul.switch(v-bind:show="type")
+                each vc,i in vn
+                    li(onclick="changeTyp(this)")=vc
+        li
+            span 优惠码
+            .val
+                input(type="tel" maxlength="20" placeholder="输入优惠码" onblur="discount(this)" v-bind:readonly="discount==1")
+
+        li(onclick="$('#addressSet').fadeIn()")
+            span 送至
+            .val(v-html="vAddr()")
+            i.icon-arrow-right
+        li
+            span 顺丰包邮
+
+    ul.list-group
+        li
+            span 订单备注
+            textarea
+
+
+
+block js
+    script(type="text/javascript").
+        var vGoods = new Vue({
+            el: '#wrap',
+            data: {
+                id: 1,
+                title:'三伏贴',
+                abstract:'“三伏贴敷”是指在夏季三伏天， 在三伏天，人们的肺脏气血通畅，药物容易深达脏腑，是治疗、调整肺脏疾患的最佳时机。',
+                price:300,
+                price_all:300,
+                discount:0,
+                type:1,
+                address_set:null,
+                address:[
+                    {
+                        name: '古力果',
+                        phone: 345,
+                        address: 34,
+                        id: 344
+                    },
+                    {
+                        name: '配置4',
+                        phone: 345,
+                        address: '肚脐圾震荡魂牵梦萦城sfda',
+                        id: 344
+                    }
+                ]
+
+            },
+            methods:{
+                bg:function(url){
+                    if(url) return 'background-image:url('+url+')'
+                },
+                vAddr:function(){
+                    //console.log(this.address_set);
+                    if(this.address_set==null){
+                        return '请选择地址'
+                    }else{
+                        var xx = this.address_set;
+                        return this.address[xx].name+' '+this.address[xx].address
+                    }
+                },
+                priceAll:function(id){
+                    if(this.discount==0){
+                        return this.price
+                    }else{
+                        return (this.price - 100).toFixed(2)*1
+                    }
+                },
+                setAddr:function(id){
+                    this.address_set = id
+                }
+            }
+        });
+
+        /** 验证优惠码 **/
+        function discount(o){
+            if($(o).val()!='1234'){//临时提示
+                $api.pop('你输入的优惠码不正确')
+            }else{
+                $api.pop('此优惠码可以使用');
+                vGoods.discount = 1;
+            }
+        }
+
+        function changeTyp(o){
+            var ds = $(o).index()+1;
+            console.log(ds);
+            vGoods.type=ds
+        }
+
+
+
+        function submit(){
+            //提交成功后跳转
+            location.href= 'my_order_det.html?id=1'
+        }
+

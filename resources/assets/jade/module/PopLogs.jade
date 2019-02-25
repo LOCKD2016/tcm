@@ -1,0 +1,47 @@
+//覆盖
+template
+    .modal.fade#logs
+        .modal-dialog
+            .modal-content
+                .modal-header
+                    button.close(type='button', data-dismiss='modal', aria-label='Close')
+                        span(aria-hidden='true') ×
+                    h4.modal-title 项目日志
+                .modal-body
+                    .find_table_box.table-responsive
+                        table.table.table-bordered
+                            thead
+                                tr
+                                    th 操作者
+                                    th 操作描述
+                                    th 操作时间
+                            tbody
+                                tr(v-for="l in logs")
+                                    td {{l.user_realname}}
+                                    td {{l.operation_detail}}
+                                    td {{l.created_at}}
+script(type='text/javascript').
+    export default {
+        props: ['fid'],
+        ready(){
+            this.getLogs(this.fid);
+        },
+        data(){
+            return {
+                logs:{},
+            };
+        },
+        methods:{
+            getLogs(id){
+                if(id>0){
+                    this.$http.get('projectOperation/' + id).then(function (res) {
+                        this.$set('logs',res.data.data);
+                    });
+                }
+            }
+        }, watch: {
+            fid(newValue, oldValue){
+                this.getLogs(newValue);
+            }
+        }
+    }

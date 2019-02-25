@@ -1,0 +1,133 @@
+//增加月报
+template
+    .modal.fade#addtest
+        .modal-dialog.modal-lg
+            .modal-content
+                .modal-header
+                    button.close(type='button', data-dismiss='modal', aria-label='Close')
+                        span(aria-hidden='true') ×
+                    h4.modal-title 添加问题
+                .modal-body
+                    form.form-horizontal(role='form')
+                        .form-group
+                            label.col-sm-2.control-label 问题类型：
+                            .col-sm-10
+                                span(v-if="ddd.type =='radio'") 单选
+                                span(v-if="ddd.type =='checkbox'") 复选
+                                span(v-if="ddd.type =='text'") 问答
+                                span(v-if="ddd.type =='photo'") 图片
+                        .form-group
+                            label.col-sm-2.control-label 问题描述：
+                            .col-sm-10
+                                input.form-control(type="text" v-model="ddd.title")
+                        .form-group(style="display:none")#photo
+                            label.col-sm-2.control-label(for='') 图片上传：
+                            .col-sm-10
+                                input#test(type="file" name="file")
+                                template(v-for="val in ddd.option")
+                                    img(v-bind:src="val",style="width:120px;")
+                                    //sss
+                                    i.icon-bin(@click="deletes(val)",style="color:red")
+                        .clone.ff
+                            .form-group(v-for="d in ddd.option")
+                                label.col-sm-2.control-label
+                                    span 选项：
+                                    i.icon-minus
+                                    i.icon-plus
+                                .col-sm-10
+                                    input.form-control(type='text',v-model="d.val",name='contentans')
+                        .form-group
+                            label.col-sm-2.control-label 是否必填：
+                            .col-sm-10
+                                select.form-control(v-model="ddd.must")
+                                    option(value="0") 不必填
+                                    option(value="1") 必填
+                        .form-group
+                            label.col-sm-2.control-label 排序值：
+                            .col-sm-1
+                                input.form-control(type="text" v-model="ddd.sort")
+                .modal-footer
+                    button.btn.btn-primary(type='button',@click="add()") 保存
+block js
+    script(type="text/javascript").
+        export default {
+            props: ['ddd'],
+            ready(){
+                this.uploadFile();
+            },
+            data(){
+                return {
+                    data: {},
+                    answer: ''
+                };
+            },
+            watch: {
+                'ddd.type': function (value) {
+                    if (value == 'text') {
+                        $('.clone').hide();
+                        $('#photo').hide();
+                    } else if (value == 'photo') {
+                        $('.clone').hide();
+                        $('#photo').show();
+                    } else {
+                        $('.clone').show();
+                        $('#photo').hide();
+                    }
+                }
+            },
+            methods: {
+                uploadFile(){
+                    var vue = this;
+                    layui.use('upload', function () {
+                        layui.upload({
+                            url: '/api/upload/add'
+                            , elem: '#test'
+                            , method: 'post'
+                            , success: function (res) {
+                                if (vue.ddd.option != null && vue.ddd.option.length == 3) {
+                                    layer.msg('最多上传三张示例图片');
+                                    return;
+                                }
+
+                                if(isEmpty(vue.ddd.option)){
+                                    vue.ddd.option = [];
+                                }
+                                if (vue.ddd.option == null || vue.add.option == '') {
+                                    vue.ddd.option = [];
+                                }
+                                console.log(vue.ddd.option);
+                                vue.ddd.option.push(res.data);
+                            }
+                        });
+                    });
+                },
+                deletes(val){
+                    this.ddd.option.splice($.inArray(val, this.ddd.option), 1);
+                },
+                add(){
+                    if ($.trim(this.ddd.title) == '') {
+                        layer.msg('请输入标题');
+                        return;
+                    }
+                    if (this.ddd.type == 'radio' || this.ddd.type == 'checkbox') {
+                        var data = $("form").serializeArray();
+                        this.ddd.option = [];
+                        for (var i = 0; i < data.length; i++) {
+                            if (data[i].name == 'contentans') {
+                                if ($.trim(data[i].value) != '') {
+                                    this.ddd.option.push(data[i].value);
+                                }
+                            }
+                        }
+                    }
+                    this.$http.put('exam', this.ddd).then(function (res) {
+                        if (res.data.status) {
+                            location.reload();
+                        }
+                    });
+
+                }
+            }
+        }
+
+

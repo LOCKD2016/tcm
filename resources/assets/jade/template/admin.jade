@@ -1,0 +1,92 @@
+extends ../layout/layout
+block nav
+    .tit_nav
+        .container.clearfix
+            .pull-left 管理员列表
+            .pull-right
+                a.btn.btn-primary.btn-sm(onclick="itemPop(#{i},'useradd')")
+                    i.icon-plus
+                    span 添加用户
+block body
+    .item_list
+        .list
+            .user_table_box.table-responsive
+                table.table.table-bordered
+                    thead
+                        tr
+                            th 序号
+                            th 账号
+                            th 真实姓名
+                            th 上次登录时间
+                            th 管理组
+                            th 操作
+                    tbody
+                        tr(v-for="user in users")
+                            td {{user.user_id}}
+                            td {{user.user_name}}
+                            td {{user.user_realname}}
+                            td {{user.user_last_login_time}}
+                            td {{user.group_name}}
+                            td
+                                span(@click="userSave(user.user_id)") 修改
+                                span(@click="userDel(user.user_id)") 删除
+        nav
+            ul.pagination
+                paginate(:cur.sync="cur",:all.sync="all",v-on:btn-click="listen",v-if="cur")
+        pop-useradd
+        pop-userinfo(:id.sync="id")
+block js
+    script(type="text/javascript").
+        export default {
+            data(){ //页面用到的数据
+                return {
+                    cur:0,
+                    all:0,
+                    users:{},
+                    id:0
+                };
+            },
+            created(){//实例创建后调用
+                headNav(5);
+                this.getUser(this.cur);
+            },
+            events: {
+                userupdate(){
+                    this.getUser(1);
+                }
+            },
+            methods:{
+                getUser(page){
+                    this.$http({url:'user/index',method:'GET',params:{page:page}}).then(function(res){
+                        this.$set('users', res.data.data);
+                        var pagination = res.data.meta.pagination;
+                        this.$set('cur', pagination.current_page);
+                        this.$set('all', pagination.total_pages);
+                    });
+                },
+                listen(data){
+                    this.getUser(data);
+                },
+                userSave(id){
+                    this.$set('id', id);
+                    $("#userinfo").modal("show");
+                },
+                userDel(id){
+                    var vue = this;
+                    layer.confirm('您确定删除？', {
+                        btn: ['确定', '取消'] //按钮
+                    }, function () {
+                        vue.$http.delete("user/" + id).then(function (res) {
+                            if (res.data.status == 1) {
+                                layer.msg(res.data.msg);
+                                vue.$dispatch("userupdate");
+                            } else {
+                                layer.msg(res.data.msg);
+                            }
+                        });
+                    }, function () {
+                    });
+                }
+
+            }
+        }

@@ -1,0 +1,104 @@
+extends ../layout/layout
+
+block nav
+    .tit_nav
+        .container.clearfix
+            .pull-left 操作日志
+block body
+    //form.form-horizontal(role='form')
+    //    .form-group
+    //        label.col-sm-1.control-label.zdfl  关键词搜索：
+    //        .col-sm-4
+    //            .input-group
+    //                input.form-control.auto_inp(type="search", v-model="name",placeholder="请输入关键词")
+    //                .input-group-btn(@click="getService(1)")
+    //                    .btn.btn-default
+    //                        i.icon-search
+    //                .pull-right.col-sm-9
+    //                    .search_num
+    //                        .more_search.btn.btn-default
+    //                            span 共 {{total}} 条记录
+    .new_item
+        .item_list
+            .list
+                .find_table_box.table-responsive
+                    table.table.table-bordered
+                        thead
+                            tr
+                                th 序号
+                                th 发送人
+                                th 操作内容
+                                th 接收人
+                                th 添加时间
+                                th 操作
+                        tbody
+                            tr(v-for="(index,d) in data")
+                                td {{index+1}}
+                                td {{d.send_people}}
+                                td {{d.operation_detail}}
+                                td {{d.receive_people}}
+                                td {{d.created_at}}
+                                td.com_new
+                                    a.btn.btn-primary(@click="del(d.id)") 删除
+                                    span.control |
+                                    a(v-if="d.read_flag==0",@click="read(d.id)").btn.btn-primary 标记为已读
+                                    a(v-else).btn.btn-primary 已读
+    paginate(:cur.sync="cur",:all.sync="all",v-on:btn-click="listen",v-if="cur",v-on:gopage="listen")
+block js
+    script(type="text/javascript").
+
+        export default {
+            created(){
+                this.getOperations(1);
+            },
+            data(){
+                return {
+                    data:{},
+                    cur: 0,
+                    all: 0,
+                    total: 0,
+                    name:'',
+                    status: 0
+                }
+            },events: {
+                operation(){
+                    this.getOperations(1);//222
+                }
+            },
+            methods: {
+                getOperations(page){
+                    this.$http({
+                        url: 'operation/list',
+                        method: 'GET',
+                        params: {page: page}
+                    }).then(function (res) {
+                        this.$set('data', res.data.data);
+                        var pagination = res.data.meta.pagination;
+                        this.$set('cur', pagination.current_page);
+                        this.$set('all', pagination.total_pages);
+                        this.$set('total', pagination.total);
+                    });
+                },
+                listen(data){
+                    this.getOperations(data);
+                },
+                del(id){
+                    this.$http.delete('operation/del/' + id).then(function (res) {
+                        if (res.data.status == 1) {
+                            layer.msg(res.data.msg);
+                            this.$dispatch('operation');
+                            this.$dispatch('count');
+                        } else {
+                            layer.msg(res.data.msg);
+                        }
+                    });
+                },
+                read(id){
+                    this.$http.get('operation/read/' + id).then(function (res) {
+                        layer.msg(res.data.msg);
+                        this.$dispatch('operation');
+                        this.$dispatch('count');
+                    });
+                }
+            }
+        }

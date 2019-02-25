@@ -1,0 +1,71 @@
+extends ../layout/layout
+block nav
+    .tit_nav
+        .container
+            .pull-left 登录日志
+block body
+
+    .user_table_box.table-responsive
+        table.table.table-bordered
+            thead
+                tr
+                    th 登录账号
+                    th 真实姓名
+                    th 权限组
+                    th 上次登录时间
+                    th 操作功能
+            tbody
+                tr(v-for="log in logs")
+                    td {{log.user_name}}
+                    td {{log.user_realname}}
+                    td {{log.group_name}}
+                    td {{log.created_at}}
+                    td
+                        span(@click="detail(log.id)") 查看登录详情
+        nav
+            ul.pagination
+                paginate(:cur.sync="cur",:all.sync="all",v-on:btn-click="listen",v-if="cur")
+        pop-logdetail(:id.sync="id")
+
+block js
+    script(type="text/javascript").
+        export default{
+            data(){
+                return {
+                    logs: [],
+                    cur: 0,
+                    all: 0,
+                    msg: '',
+                    id: 0
+                };
+            },
+            created(){
+                this.page = this.$route.params.id;
+                this.getLogs();
+
+            },
+            ready(){
+                headNav(4);
+            },
+            methods:{
+                getLogs(page=''){
+                    if (page) {
+                        this.page = page;
+                    }
+                    this.$http({url: 'logs', method: 'GET', params: {page: this.page}}).then(function (res) {
+                        this.$set('logs', res.data.data);
+                        var pagination = res.data.meta.pagination;
+                        this.$set('cur', pagination.current_page);
+                        this.$set('all', pagination.total_pages);
+                    });
+                },
+                listen(data){
+                    this.getLogs(data);
+                    this.$router.go({name: 'adm_log', params: {id: data}});
+                },
+                detail(id){
+                    this.$set('id', id);
+                    $("#logdetail").modal("show");
+                }
+            }
+        }

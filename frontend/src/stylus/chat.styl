@@ -1,0 +1,270 @@
+.p_chat
+    .foot_inp
+      background #e0e0e0
+    #wrap
+        padding-bottom $foot_h
+        //.swiper-container
+        padding-bottom 1.7rem
+    .swiper-slide
+        padding-top 0.1rem
+        //padding-bottom 0.85rem
+.chat_body
+    //min-height 10rem
+    //height 9rem
+    //padding .3rem 0
+    width 100%
+    height 100%
+    //overflow scroll
+    background #eee
+    //padding-bottom 0.85rem
+    .tips
+      margin-top 0
+      margin-bottom 0.3rem
+    .time
+        margin 0.1rem auto
+        font-size .22rem
+        background #cccccc
+        width 2rem
+        text-align center
+        border-radius .2rem
+        color #fff
+        line-height .4rem
+        height .4rem
+        //opacity .5
+    .js
+      background #80c98a
+      opacity 1
+    .msg
+        margin .2rem
+        position relative
+        z-index 3
+        padding 0 0 0 .9rem
+        &.self
+            padding 0 .9rem 0 0
+            text-align right
+            .avatar
+                left auto
+                right 0
+            .cont
+                border-color #e8e8e8
+                color #333
+                background #fff
+                &:before
+                &:after
+                    border-right-color transparent !important
+                    border-left-color #fff
+                    left auto
+                    right .6rem
+                &.link:after
+                    border-left-color #fff
+
+                p
+                    white-space pre-wrap
+
+
+
+        .avatar
+            position absolute
+            left 0
+            z-index 6666
+            width .7rem
+            height .7rem
+        .second
+            font-size 0.24rem
+            color #999
+            margin-left 0.16rem
+        .cont
+            min-width 1rem
+            min-height .65rem
+            max-width 4.2rem
+            padding .2rem .17rem
+            border-radius .06rem
+            word-wrap break-word
+            word-break break-all
+            white-space pre-wrap
+            border .016px solid $bor
+            background #fff
+            display inline-table
+            text-align justify !important
+            line-height .32rem
+            font-size 0.27rem
+            .icon-rss
+              font-size 0.3rem
+              color #999999
+
+            // &:after
+            // &:before
+            //     content ''
+            //     position absolute
+            //     border .2rem solid transparent
+            //     border-right-color #fff
+            //     left .62rem
+            //     top 50%
+            //     transform translateY(-50%)
+            // &:before
+            //     border-right-color $bor
+            //     margin-left -.02rem
+            //     z-index -1
+            &.warning
+              background #80c98a !important
+              border-color #80c98a !important
+              padding-left 0.6rem
+              color #fff
+              position relative
+              font-size 0.18rem
+              &:after
+              &:before
+                border none
+              .icon-warning
+                    position absolute
+                    font-size 0.3rem
+                    left 0.2rem
+                    top 50%
+                    transform translateY(-50%)
+                    -webkit-transform translateY(-50%)
+            &.link
+
+                background #fff
+                border-color #e8e8e8
+                padding 0
+                border 0
+                min-width 3rem
+                position relative
+                .cancel
+                  width 100%
+                  height 100%
+                  position absolute
+                  left 0
+                  top 0
+                  z-index 999
+                  .cancelbg
+                    position absolute
+                    right 0.4rem
+                    bottom 0
+                    width 1.66rem
+                    height 0.67rem
+                    background-image url('/static/img/nameBor.png')
+                    background-size 100% 100%
+                    text-align center
+                    line-height 0.67rem
+                    z-index 1000
+                    span
+                      color #c49172
+                      display inline-block
+                      transform rotate(-5deg)
+                &:after
+                &:before
+                    border-width 0.16rem
+                    left -0.26rem
+                    top .24rem
+                    border-right-color #42b689
+                h3
+                    background #42b689
+                    color #fff
+                    border-radius .06rem .06rem 0 0
+                    padding .1rem .2rem .1rem .5rem
+                    ovt()
+                    max-width 4.2rem
+                    font-size 0.2rem
+
+                p
+                    padding .1rem .2rem
+                    color #333
+                h5
+                    color #999
+                    padding 0 0 .1rem .2rem
+                h5
+                h3
+                    position relative
+                i
+                    position absolute
+                .icon-arrow-right
+                    right .1rem
+                    bottom .15rem
+                .icon-help
+                    left .1rem
+                    font-size .32rem
+.aglinC
+  padding-top 0.3rem !important
+  background #eee !important
+  span
+    vertical-align middle
+    min-width 0.8rem
+    margin-right 0.3rem
+
+    &.inputImg
+      position relative
+      width 0.6rem
+      height 0.44rem
+    input
+      width 100%
+      height 0.4rem
+      position absolute
+      left 0
+      top 0
+      z-index 400
+      opacity 0
+    .icon
+      position absolute
+      left 50%
+      transform translateX(-50%)
+      top 0
+      width 0.6rem
+      height 0.44rem
+      text-align center
+      background-image url('/static/img/img.png')
+      background-size 50% auto
+      background-position center center
+      background-repeat no-repeat
+    .video
+        position absolute
+        left 50%
+        transform translateX(-50%)
+        top 0
+        width 0.6rem
+        height 0.44rem
+        text-align center
+        background-image url('/static/img/video.png')
+        background-size 50% auto
+        background-position center center
+        background-repeat no-repeat
+
+  &.active
+    bottom 0.9rem
+    &:before
+      background #eee !important
+
+.warningFz
+  h5
+    color #fff
+    font-size 0.24rem
+    margin-top 0.1rem
+    span
+      margin-right 0.16rem
+
+  .cont
+     width 4.2rem
+
+.btn-fix
+  &.active
+    display none
+audio
+  width 2rem
+  height 0.3rem
+  opacity 0
+audio::-internal-media-controls-download-button
+  display:none !important;
+audio::-webkit-media-controls
+  overflow: hidden !important
+
+.audioBox
+  width 2rem
+  .iocn-rss
+    width 100%
+    height 100%
+.swiper-slide {
+  overflow: auto;
+}
+.setFontSize{
+  font-size 0.24rem
+}

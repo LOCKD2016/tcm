@@ -1,0 +1,68 @@
+<div class="crop_box" >
+
+
+
+    <!--裁剪结果显示-->
+    <div class="" ui="previewer" style="display: none;">
+        <div class="" style="text-align: center;"><img ui="preview_img" /></div>
+    </div>
+    <!--裁剪结果显示 end-->
+
+    <!--加载中-->
+    <div ui="loading-tips" class="imgcut-loading-tips" style="display: none; ">
+
+    </div>
+    <!--加载中 end-->
+
+    <!--裁剪区域。-->
+    <div ui="cut-area" style="margin: 0 auto;" >
+        <div style="height: 0px; overflow: visible; position: relative;">
+            <div class="cropControls cropControlsCrop" ui="bar_tool">
+                <i class="cropControlZoomMuchIn" ui="btn_zoom_much_in"></i>
+                <i class="cropControlZoomIn" ui="btn_zoom_in"></i>
+                <i class="cropControlZoomOut" ui="btn_zoom_out"></i>
+                <i class="cropControlZoomMuchOut" ui="btn_zoom_much_out"></i>
+                <i class="cropControlRotateLeft" ui='btn_turn_left'></i>
+                <i class="cropControlRotateRight" ui="btn_turn_right"></i>
+                <i class="cropControlCrop" ui="btn_cut">保存</i>
+                <i class="cropControlReset" ui="btn_reset"></i>
+            </div>
+
+        </div>
+        <div ui="image-editor-panel">
+            <canvas ui="background-layout" style="position: absolute;"></canvas>
+            <canvas ui="cutter-layout" style="position: absolute; "></canvas>
+            <canvas ui="operation-layout" style="position: absolute; cursor: pointer; "></canvas>
+        </div>
+    </div>
+
+
+    <div ui="debug" style="color:green;"></div>
+
+    <div style="display: none;">
+        <!--工具栏-->
+        <div class="crop_bar" ui="bar_tool" style="display: none;">
+                <span class="s4">
+                    <a class="a_select" ui="btn_reset"><i></i>退出</a>
+                    </span>
+            <span class="s1"><a class="a_trans" ui="btn_turn_right"><i></i>旋转</a></span>
+                <span class="s2">
+                    <a class="a_turn_big" ui="btn_zoom_in"><i></i>放大</a>
+                    <a class="a_turn_small" ui="btn_zoom_out"><i></i>缩小</a>
+                    <b></b>
+                </span>
+            <span class="s3"><a class="a_cut" ui="btn_cut"><i></i>裁剪</a></span>
+
+        </div>
+        <!--工具栏 end-->
+        <!--确认栏-->
+        <div class="crop_bar" ui="bar_confirm" style="display: none;">
+
+
+            <span class="s4"><a class="a_cancel" ui="btn_cancel"><i></i>取消</a></span>
+            <span class="s4"><a class="a_save" ui="btn_save"><i></i>完成</a></span>
+        </div>
+        <!--确认栏 end-->
+
+    </div>
+</div>

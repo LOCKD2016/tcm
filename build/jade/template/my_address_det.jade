@@ -1,0 +1,98 @@
+extends ../layout/layout
+block head
+    -var bodyclass='p_my_address'
+block banner
+    header
+        .left(onclick="back()")
+            i.icon-arrow-left
+        .center 收货地址
+        .right(onclick="save()") 保存
+block body
+    ul.list-group
+        li
+            span 收货人
+            .val
+                input(type="text" maxlength="6" v-model="name" placeholder="请输入收货人")
+            i.icon-arrow-right
+        li
+            span 联系电话
+            .val
+                input(type="tel" maxlength="11" v-model="phone" placeholder="请输入手机号")
+            i.icon-arrow-right
+        li(onclick="setAddr('#city')")
+            span 所在地
+            .val#city {{add_province}} {{add_city}} {{add_area}}
+            i.icon-arrow-right
+        li
+            span 街道
+            .val
+                input(type="text" maxlength="30" v-model="address" placeholder="详细地址")
+            i.icon-arrow-right
+
+block js
+    script(type='text/javascript' src="../js/areaData_v2.js")
+    script(type='text/javascript' src="../js/iscroll.js")
+    script(type='text/javascript' src="../js/iosSelect.js")
+    script(type='text/javascript').
+        var pId = $api.GetParam('id');
+        var vMyAddrDet = new Vue({
+            el: '#wrap',
+            data: {
+                id: 344,
+                name: '古力果',
+                phone: 1330454545,
+                address: 34,
+                add_province: null,
+                add_city: null,
+                add_area: null,
+                type: 1
+            },
+            methods:{
+                defType:function(i,id){
+                    var _self = this;
+                    for(var xs in _self.lists){
+                        if(xs==i){
+                            _self.lists[xs].type = 1
+                        }else{
+                            _self.lists[xs].type = 0
+                        }
+                    }
+                    //AJAX id
+                }
+            }
+        });
+        function save(){
+
+        }
+
+        function setAddr(obj, call) {
+            $('input').blur();
+            var levelId1 = $(obj).attr('data-province-code');
+            var levelId2 = $(obj).attr('data-city-code');
+            var levelId3 = $(obj).attr('data-district-code');
+            var iosSelect = new IosSelect(3, [iosProvinces, iosCitys, iosCountys],
+                    {
+                        title: '地址选择',
+                        itemHeight: 40,
+                        relation: [1, 1, 0, 0],
+                        oneLevelId: levelId1,
+                        twoLevelId: levelId2,
+                        threeLevelId: levelId3,
+                        callback: function (selectOneObj, selectTwoObj, selectThreeObj) {
+                            $(obj).attr('data-province-code', selectOneObj.id)
+                                    .attr('data-city-code', selectTwoObj.id)
+                                    .attr('data-district-code', selectThreeObj.id);
+                            //vCont.info.add_city = selectOneObj.value + ' ' + selectTwoObj.value + ' ' + selectThreeObj.value;
+                            vMyAddrDet.add_province = selectOneObj.value;
+                            vCs = selectTwoObj.value;
+                            vMyAddrDet.add_city = vCs;
+                            if(vCs=="北京市" || vCs=="天津市" || vCs=="上海市" || vCs=="重庆市"){
+                                vMyAddrDet.add_city = ''
+                            }
+                            vMyAddrDet.add_area = selectThreeObj.value;
+                            if (call) {
+                                call([selectOneObj.id, selectTwoObj.id, selectThreeObj.id]);
+                            }
+                        }
+                    });
+        }

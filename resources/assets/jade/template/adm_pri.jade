@@ -1,0 +1,118 @@
+extends ../layout/layout
+block nav
+    .tit_nav
+        .container.clearfix
+            .pull-left 权限管理
+            .pull-right
+                a.btn.btn-primary.btn-sm(v-link!="{ path: 'auth' }")
+                    i.icon-plus
+                    span 预览权限
+                //a.btn.btn-primary.btn-sm(onclick="itemPop(#{i},'auth')")
+                    i.icon-plus
+                    span 新增权限
+                a.btn.btn-primary.btn-sm(onclick="itemPop(#{i},'usergroup')")
+                    i.icon-plus
+                    span 新增用户组
+
+block body
+    //.bg_cor
+    .user_table_box.table-responsive
+        table.table.table-bordered
+            thead
+                tr
+                    th #
+                    th 用户组
+                    th 描述
+                    th 操作
+            tbody
+                    tr(v-for="auth in auths")
+                        td {{auth.id}}
+                        td {{auth.display_name}}
+                        td {{auth.description}}
+                        td
+                            //i.icon-exit
+                            span(v-on:click="edit(auth.id)") 修改
+                            span(v-on:click="del(auth.id)") 删除
+    nav
+        ul.pagination
+            paginate(:cur.sync="cur",:all.sync="all",v-on:btn-click="listen",v-if="cur")
+    pop-auth
+    pop-usergroup
+    pop-usergroupedit(:id.sync="id")
+
+block js
+    script(type="text/javascript").
+        window.datas = [];
+        import PopUsergroupedit from "./module/PopUsergroupedit.vue"
+        export default {
+            components: {
+                PopUsergroupedit
+            },
+            created(){
+                this.getAuth(1);
+                this.getAuthJson();
+            },
+            ready(){
+                headNav(4);
+            },
+            data(){
+                return{
+                    auths:[],
+                    cur:0,
+                    all:0,
+                    id:0,
+                    getAuths:[],
+                }
+            },
+            events: {
+                refreshList(){
+                    this.getAuth(this.cur);
+                }
+            },
+            methods: {
+                getAuthJson(){
+                    var self = this;
+                    this.$http.get('getJson').then(function (res) {
+                        var data = res.data.permissions;
+                        $('#priTree').jstree({
+                            'plugins': ["wholerow", "checkbox"], 'core': {
+                                'data': data
+                            }
+                        }).on("changed.jstree", function (e, data) {
+                            window.datas = data.selected;
+                        });
+                    });
+                },
+                getAuth(page){
+                    this.$http({url: 'role' ,method:'get',params:{page:page}}).then(function(res){
+                            this.$set('auths', res.data.data);
+                            var pagination = res.data.meta.pagination;
+                            this.$set('cur', pagination.current_page);
+                            this.$set('all', pagination.total_pages);
+                    })
+                },
+                listen(data){
+                    this.getAuth(data);
+                },
+                del(id){
+                    var vue = this;
+                    layer.confirm('您确定删除？', {
+                        btn: ['确定', '取消'] //按钮
+                    }, function () {
+                        vue.$http.delete('role/' + id).then(function (res) {
+                            if (res.data.status == 1) {
+                                layer.msg(res.data.msg);
+                                vue.$dispatch("refreshList");
+                            } else {
+                                layer.msg(res.data.msg);
+                            }
+                        })
+                    }, function () {
+                    });
+                },
+                edit(id){
+                    this.$set('id',id);
+                    $("#usergroupedit").modal("show");
+                }
+            }
+        }

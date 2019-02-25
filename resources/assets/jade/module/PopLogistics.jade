@@ -1,0 +1,91 @@
+//物流状态
+template
+    .modal.fade#logistics
+        .modal-dialog
+            .modal-content
+                .modal-header
+                    button.close(type='button', data-dismiss='modal', aria-label='Close')
+                        span(aria-hidden='true') ×
+                    h4.modal-title 物流状态
+                .modal-body
+                    form.form-horizontal(role='form')
+                        .form-group
+                            label.col-sm-2.control-label
+                                span 物流公司：
+                            .col-sm-10
+                                select.form-control(v-model="send.logistics")
+                                    option 请输入物流公司
+                                    option(value="sf") 顺丰快递
+                                    option(value="sto") 申通快递
+                                    option(value="yt") 圆通快递
+                                    option(value="yd") 韵达快递
+                                    option(value="tt") 天天快递
+                                    option(value="ems") EMS
+                                    option(value="zto") 中通快递
+                                    option(value="ht") 汇通快递
+                                    option(value="qf") 全峰快递
+                                    option(value="db") 德邦快递
+                                    option(value="gt") 国通快递
+                                    option(value="rfd") 如风达快递
+                                    option(value="jd") 京东快递
+                                    option(value="zjs") 宅急送
+                                    option(value="emsg") EMS国际
+                                    option(value="fedex") Fedex国际
+                                    option(value="yzgn") 邮政国内
+                                    option(value="ups") UPS国际快递
+                                    option(value="ztky") 中铁快运
+
+                        .form-group
+                            label.col-sm-2.control-label
+                                span 物流单号：
+                            .col-sm-10
+                                input.form-control(type="text" placeholder="请输入物流单号" v-model="send.deal_number")
+                .modal-footer
+                    button.btn.btn-default(type='button', data-dismiss='modal') 取消
+                    button.btn.btn-primary(type='button',@click="addSend(send)") 添加
+
+block js
+    script(type="text/javascript").
+        export default {
+            props: ['id'],
+            created(){
+            },
+            data(){
+                return {
+                    send: {}
+                };
+            },
+            methods: {
+                getSendDetail(id){
+                    if (id > 0) {
+                        this.$http.get('getSendDetail/' + id).then(function (res) {
+                            this.$set('send', res.data.data);
+                        });
+                    }
+                },
+                addSend(send){
+                    this.$http.post('addSend', send).then(function (res) {
+                        if (res.data.status == 1) {
+                            layer.msg(res.data.msg);
+                            this.$set('send', '');
+                            $("#logistics").modal("hide");
+                            this.$dispatch("update");
+                        }else{
+                            layer.msg(res.data.msg);
+                        }
+                    }, function (res) {
+                        var data = res.data;
+                        errorMsg(data.errors);
+                    });
+                },
+                goback(){
+                    this.$router.go("/else_deliver");
+                },
+            },
+            watch: {
+                id(newValue){
+                    this.getSendDetail(newValue);
+                }
+            }
+
+        }

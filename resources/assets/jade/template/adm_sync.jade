@@ -1,0 +1,57 @@
+extends ../layout/layout
+block nav
+    .tit_nav
+        .container.clearfix
+            .pull-left 数据同步
+block body
+    .box_css
+
+        .syt
+            form.form-horizontal(role='form')
+                .form-group
+                    .col-sm-10
+                        //label.la(@click="enter('test')")
+                            i.icon-folder-download
+                            | 测试队列
+                        label.la(@click="enter('doctor')")
+                            i.icon-folder-download
+                            | 同步医生数据
+                        label.la(@click="enter('scheduling')")
+                            i.icon-folder-download
+                            | 同步医生排班
+                        label.la(@click="enter('clinique')")
+                            i.icon-folder-download
+                            | 同步诊所信息
+block js
+    script(type="text/javascript").
+        export default {
+            ready(){
+                headNav(5);
+            },
+            data(){
+                return{
+
+                }
+            },
+
+            methods: {
+
+                enter(route){
+                    var _this = this;
+                    var confirm = layer.confirm('您确定您的操作吗？', {
+                        btn: ['确定', '取消'],
+                        skin: 'layui-layer-molv'
+                    }, function () {
+                        _this.doctor_sync(route);
+                        layer.close(confirm);
+                    }, function () {
+
+                    });
+                },
+                doctor_sync:function (route) {
+                    this.$http.get('sync/'+route).then(function(res){
+
+                    })
+                }
+            }
+        }

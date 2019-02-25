@@ -1,0 +1,137 @@
+extends ../layout/layout
+block nav
+    .tit_nav
+        .container.clearfix
+            .pull-left 问题详情
+
+block body
+    .new_item
+        form.form-horizontal(role='form')
+            .form-group
+                label.col-sm-1.control-label(for='') 问题类型:
+                .col-sm-1
+                    span {{type}}
+            .form-group
+                label.col-sm-1.control-label(for='') 是否必填:
+                .col-sm-1
+                    select.form-control(v-model='necessary')
+                        option(value='0') 否
+                        option(value='1') 是
+            .form-group
+                label.col-sm-1.control-label(for='') 问题名称:
+                .col-sm-3
+                    input(type='text' name='question' v-model='question')
+            .form-group
+                label.col-sm-1.control-label(for='')
+                .col-sm-1
+                    button.btn.btn-primary(type='button' @click="update()") 修改
+            .form-group
+                span(style='color:red') * 修改问题后请点击修改对问题进行保存
+            .form-group(v-if='type_id<2')
+                label.col-sm-1.control-label(for='') 答案
+            .form-group(v-for='(index,a) in list')
+                label.col-sm-1.control-label(v-if='type_id<2') {{index+1}}、
+                .col-sm-3(v-if='type_id<2')
+                    span {{a.lid}}  ===>
+                    span(onclick="textEdit(this,'{{a.id}}','answer')") {{a.answer}}
+                .col-sm-1(v-if='type_id<2')
+                    .close(@click="order(a.id)") ↑
+                .col-sm-1(v-if='type_id<2')
+                    .close(@click="del(a.id)") ×
+
+block js
+    script(type="text/javascript").
+        export default {
+            created(){
+                this.id = this.$route.params.id;
+                this.getInfo(this.id);
+            },
+            ready(){
+                headNav(2);
+            },
+            data(){
+                return {
+                    question: '',
+                    type_id: 0,
+                    list: {},
+                    id: 0,
+                    type: '',
+                    necessary: 0
+                }
+            },
+            events: {
+                lnquestion(){
+                    this.getInfo(this.id);
+                }
+            },
+            methods: {
+                getInfo(id){
+                    this.$http.get('question/'+id).then(function (res){
+                        this.$set('question',res.data.question.question);
+                        this.$set('type_id',res.data.question.type);
+                        this.$set('necessary',res.data.question.necessary);
+                        var type = res.data.question.type;
+                        this.returnType(type);
+                        this.$set('list',res.data.question.answer);
+                    })
+                },
+                returnType(type){
+                    if(type==0){
+                        this.type = '单选';
+                    }else if(type==1){
+                        this.type = '多选';
+                    }else if(type==2){
+                        this.type = '填空';
+                    }
+                },
+                goback(){
+                    this.$route.go('/lnquiry_list');
+                },
+                update(){
+                    if(!this.id){
+                        layer.msg('系统错误，请按F5刷新重试')
+                    }
+                    var obj = {};
+                    obj.question = this.question;
+                    obj.necessary = this.necessary;
+                    var id = this.id;
+                    this.$http.put('question/'+id,obj).then(function (res){
+                        if (res.data.status) {
+                            layer.msg(res.data.msg);
+                        }
+                        vue.$dispatch('lnquestion');
+                    })
+                },
+                order(id){
+                    var obj = {};
+                    obj.qid = this.id;
+                    obj.order = 1;
+                    var vue = this;
+                    vue.$http.put('answer/' + id, obj).then(function (res) {
+                        if (res.data.status) {
+                            layer.msg(res.data.msg);
+                        }
+                        vue.$dispatch('lnquestion');
+                    })
+                },
+                qita(){
+                    layer.msg('其他是不能修改的');//123123
+                    return false;
+                },
+                del(id){
+                    var vue = this;
+                    layer.confirm('您确定删除？', {
+                        btn: ['确定', '取消']
+                    }, function () {
+                        vue.$http.delete('answer/' + id).then(function (res) {
+                            if (res.data.status) {
+                                layer.msg(res.data.msg);
+                                vue.$dispatch('lnquestion');
+                            }
+                        })
+                    }, function () {
+
+                    });
+                }
+            }
+        }

@@ -1,0 +1,101 @@
+extends ../layout/layout
+block nav
+    .tit_nav
+        .container.clearfix
+            .pull-left 聊天管理
+block body
+    .item_list
+        .list
+            .search_box
+                dl
+                    dt 筛选
+                    dd.row
+                        .col-sm-3
+                            .input-group
+                                input.form-control.auto_inp(type="search" v-model="name" placeholder="输入医生姓名搜索")
+                                .input-group-btn(v-on:click="getData(1)")
+                                    .btn.btn-default
+                                        i.icon-search
+                        .col-sm-2
+                            span 共 {{total}} 条记录
+
+
+            .user_table_box.table-responsive
+                table.table.table-bordered
+                    thead
+                        tr
+                            th 序号
+                            th 医生姓名
+                            th 患者昵称
+                            th 患者姓名
+                            th 操作
+                    tbody
+                        tr(v-for="(index, val) in data")
+                            td {{index+1}}
+                            td {{val.doctor.name}}
+                            td {{val.user.nickname}}
+                            td {{val.user.realname}}
+                            td
+                                span(v-link="{ path: 'message_detail/', query: { id: val.id, doctor_name: val.doctor.name, user_name: val.user.realname} }") 查看
+
+                nav
+                    ul.pagination
+                        paginate(:cur.sync="cur",:all.sync="all",v-on:btn-click="listen",v-if="cur",v-on:gopage="listen")
+
+block js
+    script(type="text/javascript").
+        export default {
+            components:{
+
+            },
+            data(){ //页面用到的数据
+                return {
+                    cur:0,
+                    all:0,
+                    total:0,
+                    page:1,
+                    data:{},
+                    val:{
+                        content:{}
+                    },
+                    name: '',
+                };
+            },
+            created(){//实例创建后调用
+                this.page = this.$route.params.id;
+                this.getData(1);
+            },
+            events: {
+                userupdate(){
+                    this.getData();
+                }
+            },
+            methods:{
+                getData(page){
+                    console.log('****');
+                    this.$http({url:'message/getMessage', method:'GET', params: {page: page, name: this.name}}).then(function(res){
+                        console.log('888888');
+                        console.log(res);
+                        this.$set('data', res.body.data.data);
+                        var data = res.data.data;
+                        this.$set('cur', data.current_page);
+                        this.$set('all', data.last_page);
+                        this.$set('total', data.total);
+                    });
+                },
+                detail(val){
+                    //this.$set('val', val);
+                    //$("#clinique").modal("show");
+                    var id = val.id;
+                    this.$router.push({
+                        path: '/message',
+                        query: {
+                            id: id,
+                        }
+                    });
+                },
+                listen(data){
+                    this.getData(data);
+                }
+            }
+        }

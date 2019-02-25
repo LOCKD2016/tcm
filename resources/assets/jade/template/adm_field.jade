@@ -1,0 +1,65 @@
+extends ../layout/layout
+block nav
+    .tit_nav
+        .container
+            .pull-left 接口失败日志
+block body
+
+    .user_table_box.table-responsive
+        table.table.table-bordered
+            thead
+                tr
+                    th 接口的描述
+                    th 接口编码
+                    th(style="width:50%") 返回数据
+                    th 备注
+                    th 请求时间
+            tbody
+                tr(v-for="log in data")
+                    td {{log.title}}
+                    td {{log.code}}
+                    td {{log.return}}
+                    td {{log.remarks}}
+                    td {{log.created_at}}
+        nav
+            ul.pagination
+                paginate(:cur.sync="cur",:all.sync="all",v-on:btn-click="listen",v-if="cur")
+        pop-logdetail(:id.sync="id")
+
+block js
+    script(type="text/javascript").
+        export default{
+            data(){
+                return {
+                    data: [],
+                    cur: 0,
+                    all: 0,
+                    total: 0,
+                    id: 0
+                };
+            },
+            created(){
+                this.page = this.$route.params.id;
+                this.getData();
+            },
+            ready(){
+                headNav(5);
+            },
+            methods:{
+                getData(page=''){
+                    if (page) {
+                        this.page = page;
+                    }
+                    this.$http({url: 'job_field', method: 'GET', params: {page: this.page}}).then(function (res) {
+                        this.$set('data', res.data.data);
+                        this.$set('cur', res.data.current_page);
+                        this.$set('all', res.data.last_page);
+                        this.$set('total', res.data.total);
+                    });
+                },
+                listen(data){
+                    this.getLogs(data);
+                    this.$router.go({name: 'adm_log', params: {id: data}});
+                }
+            }
+        }

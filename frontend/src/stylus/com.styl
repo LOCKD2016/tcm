@@ -1,0 +1,810 @@
+@font-face {
+    font-family: 'icomoon';
+    src:  url('/static/fonts/icomoon_web.ttf?v23432');
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face
+    font-family 'FangSong'
+    src url("/static/fonts/FangSong.ttf")
+
+[class^="icon-"], [class*=" icon-"] {
+    /* use !important to prevent issues with browser extensions that change fonts */
+    font-family: 'icomoon' !important;
+    speak: none;
+    font-style: normal;
+    font-weight: normal;
+    font-variant: normal;
+    text-transform: none;
+    line-height: 1;
+
+    /* Better Font Rendering =========== */
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+.fixbody
+#app
+.outter
+    //transition: 0.5s;
+    position: fixed;
+    top: 0;
+    height: 100%;
+    width: 100%;
+
+.outter.hideLeft {
+    //opacity: 0.75;
+    //transform: translate3d(-100%, 0, 0);
+    //transition: 1.0s;
+    overflow: hidden;
+}
+.sub-page {
+    position: absolute;
+    top: 0px;
+    bottom: 0px;
+    background: #eee;
+    height: 100%;
+    width: 100%;
+    /* overflow: hidden; */
+    right: 0;
+    left: 0;
+    z-index: 5;
+}
+textarea
+    -webkit-appearance none !important
+    appearance none !important
+    border 1px solid $bor
+    padding 0 .1rem
+    outline none
+    border-radius 3px
+    box-shadow none
+    font-size .2rem
+input
+    &[type="text"]
+    &[type="password"]
+    &[type="date"]
+    &[type="tel"]
+    &[type="mail"]
+    &[type="file"]
+        -webkit-appearance none !important
+        appearance none !important
+        border 1px solid $bor
+        padding 0 .1rem
+        outline none
+        border-radius 3px
+        box-shadow none
+        font-size .2rem
+ul()
+    list-style none
+    padding 0
+    margin 0
+
+img()
+    background-repeat no-repeat
+    background-position center
+    background-size cover
+
+ovt()
+    overflow hidden
+    white-space nowrap
+    text-overflow ellipsis
+
+ft()
+    font-family "FangSong"
+    //font-family "STKaiti"
+
+bgs()
+    background: -linear-gradient(45deg,$jba,$jbb)
+    background: -webkit-linear-gradient(45deg,$jba,$jbb)
+bgt()
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+
+trans($x,$y)
+    -webkit-transform translate($x,$y)
+    transform translate($x,$y)
+
+tr_ro($x)
+    -webkit-transform rotate($x)
+    transform rotate($x)
+
+clear()
+    &:after
+        content ''
+        display table
+        clear both
+        visibility hidden
+        line-height 0
+        height 0
+
+
+.clearfix
+    clear()
+    .pull-left
+    .left
+        float left
+    .pull-right
+    .right
+        float right
+.none
+    display none
+//极细线
+.android
+    .bor
+        border-width 1px !important
+    footer:before
+        top 1px !important
+        z-index 3
+        -webkit-transform: scaleY(0.5)
+        transform: scaleY(0.5)
+
+
+
+bor($pos,$top,$bot,$cor)
+    position $pos
+    if $top == auto
+        &:after
+            content: '';
+            position: absolute;
+            left: 0;
+            background: $cor
+            bottom -1px
+            width: 100%
+            height: 1px
+            -webkit-transform: scaleY(-0.5)
+            transform: scaleY(-0.5)
+            -webkit-transform-origin: 0 0
+            transform-origin: 0 0
+    else
+        &:before
+            content: '';
+            position: absolute;
+            left: 0;
+            background: $cor
+            top $top
+            width: 100%
+            height: 1px
+            -webkit-transform: scaleY(-0.5)
+            transform: scaleY(-0.5)
+            -webkit-transform-origin: 0 0
+            transform-origin: 0 0
+
+html
+    font-family 'PingFang SC','Microsoft Yahei',"STFangsong"
+    font-size 50px
+    height 100%
+    width 100%
+    body
+        height 100%
+        margin 0
+        font-size .2rem
+        background #f2f2f1
+        // padding-bottom constant(safe-area-inset-bottom)
+        // padding-bottom env(safe-area-inset-bottom)
+
+//媒体查询 适配iPhone X
+
+@media only screen and (width: 375px) and (min-height: 690px)
+    footer
+        padding-bottom 34px
+        box-sizing content-box
+        &.foot_inp
+            box-sizing border-box
+            margin-bottom 34px
+    .btn-fix
+        margin-bottom 34px
+    .btn-block
+        margin-bottom 34px
+    .swiper-container
+        padding-bottom 34px
+
+*
+    -webkit-box-sizing border-box
+    box-sizing border-box
+    font-weight normal
+    vertical-align middle
+    &[href]
+    &[onclick]
+        cursor pointer
+a
+    text-decoration none
+
+h1
+h2
+h3
+h4
+h5
+h6
+p
+    margin 0
+    font-weight normal
+
+img
+    max-width 100%
+
+header
+    bor(fixed,auto,0.01rem,$bor)
+    //background #fff
+    background #42b689
+    color #fff
+    top 0
+    width 100%
+    z-index 5
+    height $head_h
+    line-height $head_h
+    text-align center
+    .left,.right
+        position absolute
+        padding 0 .2rem
+        bottom 0
+        z-index 400
+    a
+        color #fff
+
+    .left
+        left 0
+        font-size .3rem
+    .right
+        font-size .2rem
+        right 0
+        span
+          font-size .27rem
+        .addr
+          display inline-block
+          width 0.17rem
+          height 0.23rem
+          background-size 100% 100%
+          background-image url('/static/img/addr.png')
+          margin-right 0.08rem
+          margin-top 0.03rem
+        span
+            display inline-block
+            margin-right .1rem
+            font-size 0.25rem
+
+        .btn
+            line-height .5rem
+        .sm
+            font-size .22rem
+            color $hui
+
+        &[onclick]
+            color #fff
+    .center
+        text-align center
+        width 60%
+        height 100%
+        margin 0 auto
+        font-size .34rem
+        ovt()
+        sub
+            margin-left .1rem
+            opacity .6
+    .icon-search
+        font-size .3rem
+        color $he
+    &.tm
+        background transparent
+        .center
+        &:after
+            opacity 0
+        .left
+            color #fff
+.nav
+    display inline-table
+    width 100%
+    ul()
+    li
+        display table-cell
+        text-align center
+        width 20%
+    &.nav-tabs
+        li
+            &:not(:last-child)
+                border-right 1px solid $tmh
+            &.active
+                color $lan
+                border-bottom 2px solid $lan
+    &.nav-foot
+        bottom 0
+        height $foot_h
+        li
+            i.index
+              width 0.33rem
+              height 0.33rem
+              background-image url('/static/img/index.png')
+            i.health
+              width 0.35rem
+              height 0.38rem
+              background-image url('/static/img/health.png')
+            i.mine
+              width 0.32rem
+              height 0.39rem
+              background-image url('/static/img/mine.png')
+            i.my
+              width 0.32rem
+              height 0.39rem
+              background-image url('/static/img/my.png')
+            &.active
+              i.index
+                background-image url('/static/img/index_a.png')
+              i.health
+                background-image url('/static/img/health_a.png')
+              i.mine
+                background-image url('/static/img/mine_a.png')
+              i.my
+                background-image url('/static/img/my_a.png')
+        a
+            color #666666
+        li.active a
+            color #42b689
+        li.new_msg:last-child
+            position relative
+            p:before
+                content ''
+                position absolute
+                border 3px solid $hon
+                margin-left  .45rem
+                top .2rem
+                border-radius 50%
+
+        i
+            font-size .3rem
+            margin .05rem auto
+            display block
+            background-size 100% 100%
+
+        p
+            margin 0
+            font-size .25rem
+
+footer
+    bor(fixed,0.01rem,auto,#dadada)
+    z-index 5
+    width 100%
+    bottom 0
+    height $foot_h
+    background #fff
+    // padding-bottom constant(safe-area-inset-bottom)
+    // padding-bottom env(safe-area-inset-bottom)
+    &.foot_inp
+        background #eee
+        padding .1rem
+        height .8
+        .btn
+            line-height .6rem
+            position absolute
+            right .1rem
+            top .12rem
+            width 1.1rem
+            height 0.6rem
+        textarea
+            resize none
+            width 5rem
+            height .6rem
+            border 1px solid $bor
+            box-shadow none
+            outline none
+            padding .1rem
+            margin .02rem 0 0 0
+            font-size 0.3rem
+
+#wrap
+    position fixed
+    top 0
+    width 100%
+    height 100%
+    padding-top $head_h
+    overflow-y auto
+    //-webkit-overflow-scrolling touch !important
+.btn
+    display inline-block
+    text-align center
+    min-width 1rem
+    height .45rem
+    line-height .45rem
+    color #fff
+    font-size .25rem
+    cursor pointer
+    background $he
+    border-radius 3px
+    padding 0 .1rem
+    max-width 100%
+    &:not(:first-child)
+        margin-left .2rem
+
+    &.btn-jv
+        background #42b689
+    &.btn-lv
+        background $lv
+    &.btn-o
+        background #fff
+        color $hui
+        border 1px solid $bor
+        &.btn-jv
+            border-color  #42b689
+            color  #42b689
+
+    &.btn-m
+        border-radius .05rem
+        background #fff
+        border 1px solid $sl
+        color $sl
+        width 1.5rem
+        &:hover
+            background $sl
+            color #fff
+    &.btn-s
+        width 1.1rem
+    &.disabled
+        opacity .5
+        cursor default
+    &.btn-fix
+        margin-left 0
+        position fixed
+        z-index 9
+        width 100%
+        bottom 0
+        background #42b689
+        border-radius 0
+        height .85rem
+        line-height .85rem
+        padding 0
+        text-align center
+        display table
+        font-size .3rem
+        .left,.right
+            display table-cell
+        .left
+            width 4.2rem
+            background #fff
+            color #333
+            bor(relative,0,auto,$bor)
+            span
+              font-size 0.2rem
+              color #666
+            b
+                color #c49173
+                font-size .35rem
+        .right
+            width 2.2rem
+            color #fff
+            background #949392
+        .buy
+            background #42b689
+    &.btn-block
+        display block
+        margin 0.5rem auto .3rem auto
+        width 5.8rem
+        font-size .3rem
+        line-height .7rem
+        height .7rem
+        border-radius 4px
+        background #42b689
+    &.btn-lg
+        width 2.1rem
+        height .5rem
+        font-size .24rem
+        line-height .5rem
+        position relative
+        &:before
+            content ''
+            position absolute
+            top .02rem
+            right .02rem
+            bottom .02rem
+            left .02rem
+            border 1px solid #fff
+            opacity .6
+    i
+        margin-right .1rem
+$avw = .8rem
+.avatar
+    width $avw
+    height $avw
+    font-size 0
+    border-radius 50%
+    margin auto
+    img()
+    //background-image url("/static/img/avatar.png")
+
+.tabs_box
+    background #fff
+    padding .4rem
+    .tabs_con
+        display none
+
+.loader_bg
+    position fixed
+    z-index 999
+    width 100%
+    height 100%
+    background rgba(0,0,0,.3)
+    top -100%
+    opacity 0
+    transition opacity .2s .1s
+.loader
+    font-size: 0;
+    position: absolute;
+    z-index 10
+    text-indent: -9rem;
+    border 0.15rem solid rgba(250, 250, 250, 0.3)
+    border-left-color: #fff
+    -webkit-transform: translateZ(0);
+    transform: translateZ(0);
+    -webkit-animation: load8 0.5s infinite linear;
+    animation: load8 0.5s infinite linear;
+    box-shadow 0 0 .02rem rgba(0,0,0,.3)
+    top: 40%;
+    left: 50%;
+    margin-left: -.8rem;
+
+.loader,
+.loader:after
+    border-radius: 50%;
+    width: 1.6rem;
+    height: 1.6rem;
+.loading .loader_bg
+    top 0
+    opacity 1
+
+@-webkit-keyframes load8
+    0%
+        -webkit-transform: rotate(0deg);
+        transform: rotate(0deg);
+    100%
+        -webkit-transform: rotate(360deg);
+        transform: rotate(360deg);
+
+@keyframes load8
+    0%
+        -webkit-transform: rotate(0deg);
+        transform: rotate(0deg);
+    100%
+        -webkit-transform: rotate(360deg);
+        transform: rotate(360deg);
+.list-group
+    ul()
+    background #fff
+    margin .2rem 0
+    padding-left .3rem
+    font-size .24rem
+    bor(relative,auto,0.01rem,$bor)
+    bor(relative,0,auto,$bor)
+    li
+        .des
+            color #333
+            text-align left
+            height auto
+            padding 0 .3rem .3rem 0
+            line-height normal
+        text-align left
+        position relative
+        line-height 0.74rem
+        color #666
+        &.hei_140
+          line-height 1.4rem
+        &:not(:first-child)
+            bor(relative,0,auto,$bor)
+        &:nth-child(2)
+          .num
+            opacity 1
+        select
+        .icon-arrow-right
+        .btn
+        .val
+        .switch
+            position absolute
+            right .3rem
+            top 50%
+            trans(0,-50%)
+        input
+            border 0
+            font-size .23rem
+        .num
+          position absolute
+          right 0.5rem
+          width 0.2rem
+          height 0.2rem
+          background #c49172
+          border-radius 50%
+          color #fff
+          top 50%
+          trans(0,-50%)
+          text-align center
+          line-height 0.2rem
+          font-size 0.2rem
+          opacity 0
+        .icon-arrow-down
+            position absolute
+            right 0.3rem
+            top 56%
+            transform translate(0, -50%)
+            color #cecece
+        .val
+            right 1rem
+            color #333
+            text-align right
+            max-width 4rem
+            ovt()
+            input
+                text-align right
+                padding 0
+                width 100%
+                min-width 3rem
+                &.inp_h
+                  height  0.9rem
+        .kg,.cm
+            &:after
+                content 'kg'
+                position absolute
+                right 0
+                opacity .6
+            input
+                margin-right .4rem
+                width 1rem
+        .cm:after
+            content 'cm'
+        select
+            height 100%
+            width 80%
+            right 0
+            opacity .001
+    a
+        display block
+        color inherit
+    textarea
+        width 5.8rem
+        height 2rem
+        padding 0
+        outline none
+        margin -.1rem 0 .2rem 0
+        resize none
+        border 0rem
+ul.switch
+    height .53rem
+    border-radius 3px
+    z-index 5
+    ul()
+    overflow hidden
+    li
+        line-height .5rem
+        float left
+        padding 0 .2rem
+        overflow hidden
+        border 1px solid rgba(0,0,0,.1)
+        &:not(:last-child)
+            border-right 0
+        &:first-child
+            border-radius 3px 0 0 3px
+        &:last-child
+            border-radius 0 3px 3px 0
+.tips
+    padding .2rem .3rem
+    color #fff
+    background #fff
+    margin-top 0.16rem
+    margin-left 0.14rem
+    margin-right 0.14rem
+    border-radius 0.08rem
+    box-shadow 1px 0px 0.2rem #aaa
+    -webkit-box-shadow 1px 0px 0.2rem #aaa
+    .icon-sound
+      width 0.4rem
+      height 0.4rem
+      text-align center
+      line-height 0.4rem
+      display inline-block
+      background $jv
+      border-radius 50%
+      margin-right 0.18rem
+    .icon-tit
+      border-radius 50%
+      margin-right 0.18rem
+      width 0.4rem
+      height 0.4rem
+      display inline-block
+      text-align center
+      line-height 0.35rem
+      background-color #42b689
+      i
+        width 0.19rem
+        height 0.23rem
+        display inline-block
+        background url('/static/img/tit.png')
+        background-size 100% auto
+        -webkit-background-size 100% auto
+    span
+      color #333
+      &.cor
+        color #42b689
+.data_null
+    padding 3rem 0 1rem 0
+    background url('/static/img/null-data.svg') no-repeat center 1rem
+    background-size 2rem
+    text-align center
+    a
+        color $lan
+#popBox
+    position fixed
+    z-index 1000
+    left 50%
+    padding .1rem .3rem
+    padding .1rem .3rem
+    background $tms
+    border-radius .1rem
+    color #fff
+    text-align center
+    top -1rem
+    opacity 0
+    transition top ease-out .4s, opacity ease-in .3s .2s
+    trans(-50%,0)
+    &.show
+        top 30%
+        opacity 1
+.stars
+    display inline-block
+    margin auto .1rem
+    vertical-align middle
+    color #cccccc
+    &[show="1"]
+    &[show="2"]
+    &[show="3"]
+    &[show="4"]
+    &[show="5"]
+        i:nth-child(1)
+            color #7acb88
+    &[show="2"]
+    &[show="3"]
+    &[show="4"]
+    &[show="5"]
+        i:nth-child(2)
+            color  #7acb88
+    &[show="3"]
+    &[show="4"]
+    &[show="5"]
+        i:nth-child(3)
+            color #7acb88
+    &[show="4"]
+    &[show="5"]
+        i:nth-child(4)
+            color  #7acb88
+    &[show="5"]
+        i:nth-child(5)
+            color  #7acb88
+.i_wid
+  width 3rem
+  height 1rem
+  text-align right
+  line-height 1rem
+
+.disease_choose
+    position absolute
+    top 0
+    right 0
+    width 1rem
+    height 0.74rem
+
+.result
+    max-width 4rem
+    width 2rem
+    text-align right
+    position absolute
+    top 0.74rem
+    right 1rem
+    z-index 999
+    background #eee
+    ul
+        margin 0
+        li
+            margin 0.1rem 0
+            line-height 0.3rem
+            text-align right
+            span
+                margin-right 0.1rem
+                font-size 0.22rem
+                color #000
+.changesize
+    font-size .27rem !important
+.changemy
+    font-size .27rem !important

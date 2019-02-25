@@ -1,0 +1,167 @@
+extends ../layout/layout
+block nav
+block body
+    .tit_nav
+        .container.clearfix
+            .pull-left 药品订单管理1
+            .pull-right
+                a.btn.btn-sm.btn-primary(@click="exportData()") 导出管理
+    .search_box
+        dl
+            //dt 筛选
+            dd.row
+                .col-sm-1  订单编号
+                .col-sm-2
+                    .input-group
+                        input.form-control.auto_inp(type="text" v-model="search.order_sn" placeholder="")
+
+                .col-sm-1  患者
+                .col-sm-1
+                    .input-group
+                        input.form-control.auto_inp(type="text" v-model="search.user_name" placeholder="")
+                //.col-sm-1  医师
+                //.col-sm-2
+                    .input-group
+                        input.form-control.auto_inp(type="text" v-model="search.doc_name" placeholder="")
+        dl
+            dd.row
+                .col-sm-1  付款方式
+                .col-sm-1
+                    select.form-control(v-model="search.pay_type",@change="getDate(1)")
+                        option(value='') 不限
+                        option(value=0) 未支付
+                        option(value=1) 微信支付
+                .col-sm-1  付款时间
+                .col-sm-2
+                    .input-group
+                        input.form-control.auto_inp(type="date",v-model="search.pay_time",@change="getDate(1)")
+                //.col-sm-1  来源
+                //.col-sm-1
+                    select.form-control(v-model="search.source")
+                        option(value=0) 不限
+                        option(value=1) 网诊
+                        option(value=2) 门诊
+                .col-sm-2
+                    .input-group
+                        select.form-control(v-model="search.cur_total")
+                            option(value=10) 10条每页
+                            option(value=20) 20条每页
+                            option(value=50) 50条每页
+                            option(value=100) 100条每页
+                        .input-group-btn(@click="getDate()")
+                            .btn.btn-default
+                                i.icon-search
+                .col-sm-2
+                    span 共 {{total}} 条记录
+
+    .user_table_box.table-responsive
+        table.table.table-bordered.check_list
+            thead
+                tr
+                    th.col-sm-1(style="width:15%;") 订单编号
+                    th.col-sm-1 患者
+                    th.col-sm-1 就诊医师
+                    th.col-sm-1 收费项目
+                    th.col-sm-1 应收
+                    th.col-sm-1 实收
+                    th.col-sm-1 付款方式
+                    th.col-sm-1(style="width:12%;") 付款时间
+                    th.col-sm-1 退款金额
+                    th.col-sm-1 状态
+                    th.col-sm-1 备注
+
+            tbody
+                tr(v-for="(index,val) in data")
+                    td  {{val.order_sn}}
+                    td {{val.clinic.appuser}}
+                    td {{val.clinic.doctor}}
+                    td  {{val.order_type}}
+                    td {{val.payable_amount}}
+                    td  {{val.pay_amount}}
+                    td  {{val.pay_type}}
+                    td  {{val.pay_time}}
+                    td  {{val.refund_amount}}
+                    td  {{val.status}}
+                    td {{val.note}}
+
+        nav
+            ul.pagination
+                paginate(:cur.sync="cur",:all.sync="all",v-on:btn-click="listen",v-if="cur",v-on:gopage="listen")
+
+block js
+    script(type="text/javascript").
+        export default{
+            created(){
+                this.page = this.$route.params.id;
+                this.getDate();
+            },
+            ready(){
+                headNav(1);
+            },
+            data(){
+                return{
+                    data:{},
+                    cur: 0,
+                    all: 0,
+                    total: 0,
+                    search: {
+                        order_type: 'recipe',
+                        pay_type: '',
+                        source: 0,
+                        cur_total:10
+                    },
+                }
+            },
+            events: {
+                update(){
+                    this.getDate();
+                }
+            },
+            methods:{
+                getDate(page=''){
+                    if(page){
+                        this.page = page;
+                    }
+                    this.$http({url:'order/prescription',method:'GET',params:{page:this.page,search:this.search}}).then(function (res) {
+                        this.$set('data',res.data.data);
+                        var pagination = res.data.meta.pagination;
+                        this.$set('cur', pagination.current_page);
+                        this.$set('all', pagination.total_pages);
+                        this.$set('total', pagination.total);
+                    })
+                },
+                exportData(){
+                    var title = '药费订单';
+                    var head = [
+                        '订单编号',
+                        '患者',
+                        '就诊医师',
+                        '订单类型',
+                        '应收',
+                        '实收',
+                        '付款方式',
+                        '付款时间',
+                        '退款金额',
+                        '状态',
+                        '备注'
+                    ];
+                    var width = {'A': 20, 'B': 10, 'C': 10, 'D': 10, 'E': 10, 'F': 10, 'G': 10, 'H': 20, 'I': 10,'J':10,'K':20};
+                    this.$http({
+                        url: 'exports/exports',
+                        method: 'post',
+                        params: {title: title, head: head, search: this.search,type: 'drug_medicinal', width: width}
+                    }).then(function (res) {
+                        if (res.data.errcode == 200) {
+                            location.href = "/api/upload/download/" + res.data.data;
+                        } else {
+                            layer.msg(res.data.msg);
+                        }
+                    });
+                },
+                listen(data){
+                    this.getDate(data);
+                    this.$router.go({name: 'drug_medicinal', params: {id: data}});
+                }
+
+            }
+        }

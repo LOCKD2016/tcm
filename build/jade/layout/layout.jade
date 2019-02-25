@@ -1,0 +1,48 @@
+doctype html
+-var tit = '中医';
+-var vs = 2017041702
+//-var vs = new Date().getTime()
+-var static_url = "../"
+//-var static_url = "http://t.ai100.com.cn/"
+html
+    head
+        meta(charset='utf-8')
+        meta(name='viewport', content='width=device-width, initial-scale=1, user-scalable=no')
+        link(rel='stylesheet', type='text/css', href='#{static_url}css/app.css?v=#{vs}')
+        script(type='text/javascript', src='#{static_url}js/jquery-2.1.4.min.js')
+        script(type='text/javascript', src='#{static_url}js/vue.min.js?v=#{vs}')
+        block head
+        title #{tit}
+        script.
+
+            //控制页面字体
+            var is_mob=false;
+            (function (doc, win) {
+                var docEl = doc.documentElement,
+                    resizeEvt = 'orientationchange' in window ? 'orientationchange' : 'resize',
+                    recalc = function () {
+                        var clientWidth = docEl.clientWidth;
+                        if (clientWidth >= 600) {
+                            $('html').removeClass('is_mob');
+                            is_mob=false;
+                        }else{
+                            $('html').addClass('is_mob');
+                            is_mob=true;
+                        }
+                        if (!clientWidth) return;
+                        docEl.style.fontSize = 100 * (clientWidth / 640) + 'px';
+                    };
+                if (!doc.addEventListener) return;
+                win.addEventListener(resizeEvt, recalc, false);
+                doc.addEventListener('DOMContentLoaded', recalc, false);
+            })(document, window);
+
+    body(class=bodyclass)
+        .loader_bg
+            .loader
+        #popBox
+        block banner
+        #wrap
+            block body
+        script(type='text/javascript', src='#{static_url}js/app.js?v=#{vs}')
+        block js

@@ -1,0 +1,44 @@
+extends ../layout/layout
+block head
+    -var bodyclass='p_myfml'
+block banner
+    header
+        a.left(href="my.html")
+            i.icon-arrow-left
+        .center 就诊人
+
+block body
+    .tips
+        i.icon-sound
+        span 家庭卡可以绑定5个就诊人，VIP卡可以绑定9个就诊人
+
+    ul.list-group
+        li(v-for="it in lists" @click="det(it.id)")
+            a {{it.nickname}}
+            i.icon-arrow-right
+    a.btn.btn-block(href="my_family_det.html" v-if="vip==1&&lists.length<5||vip==2&&lists.length<9")
+        i.icon-plus
+        span 添加就诊人
+block js
+    script(type='text/javascript').
+        var vMyFamily = new Vue({
+            el: '#wrap',
+            data: {
+                vip:1,
+                lists:[
+                    {
+                        nickname: '古力果',
+                        id: 12
+                    },
+                    {
+                        nickname: '脸魂牵梦萦',
+                        id: 123
+                    }
+                ]
+            },
+            methods:{
+                det:function(id){
+                    location.href= 'my_family_det.html?id='+id
+                }
+            }
+        });

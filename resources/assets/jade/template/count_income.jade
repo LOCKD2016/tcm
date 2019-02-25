@@ -1,0 +1,167 @@
+extends ../layout/layout
+block nav
+block body
+    .tit_nav
+        .container.clearfix
+            .pull-left 收入统计
+            .pull-right
+                //a.btn.btn-primary.btn-sm(@click="exports()")
+                    i.icon-plus
+                    span 导出表格
+    .search_box
+        dl
+            dt 筛选
+            dd.row
+                .col-sm-2
+                    .input-group
+                        input.form-control.auto_inp(type="search" v-model="name" placeholder="输入医生姓名")
+                .col-sm-2
+                    .input-group
+                        input.form-control.auto_inp(type="date",name="startTime",v-model="startTime")
+                .col-sm-2
+                    .input-group
+                        input.form-control.auto_inp(type="date",name="endTime",v-model="endTime")
+                        .input-group-btn(@click="getData()")
+                            .btn.btn-default
+                                i.icon-search
+                //.col-sm-2
+                    .input-group
+                        select.form-control(v-model="cur_total")
+                            option(value=10) 10条每页
+                            option(value=20) 20条每页
+                            option(value=50) 50条每页
+                            option(value=100) 100条每页
+
+                .col-sm-2(style="margin-left:6%")
+                    span 共 {{total}} 条记录
+    //p
+    //    span(style="margin-left:10px") 平台总收入
+    //        i(style="color:blue;font-style: normal;") {{count.total}}
+    //    span(style="margin-left:20px") 诊费总收入
+    //        i(style="color:blue;font-style: normal;") {{count.clinic_amount}}
+    //    span(style="margin-left:20px") 挂号费总收入
+    //        i(style="color:blue;font-style: normal;") {{count.reg_amount}}
+    //    span(style="margin-left:20px") 药费总收入
+    //        i(style="color:blue;font-style: normal;") {{count.medicinal_amount}}
+    //    span(style="margin-left:20px") 代煎总收入
+    //        i(style="color:blue;font-style: normal;") {{count.replace_amount}}
+    //    span(style="margin-left:20px") 快递总收入
+    //        i(style="color:blue;font-style: normal;") {{count.express_amount}}
+    //    span(style="margin-left:20px") 总退款
+    //        i(style="color:blue;font-style: normal;") {{count.refund_amount}}
+            //ssssss
+            //sssss
+    .user_table_box.table-responsive(style="margin-top:10px;")
+        //ssssssss
+        table.table.table-bordered.check_list
+            thead
+                tr
+                    th.col-sm-1 医师
+                    th.col-sm-1 门诊
+                    th.col-sm-1 网诊
+                    th.col-sm-1 药费
+                    //th.col-sm-1 代煎费
+                    //th.col-sm-1 快递费
+                    th.col-sm-1 退款
+
+            tbody
+                tr(v-for="val in data")
+                    td {{val.name}}
+                    td {{val.clinic}}
+                    td {{val.web}}
+                    td {{val.medicine}}
+                    //td  {{val.replace_amount}}
+                    //td  {{val.express_amount}}
+                    td  {{val.refund_amount}}
+        nav
+            ul.pagination
+                paginate(:cur.sync="cur",:all.sync="all",v-on:btn-click="listen",v-if="cur",v-on:gopage="listen")
+
+block js
+    script(type="text/javascript").
+        export default{
+            created(){
+                this.page = this.$route.params.id;
+                this.getData();
+            },
+            ready(){
+                headNav(2);
+            },
+            data(){
+                return {
+                    data: {},
+                    cur: 0,
+                    all: 0,
+                    total: 0,
+                    cur_total: 10,
+                    count:{},
+                    title: [
+                        '医师',
+                        '诊费',
+                        '挂号费',
+                        '药费',
+                        '代煎费',
+                        '快递费',
+                        '退款'
+                    ],
+
+                    startTime: '',
+                    endTime: '',
+                    name: ''
+                }
+            },
+            watch: {
+                time: {
+                    handler: function (val, oldVal) {
+                        this.getData();
+                    },
+                    deep: true
+                }
+            },
+            events: {
+                update(){
+                    this.getData();
+                }
+            },
+            methods: {
+                getData(page=''){
+                    if (page) {
+                        this.page = page;
+                    }
+                    this.$http({
+                        url: 'count/income', method: 'GET', params: {
+                            name: this.name,
+                            page: this.page,
+                            startTime: this.startTime,
+                            endTime: this.endTime,
+                            // cur_total: this.cur_total
+                        }
+                    }).then(function (res) {
+                        this.$set('data', res.data.data.data);
+                        this.$set('cur', res.data.data.current_page);
+                        this.$set('all', res.data.data.last_page);
+                        this.$set('total', res.data.data.total);
+                    })
+                },
+                exports(){
+                    var title = '收入统计';
+                    var width = {'A': 10, 'B': 10, 'C': 10, 'D': 10, 'E': 10, 'F': 10};
+                    this.$http({
+                        url: 'count/exports',
+                        method: 'GET',
+                        params: {title: title, head: this.title, data: this.data, width: width}
+                    }).then(function (res) {
+                        if (res.data.errcode == 200) {
+                            location.href = "/api/upload/download/" + res.data.data;
+                        } else {
+                            layer.msg(res.data.msg);
+                        }
+                    });
+                },
+                listen(data){
+                    this.getData(data);
+                    this.$router.go({name: 'count_income', params: {id: data}});
+                }
+
+            }
+        }

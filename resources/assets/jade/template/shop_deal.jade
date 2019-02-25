@@ -1,0 +1,181 @@
+extends ../layout/layout
+block nav
+    .tit_nav
+        .container.clearfix
+            .pull-left 商城订单
+            .pull-right
+                a.btn.btn-sm.btn-primary(@click="exportData()") 导出管理
+block body
+    .search_box#searchList
+        dl
+            dt 查询：
+            dd.row
+                .col-sm-2
+                    .input-group
+                        input.form-control.auto_inp(type="search" v-model="number" placeholder="请输入订单编号查询")
+                        .input-group-btn(v-on:click="getAlldeal()")
+                            .btn.btn-default
+                                i.icon-search
+                .col-sm-2
+                    .input-group
+                        input.form-control.auto_inp(type="search" v-model="mobile" placeholder="请输入手机号查询")
+                        .input-group-btn(v-on:click="getAlldeal()")
+                            .btn.btn-default
+                                i.icon-search
+                .col-sm-2
+                    .input-group
+                        input.form-control.auto_inp(type="search" v-model="code" placeholder="请输入优惠码查询")
+                        .input-group-btn(v-on:click="getAlldeal()")
+                            .btn.btn-default
+                                i.icon-search
+                .col-sm-2
+                    select.form-control(v-model="status")
+                        option(value=1 selected) 请选择支付状态
+                        option(value=0) 未付款
+                        option(value=2) 已付款
+                        option(value=3) 已取消
+                .col-sm-2
+                    span 共 {{total}} 条记录
+
+
+    .user_table_box.table-responsive
+        table.table.table-bordered
+            thead
+                tr
+                    th 序号
+                    th 订单编号
+                    th 药名
+                    th 用户昵称
+                    th 手机号
+                    th 购买类型
+                    th 原价
+                    th 实付
+                    th 优惠码
+                    th 支付方式
+                    th 提交时间
+                    th 支付状态
+                    th.col-sm-1 备注
+                    th 操作
+            tbody
+                tr(v-for="(index,deal) in deals")
+                    td {{index+1}}
+                    td {{deal.order_sn}}
+                    td {{deal.goods_name}}
+                    td {{deal.nickname}}
+                    td {{deal.mobile}}
+                    td {{deal.goods_type}}
+                    td {{deal.goods_price}}
+                    td {{deal.money_paid}}
+                    td {{deal.promocode}}
+                    td 微信
+                    td {{deal.created_at}}
+                    td(v-if="deal.order_status == '已取消'") 已取消
+                    td(v-else) {{deal.pay_status}}
+                    td {{deal.note}}
+                    td
+                        span(@click="note(deal.id)") 备注
+
+        nav
+            ul.pagination
+                paginate(:cur.sync="cur",:all.sync="all",v-on:btn-click="listen",v-if="cur",v-on:gopage="listen")
+
+    pop-Dealnote(:id.sync="id")
+
+block js
+    script(type="text/javascript").
+        export default {
+            data(){
+                return {
+                    deals: {},
+                    number: '',
+                    mobile: '',
+                    code: '',
+                    all: '',
+                    cur: '',
+                    departments:{},
+                    total:0,
+                    status:1,
+                    titles: {},
+                    search:{},
+                    id:0,
+                }
+            },
+            created(){
+                this.page = this.$route.params.id;
+                this.getAlldeal();
+            },
+            ready(){
+                headNav(1);
+            },
+            events: {
+                update(){
+                    this.getAlldeal(this.cur);
+                }
+            },
+            methods:{
+                note(id){
+                    this.$set('id', id);
+                    $("#dealnote").modal("show");
+                },
+                getAlldeal(page=''){
+                    if (page) {
+                        this.page = page;
+                    }
+                    this.search.number = this.number;
+                    this.search.mobile = this.mobile;
+                    this.search.status = this.status;
+                    this.search.code = this.code;
+                    this.$http({url: 'deal/list', method: 'GET', params: {page: this.page,search:this.search}}).then(function (res) {
+                        this.$set('deals', res.data.data);
+                        var pagination = res.data.meta.pagination;
+                        this.$set('cur', pagination.current_page);
+                        this.$set('all', pagination.total_pages);
+                        this.$set('total', pagination.total);
+                    })
+                },
+                exportData(){
+                    this.search.number = this.number;
+                    this.search.mobile = this.mobile;
+                    this.search.code = this.code;
+                    this.$http({
+                        url: 'export/shop',
+                        method: 'GET',
+                        params: {search: this.search}
+                    }).then(function (res) {
+                        if (res.data.status == 1) {
+                            location.href = "/api/upload/download/" + res.data.name;
+                        }
+                    })
+                },
+                expertDetail(id){
+                    location.href = "expert_detail/"+id;
+                },
+                expertDelete(id){
+                    var vue = this;
+                    layer.confirm('您确定删除？', {
+                        btn: ['确定', '取消']
+                    }, function () {
+                        vue.$http.delete('expert/deleteExport/' + id).then(function (res) {
+                            if (res.data.status == 1) {
+                                layer.msg(res.data.msg);
+                                vue.$dispatch('update');
+                            } else {
+                                layer.msg(res.data.msg);
+                            }
+                        });
+                    }, function () {
+
+                    });
+                },
+                listen(data){
+                    this.getAlldeal(data);
+                    this.$router.go({name: 'shop_deal', params: {id: data}});
+                }
+            },
+            watch: {
+                status(){
+                    this.getAlldeal();
+                }
+            },
+
+        }

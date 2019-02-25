@@ -1,0 +1,6 @@
+IMServer/configs/db.php
+IMServer/configs/docker-compose.yaml
+frontend/config/index.js
+frontend/src/vuex/store.js
+config/database.php
+app/http/Middleware/ResponseMiddleware.php

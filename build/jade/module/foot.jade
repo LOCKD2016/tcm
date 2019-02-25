@@ -1,0 +1,9 @@
+-var vt=['首页','我的预约','个人中心']
+-var lk=['index','order','my']
+footer
+    ul.nav.nav-foot
+        each vd,i in vt
+            li(class= i==navs?'active':'')
+                a(href="#{lk[i]}.html")
+                    i(class='icon-h-nav#{i+1}')
+                    p=vd

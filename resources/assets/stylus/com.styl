@@ -1,0 +1,208 @@
+@font-face {
+    font-family: 'icomoon';
+    src:  url('../fonts/icomoon.eot?3yn82');
+    src:  url('../fonts/icomoon.eot?3yn82#iefix') format('embedded-opentype'),
+    url('../fonts/icomoon.ttf?3yn82') format('truetype'),
+    url('../fonts/icomoon.woff?3yn82') format('woff'),
+    url('../fonts/icomoon.svg?3yn82#icomoon') format('svg');
+    font-weight: normal;
+    font-style: normal;
+}
+
+[class^="icon-"], [class*=" icon-"] {
+    /* use !important to prevent issues with browser extensions that change fonts */
+    font-family: 'icomoon' !important;
+    speak: none;
+    font-style: normal;
+    font-weight: normal;
+    font-variant: normal;
+    text-transform: none;
+    line-height: 1;
+    margin auto 2px
+    /* Better Font Rendering =========== */
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+html,body
+    width 100%
+    height 100%
+body
+
+    margin 0
+    font-family "Microsoft YaHei" !important
+    //font-family 'PingFang SC',"STYuanti SC Regular"
+    font-weight light
+    line-height 1.2
+    font-size 14px
+    background #d8d9e7
+
+    *
+        -webkit-box-sizing border-box
+        box-sizing border-box
+        margin 0
+
+
+img
+    max-width 100%
+    max-height 100%
+    vertical-align middle
+input:not([type="checkbox"]):not([type="radio"])
+textarea
+select
+    -webkit-appearance none !important
+    &:-webkit-autofill
+        background-color transparent !important
+
+.hide,.none
+    display none
+.loader
+    font-size: 0;
+    position: absolute;
+    z-index 10
+    text-indent: -9rem;
+    border 0.15rem solid rgba(250, 250, 250, 0.3)
+    border-left-color: #fff
+    -webkit-transform: translateZ(0);
+    transform: translateZ(0);
+    -webkit-animation: load8 0.5s infinite linear;
+    animation: load8 0.5s infinite linear;
+    box-shadow 0 0 .02rem rgba(0,0,0,.3)
+    top: 40%;
+    left: 50%;
+    margin-left: -.8rem;
+    display none
+
+.loader,
+.loader:after
+    border-radius: 50%;
+    width: 1.6rem;
+    height: 1.6rem;
+.loading .loader
+    display block
+
+.ui-autocomplete
+    //display block !important
+    z-index 9999
+    padding 0
+    background #fff
+    list-style none
+    max-width 260px
+    max-height 300px
+    overflow auto
+    border 1px solid #ccc
+    box-shadow 2px 1px 5px rgba(0,0,0,.2)
+    margin-top -5px
+    padding-top 5px
+    border-radius 0 0 5px 5px
+    li div
+        padding 4px 15px
+        white-space nowrap
+        overflow hidden
+        text-overflow ellipsis
+        &.ui-state-active
+            background rgba(0,150,190,.2)
+
+.ui-helper-hidden-accessible
+    position fixed
+    bottom 0
+    padding 5px 20px
+    background rgba(0,0,0,.3)
+    color #fff
+    border-radius 0 40px 0 0
+
+textarea.form-control
+    height 100px
+.dropdown
+    position relative
+    &.open
+        .btn
+            &:first-child
+                border-radius 4px 0 0 0
+            &:last-child
+                border-radius 0 4px 0 0
+    .dropdown-menu
+        margin-top -1px
+        border-radius 0 0 4px 4px
+        max-height 300px
+        overflow-y auto
+    .btn-group
+        .btn
+            &:first-child
+                min-width 82px
+            &:last-child
+                border-left 0
+                padding-left 2px
+                padding-right 8px
+                .caret
+                    opacity .4
+.hasInput
+    .pagination
+        margin 0
+        float right
+    .input
+        float right
+        height 34px
+        margin 0 10px
+        input
+            border 1px solid #efefef
+            height 100%
+            width 50px
+            padding 0 10px
+            background #fff
+    span
+        display inline-block
+        margin-left 10px
+        -webkit-border-radius 5px
+        background #337ab7
+        color #fff
+        height 34px
+        width 60px
+        line-height 34px
+        text-align center
+        cursor pointer
+
+@-webkit-keyframes load8
+    0%
+        -webkit-transform: rotate(0deg);
+        transform: rotate(0deg);
+    100%
+        -webkit-transform: rotate(360deg);
+        transform: rotate(360deg);
+
+@keyframes load8
+    0%
+        -webkit-transform: rotate(0deg);
+        transform: rotate(0deg);
+    100%
+        -webkit-transform: rotate(360deg);
+        transform: rotate(360deg);
+
+@media(max-width: 1570px)
+    .container
+    *[class*="col-"]
+        padding-left 10px
+        padding-right 10px
+    .row
+        margin-left -10px
+        margin-right -10px
+@media(max-width: 1410px)
+    .container
+    *[class*="col-"]
+        padding-left 5px
+        padding-right 5px
+    .row
+        margin-left -5px
+        margin-right -5px
+@media(min-width: 1410px)
+    .container
+        width: 1400px
+@media(min-width: 1600px)
+    .container
+        width: 1570px
+
+clearfix()
+    &:after
+        content ''
+        display table
+        clear both

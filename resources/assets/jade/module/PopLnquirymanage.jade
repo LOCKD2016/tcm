@@ -1,0 +1,97 @@
+//项目库管理
+template
+    .modal.fade#lnquirymanage
+        .modal-dialog.modal-lg
+            .modal-content
+                .modal-header
+                    button.close(type='button', data-dismiss='modal', aria-label='Close')
+                        span(aria-hidden='true') ×
+                    h4.modal-title 方案管理
+                .modal-body
+                    table.table.table-bordered.check_list
+                        thead
+                            tr
+                                th 序号
+                                th 就诊人
+                                th 购买类型
+                                th 处理人
+                                th 指定处理人
+                                th 创建日期
+                        tbody
+                            tr(v-for="(index,ln) in lnquiries")
+                                td {{index+1}}
+                                td {{ln.realname}}
+                                td {{ln.goods_type}}
+                                td {{ln.doctor_id}}
+                                td
+                                    select.form-control(v-model="project.shared_investors" v-on:change="people(project.project_id,project.shared_investors)")
+                                        option(v-for="u in roleUsers" v-bind:value="u.user_id") {{u.user_realname}}
+                                td {{ln.created_at}}
+                nav.clearfix
+                    ul.pagination.pages
+                        paginate(:cur.sync="cur",:all.sync="all",v-on:btn-click="listen",v-if="cur")
+                    span.total 总数：{{num}}
+
+                .modal-footer
+                        button.btn.btn-primary(type='button',data-dismiss='modal', v-on:click="dismiss()") 取消
+                        button.btn.btn-primary(type='button', v-on:click="addMoney(2)") 确定
+script(type="javascript").
+    export default{
+        ready(){
+            this.getLnquiry(1);
+            this.getRoleUser();
+        },
+        data(){
+            return{
+                lnquiries:{},
+                cur:0,
+                all:0,
+                num:0,
+                roleUsers:{}
+            }
+        },
+        events: {
+            managelnquiry(){
+                this.getLnquiry(this.cur);
+                this.getRoleUser();
+            }
+        },
+        methods: {
+            dismiss(){
+                this.getLnquiries(1);
+            },
+            add(id){
+                if (this.checkedNames.indexOf(id) > -1) {
+                    for (var i = 0; i < this.checkedNames.length; i++) {
+                        if (this.checkedNames[i] == id) {
+                            this.checkedNames.splice(i, 1);
+                            break;
+                        }
+                    }
+                } else {
+                    this.checkedNames.push(id);
+                }
+            },
+            getLnquiry(page){
+                this.$http({
+                    url: 'law/index',
+                    method: 'GET',
+                    params: {page: page}
+                }).then(function (res) {
+                    this.$set('lnquiries', res.data.data);
+                    var pagination = res.data.meta.pagination;
+                    this.$set('cur', pagination.current_page);
+                    this.$set('all', pagination.total_pages);
+                    this.$set('num', pagination.total);
+                });
+            },
+            getRoleUser(){
+                this.$http.get('user/roleUser').then(function (res) {
+                    this.$set('roleUsers', res.data.data);
+                });
+            },
+            listen(data){
+                this.getLnquiry(data);
+            },
+        }
+    }

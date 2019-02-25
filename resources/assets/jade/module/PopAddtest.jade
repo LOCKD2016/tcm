@@ -1,0 +1,133 @@
+//增加月报
+template
+    .modal.fade#addtestt
+        .modal-dialog.modal-lg
+            .modal-content
+                .modal-header
+                    button.close(type='button', data-dismiss='modal', aria-label='Close')
+                        span(aria-hidden='true') ×
+                    h4.modal-title 添加问题
+                .modal-body
+                    form.form-horizontal(role='form')
+                        .form-group
+                            label.col-sm-2.control-label 问题类型：
+                            .col-sm-10
+                                select.form-control(type="text" v-model="type")
+                                    option(value="radio" selected) 单选
+                                    option(value="checkbox") 复选
+                                    option(value="text") 问答
+                                    option(value="photo") 图片
+                        .form-group
+                            label.col-sm-2.control-label 问题描述：
+                            .col-sm-10
+                                input.form-control(type="text" v-model="data.title")
+
+                        .form-group#photos(style="display:none")
+                            label.col-sm-2.control-label(for='') 图片上传：
+                            .col-sm-10
+                                input#tests(type="file" name="file")
+                                template(v-for="val in photo")
+                                    img(v-bind:src="val",style="width:120px")
+                                    i.icon-bin(@click="deletes(val)")
+                        .clone.ff
+                            .form-group
+                                label.col-sm-2.control-label
+                                    span 选项：
+                                    i.icon-minus
+                                    i.icon-plus
+                                .col-sm-10
+                                    input.form-control(type='text',name="answer")
+                        .form-group
+                            label.col-sm-2.control-label 是否必填：
+                            .col-sm-10
+                                select.form-control(name="must")
+                                    option(value="0") 不必填
+                                    option(value="1") 必填
+                .modal-footer
+                    button.btn.btn-primary(type='button',@click="add()") 保存
+
+
+block js
+    script(type="text/javascript").
+        export default {
+            props:['id'],
+            data(){
+                return{
+                    type:'radio',
+                    data:{},
+                    photo:[],
+                    answer:''
+                };
+            },
+            ready(){
+                this.uploadFile();
+            },
+            watch:{
+                type(value) {
+                    if(value =='text'){
+                        $('.clone').hide();
+                        $('#photos').hide();
+                    }else if(value == 'photo'){
+                        $('.clone').hide();
+                        $('#photos').show();
+                    }else{
+                        $('.clone').show();
+                        $('#photos').hide();
+                    }
+                }
+            },
+            methods:{
+                deletes(val){
+                    this.photo.splice($.inArray(val, this.photo), 1);
+                },
+                uploadFile(){
+                    var vue = this;
+                    layui.use('upload', function () {
+                        layui.upload({
+                            url: '/api/upload/add'
+                            , elem: '#tests'
+                            , method: 'post'
+                            , success: function (res) {
+                                vue.photo.push(res.data);
+                            }
+                        });
+                    });
+                },
+                add(){
+                    var data = $("form").serializeArray();
+                    var dd = [];
+                    for (var i = 0; i < data.length; i++) {
+                        if (data[i].name == 'answer') {
+                            if ($.trim(data[i].value) != '') {
+                                dd.push(data[i].value);
+                            }
+                        }
+                    }
+                    for (var j = 0; j < dd.length; j++) {
+                        if ($.trim(dd[j].value) != '') {
+                            dd.splice(j, 1);
+                        }
+                    }
+                    if ($.trim(this.data.title) == '') {
+                        layer.msg('请输入标题');
+                        return;
+                    }
+
+                    this.data.exam_id = this.id;
+                    this.data.type = this.type;
+                    this.data.option = dd;
+                    if(this.type == 'photo'){
+                        this.data.option = this.photo;
+                    }
+                    if(this.type == 'text'){
+                        this.data.option = [];
+                    }
+                    this.$http.post('exam',this.data).then(function (res) {
+                        layer.msg(res.data.msg);
+                        if(res.data.status ==1){
+                            location.reload();
+                        }
+                    });
+                }
+            }
+        }

@@ -1,0 +1,89 @@
+template
+    .modal.fade#disease
+        .modal-dialog
+            .modal-content
+                .modal-header
+                    button.close(type='button', data-dismiss='modal', aria-label='Close')
+                        span(aria-hidden='true') ×
+
+                .modal-body
+                    .col-sm-12(style="margin-bottom: 15px;")
+                        .col-sm-4
+                            input.form-control(type="text",v-model="name")
+                        .col-sm-1
+                            button.btn.btn-primary(type='button',@click="add()") 添加
+
+                table.user_table_box.table-responsive.table.table-bordered
+                    thead
+                        tr
+                            th.col-sm-1 序号
+                            th.col-sm-1 名称
+                            //th.col-sm-1 排序
+                            th.col-sm-1 操作
+
+                    tbody
+                        tr(v-for="val in val.disease")
+                            td {{1+$index}}
+                            td {{val.name}}
+                            //td
+                                span(@click="sort(val.id,1)") ↑
+                                span(@click="sort(val.id,-1)") ↓
+                            td
+                                span(@click="del(val.id,val.name)") 删除
+
+                .modal-footer
+                     button.btn.btn-default(type='button', data-dismiss='modal') 取消
+
+
+script(type='text/javascript').
+    export default {
+        props:['val'],
+        data(){
+            return {
+                data:{},
+                name:'',
+            };
+        },
+        methods:{
+            add(){
+                this.$http({url: 'disease/create',method:"POST",params:{section_id:this.val.id,name:this.name}}).then(function (res) {
+                    if (res.data.status == 1) {
+                        this.val.disease.push({id:res.data.data,name:this.name});
+                        console.log(this.val.disease);
+                        this.name = '';
+                    } else {
+                        layer.msg(res.data.msg);
+                    }
+                });
+            },
+
+            del(id,name){
+                var _this = this;
+                var confirm = layer.confirm('您确定删除 '+ name+'？', {
+                    btn: ['确定', '取消']
+                }, function () {
+                    _this.$http({url: 'disease/diseasedel/' + id, method: "delete"}).then(function (res) {
+                        if (res.data.status == 1) {
+                            for (var i = 0; i < _this.val.disease.length; i++) {
+                                if (_this.val.disease[i].id == id) {
+                                    _this.val.disease.splice(i, 1);
+                                }
+                            }
+                        } else {
+                            layer.msg(res.data.msg);
+                        }
+
+                    });
+                    layer.close(confirm);
+                });
+
+            },
+        },
+        watch:{
+            'id':function(value){
+                if(value>0){
+                    this.getDetail(value);
+                }
+            }
+        }
+    }

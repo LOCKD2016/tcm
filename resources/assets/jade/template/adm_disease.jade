@@ -1,0 +1,78 @@
+extends ../layout/layout
+block nav
+    .tit_nav
+        .container
+            .pull-left 常见疾病
+            .pull-right
+                a.btn.btn-primary.btn-sm(@click="add()")
+                    i.icon-plus
+                    span 添加疾病
+block body
+
+    .user_table_box.table-responsive
+        table.table.table-bordered
+            thead
+                tr
+                    th 疾病名称
+                    th 图标
+                    th 操作功能
+            tbody
+                tr(v-for="val in data")
+                    td {{val.disease.name}}
+                    td
+                        img(v-bind:src="val.icon",style="width:120px;")
+                    td
+                        span(@click="detail(val.id)") 修改
+                        span(@click="deletes(val.id)",style="color:red;") 删除
+    diseasecommon(:id.sync="id")
+    diseasecomadd
+block js
+    script(type="text/javascript").
+        import diseasecommon from  './module/disease_common.vue'
+        import diseasecomadd from  './module/disease_com_add.vue'
+        export default{
+            components: {
+                diseasecommon,
+                diseasecomadd
+            },
+            data(){
+                return {
+                    cur: 0,
+                    all: 0,
+                    data:{},
+                    id:0
+                };
+            },
+            created(){
+                this.getData();
+            },
+            events: {
+                update(){
+                    this.getData();
+                }
+            },
+            ready(){
+                headNav(5);
+            },
+            methods:{
+                deletes(id){
+                    this.$http({url: 'disease_common/'+id, method: 'delete'}).then(function (res) {
+                        if(res.data.status){
+                            this.getData();
+                        }
+                    });
+                },
+                add(){
+                    $('#diseasecomadd').modal('show');
+                },
+                detail(id){
+                    this.id = id;
+                    $('#diseasecommon').modal('show');
+                },
+                getData(){
+                    this.$http({url: 'disease_common', method: 'GET'}).then(function (res) {
+                        this.$set('data', res.data.data);
+                    });
+                }
+            }
+        }

@@ -1,0 +1,51 @@
+//覆盖
+template
+    .modal.fade#area
+        .modal-dialog
+            .modal-content
+                .modal-header
+                    button.close(type='button', data-dismiss='modal', aria-label='Close')
+                        span(aria-hidden='true') ×
+                    h4.modal-title 修改门店
+                .modal-body
+                    form.form-horizontal(role='form')
+                        .form-group
+                            label.col-sm-3.control-label(for='') 地区：
+                            .col-sm-8
+                                input.form-control(type='text' ,v-model="area_val.name")
+                        .form-group
+                            label.col-sm-3.control-label(for='') 首价：
+                            .col-sm-8
+                                input.form-control(type='text' ,v-model="area_val.initiate_price")
+                        .form-group
+                            label.col-sm-3.control-label(for='') 首重：
+                            .col-sm-8
+                                input.form-control(type='text' ,v-model="area_val.initiate_weight")
+                        .form-group
+                            label.col-sm-3.control-label(for='') 续重：
+                            .col-sm-8
+                                input.form-control(type='text' ,v-model="area_val.continue_price")
+
+                .modal-footer
+                    button.btn.btn-default(type='button', data-dismiss='modal') 取消
+                    button.btn.btn-primary(type='button', v-on:click="save()") 保存
+
+script(type='text/javascript').
+    export default {
+        props:['area_val'],
+        data(){
+            return {
+               data:{}
+            };
+        },
+        methods:{
+            save(){
+                this.$http.post('area',this.area_val).then(function(res){
+                    if(res.data.status){
+                        layer.msg('操作成功');
+                        $('#area').modal('hide');
+                    }
+                })
+            },
+        }
+    }

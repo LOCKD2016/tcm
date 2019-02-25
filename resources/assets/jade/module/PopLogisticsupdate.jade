@@ -1,0 +1,71 @@
+//物流状态
+template
+    .modal.fade#logisticsupdate
+        .modal-dialog
+            .modal-content
+                .modal-header
+                    button.close(type='button', data-dismiss='modal', aria-label='Close')
+                        span(aria-hidden='true') ×
+                    h4.modal-title 物流状态
+                .modal-body
+                    form.form-horizontal(role='form')
+
+                        .form-group
+                            label.col-sm-2.control-label
+                                span 物流公司：
+                            .col-sm-10
+                                input.form-control(type="text" v-model="send.express_company" readonly)
+
+                        .form-group
+                            label.col-sm-2.control-label
+                                span 物流单号：
+                            .col-sm-10
+                                input.form-control(type="text" v-model="send.express_number")
+                .modal-footer
+                    button.btn.btn-default(type='button', data-dismiss='modal') 取消
+                    button.btn.btn-primary(type='button',@click="addSend(send)") 修改
+
+
+block js
+    script(type="text/javascript").
+        export default {
+            props: ['id'],
+            created(){
+                this.id = this.$route.params.id;//
+            },
+            data(){
+                return {
+                    send: {},
+                };
+            },
+            methods: {
+                addSend(send){
+                    this.$http.put('deal/updatesend/'+ this.id, send).then(function (res) {
+                        if (res.data.status == 1) {
+                            layer.msg(res.data.msg);
+                            this.$set('send', '');
+                            $("#logisticsupdate").modal("hide");
+                            this.$dispatch("update");
+                        } else {
+                            layer.msg(res.data.msg);
+                        }
+                    });
+                },
+                getDealDetail(id){
+                    if (id > 0) {
+                        this.$http.get('deal/sendetail/' + id).then(function (res) {
+                            this.$set('send', res.data.data);
+                        });
+                    }
+                },
+                goback(){
+                    this.$router.go("/send_list");
+                },
+            },
+            watch: {
+                id(newValue){
+                    this.getDealDetail(newValue);
+                }
+            }
+
+        }

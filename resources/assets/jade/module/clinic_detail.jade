@@ -1,0 +1,66 @@
+template
+    .modal.fade#clinic_detail
+        .modal-dialog
+            .modal-content
+                .modal-header
+                    button.close(type='button', data-dismiss='modal', aria-label='Close')
+                        span(aria-hidden='true') ×
+                    form.form-horizontal(role='form',v-if="data.messages")
+                        label.modal-title  诊断内容
+                        .form-group
+                            .col-sm-8(v-for="val in data.messages")
+                                span(v-if="val.type ==1")
+                                    label 医生 :
+                                    span {{data.doc_name}}
+                                span(v-if="val.type ==2")
+                                    label 患者 :
+                                    span {{data.nickname}}
+                                span &nbsp;&nbsp;{{val.created_at}}
+                                span(v-if="val.type ==3")
+                                div(v-if="val.msg_type == 'text'")
+                                    div(v-bind:class="val.type ==3 ? 'message_font_color' : ''") {{val.content.text}}
+                                div(v-if="val.msg_type == 'audio'")
+                                    audio(v-bind:src="val.content.text")
+                                div(v-if="val.msg_type == 'card'",@click="card_detail(val.content.extra.cType,val.content.extra.id)")
+                                    div(class="message_font_color",v-if="val.content.extra.cType ==1")  个性问诊单
+                                    div(class="message_font_color",v-if="val.content.extra.cType ==2")  标准问诊单
+                                    div(class="message_font_color",v-if="val.content.extra.cType ==3")  处方问诊单
+                                    div(class="message_font_color",v-if="val.content.extra.cType ==4")  用户填写个性问诊单
+
+                    hr
+                    form.form-horizontal(role='form',v-if="data.has_one_recipe")
+                        label.modal-title 处方 {{data.has_one_recipe.recipe_head.sum}} 副
+                        .form-group
+                            .col-sm-8
+                                span(v-for="val in data.has_one_recipe.recipe")
+                                    p {{val.name}} {{val.dosage}}g  {{val.other}}
+                            .col-sm-8
+                                label 医嘱:
+                                span {{data.has_one_recipe.recipe_remark}}
+
+script(type='text/javascript').
+    export default {
+        props:['clinic_id'],
+        data(){
+            return {
+                data:{}
+            };
+        },
+        methods:{
+            card_detail(ctype,id){
+                window.open('/admin/card_detail/'+ctype+'/'+id+'/'+this.data.family_id);
+            },
+            getDetail(id){
+                this.$http({url:'clinic/show/'+id}).then(function (res) {
+                    this.$set('data',res.data.clinic);
+                });
+            }
+        },
+        watch:{
+            'clinic_id':function(value){
+                if(value>0){
+                    this.getDetail(value);
+                }
+            }
+        }
+    }

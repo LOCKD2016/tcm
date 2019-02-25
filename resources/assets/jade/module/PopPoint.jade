@@ -1,0 +1,132 @@
+//物流状态
+template
+    .modal.fade#point
+        .modal-dialog
+            .modal-content
+                .modal-header
+                    button.close(type='button', data-dismiss='modal', aria-label='Close')
+                        span(aria-hidden='true') ×
+                    h4.modal-title 穴位选择
+                div(style="margin-top:5px;")
+                    input(type="text" name="search" style="margin-left: 7px;")
+                    a.btn.btn-primary.btn-sm(@click="search()")
+                        i.icon-plus
+                        span(style="margin-left:5px") 搜索
+                div(@click="addChecks(1,5)",style="overflow:hidden")
+                    input(type="radio" name="checkName" style="float: left;margin-left: 5px;")
+                    span(style="float: left;") 全部取消
+                    button.btn.btn-primary(type='button',@click="addPoint()",style="float: right;margin-right: 5px;") 添加
+
+                .modal-body
+                    span(v-if="data.status ==200 && data.data.point_id != ''")
+                        span 历史选择:
+                            span {{data.data.relate}} {{data.data.point_id}}
+                    form.form-horizontal(role='form')
+                        .form-group
+                            .col-sm-2(v-for="item in relate", @click="addChecks(item.point,$index)")
+                                input(type="radio" name="checkName")
+                                span {{item.name}}
+                        .form-group
+                            .col-sm-2(v-for="point in points" ,@click="addChecks(point)")
+                                input(class="checked{{point.id}}",type="checkbox" name="checkboxName")
+                                span {{point.name}}
+                    div(style="width:100%;overflow: hidden;")
+                        div(v-if="checks.length",v-for="item in checks", track-by="$index",style="width:45%;float: left;margin-left: 20px;")
+                            img(v-bind:src="item.img")
+                        //span {{item.name}}
+                //.modal-footer
+                    button.btn.btn-default(type='button', data-dismiss='modal') 取消
+block js
+    script(type="text/javascript").
+        export default {
+            props: ['id'],
+            created(){
+                this.id = this.$route.params.id;
+            },
+            data(){
+                return {//
+                    points: {},
+                    relate:{},
+                    data:{},
+                    checks:[],
+                    checkRadio:0
+                };
+            },
+            ready(){
+
+            },
+            methods: {
+                search(){
+                    var name = $('input[name="search"]').val();
+                    $.each(this.points,function (key,val) {
+                        $('.checked'+val.id).next('span').css({color:'#333','font-size':"14px"});
+                        if(val.name == name){
+                            $('.checked'+val.id).next('span').css({'color':'red','font-size':"20px"});
+                        }
+                    })
+                },
+                addPoint:function () {
+                    var obj = {};
+                    obj.system = 'relate';
+                    obj.param = {relate:this.checkRadio,point:this.checks};
+                    this.$http.post('law/update/'+this.id,obj).then(function (res) {
+                        layer.msg(res.data.msg);
+                        if(res.data.status == 200){
+                            $("#point").modal("hide");
+                            this.$dispatch("refreshln");
+                        }
+                    });
+                },
+                addChecks(val,prev){
+                    if(typeof (prev) !='undefined'){
+                        this.checks = [];
+                        $('input:checkbox').prop("checked", false);
+                        this.checkRadio = 0;
+                        if(prev ==5) return;
+                        this.checkRadio = prev +1;
+                        for (var i = 0; i < val.length; i++) {
+                            this.checks.push(val[i]);
+                            $('.checked'+val[i].id).prop('checked',true);
+                        }
+                    }else{
+                        var checksid = [];
+                        $.each(this.checks, function (index, val) {
+                            checksid.push(val.id);
+                        });
+                        var index = checksid.indexOf(val.id);
+                        if(index >-1){
+                            this.checks.splice(index,1);
+                            $('.checked'+val[i].id).prop('checked',false);
+                        }else{
+                            this.checks.push(val);
+                            $('.checked' + val.id).prop('checked', true);
+                        }
+                    }
+                },
+                getPoint(){
+                    this.$http({url: 'law/point', method: 'GET'}).then(function (res) {
+                            this.$set('points', res.data);
+                    })
+                },
+                getRekate:function () {
+                    this.$http({url: 'law/relate', method: 'GET'}).then(function (res) {
+                        this.$set('relate', res.data);
+                    })
+                },
+                getDetail:function () {
+                    this.$http({url: 'law/show/'+this.id, method: 'GET'}).then(function (res) {
+                        this.$set('data', res.data);
+                    })
+                }
+            },
+            watch: {
+                id(newValue){
+                    if(newValue){
+                        this.getPoint();
+                        this.getRekate();
+                        this.getDetail();
+                    }
+                },
+            }
+
+        }

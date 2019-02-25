@@ -1,0 +1,120 @@
+template
+    .header
+        .container
+            .col-xs-8
+                a.logo(v-link!="{ path: '/app_users' }")
+                ul.nav.navbar-nav(role="navigation")
+                    li(v-for="nav in navbar")
+                        a(v-link="{ path: nav.url }") {{ nav.name }}
+                        ul
+                            li(v-for="ch in nav.child")
+                                a(v-if="ch.name == '协议管理'" , @click="url()") {{ ch.name }}
+                                a(v-else v-link="{ path: ch.url }") {{ ch.name }}
+
+
+            .col-xs-4.col-lg-2.text-right
+                .user
+                    a
+                        i.icon-user
+                        span.username {{user.user_name}}
+                    ul.list-unstyled
+                        li
+                            a(v-link!="{ path: '/user_center' }") 登录日志
+                        li
+                            a(v-on:click="logout()") 退出
+                a.icon-bell(v-link!="{ path: '/operation_list' }")
+                    b(v-if="total>0") {{total}}
+
+    router-view
+
+script(type="text/javascript").
+    export default {
+        data(){
+            return {
+    //                    navbar: [
+    //                        {name: '人员管理', url: '/app_users/1', admin:false,child: [
+    //                            {name: '患者列表', url: '/app_users/1', admin: false},
+    //                            {name: '医生管理', url: '/doctor/1', admin: false},
+    //                            {name: '客服管理', url: '/service/1', admin: false}
+    //                        ]},
+    //                        {name: '财务管理', url: '/shop_deal/1', admin:false,child: [
+    //                            {name: '商城订单', url: '/shop_deal/1', admin: false},
+    //                            {name: '发货列表', url: '/send_list/1', admin: false},
+    //                            //{name: '划价收费', url: '/charge_price/1', admin: false},
+    //                            {name: '网诊预约订单', url: '/drug_manage/1', admin: false},
+    //                            {name: '药费订单', url: '/drug_medicinal/1', admin: false},
+    //                            {name: '充值订单', url: '/drug_pay/1', admin: false},
+    //                        ]},
+    //                        {name: '数据管理', url: '/count_manage', admin: false, child: [
+    //                            {name: '经营统计', url: '/count_manage', admin: false},
+    //                            {name: '患者统计', url: '/count_family', admin: false},
+    //                            {name: '医师统计', url: '/count_doc', admin: false},
+    //                            {name: '疗效统计', url: '/count_curative_detail/1', admin: false},
+    //                            //{name: '疗效统计', url: '/count_curative/1', admin: false},
+    //                            {name: '收入统计', url: '', admin: false},
+    //                            {name: '商城统计', url: '/count_mall', admin: false},
+    //                            {name: '方案统计', url: '/count_lnquiry', admin: false}
+    //                        ]},
+    //                        {
+    //                            name: '内容管理', url: '/lnquiry_list/1', admin: false, child: [
+    //                            {name: '问诊单', url: '/lnquiry_list/1', admin: false},
+    //                            {name: '题库', url: '/question_list/1', admin: false},
+    //                            {name: '方案处理', url: '/proposed_law/1', admin: false},
+    //                            {name: '诊疗管理', url: '/chat_admin/1', admin: false},
+    //                            {name: '评价管理', url: '/comment_admin/1', admin: false},
+    //                            {name: '科室管理', url: '/section_admin/1', admin: false},
+    //                        ]},
+    //                        {name: '优惠码管理', url: '/promocode_list/1', admin: false, child: [
+    //                            {name: '优惠码列表', url: '/promocode_list/1', admin: false},
+    //                            {name: '优惠码添加', url: '/promocode_add', admin: false},
+    //                            {name: '活动管理', url: '/promocode_mobile/1', admin: false}
+    //                        ]},
+    //                        {name: '管理员管理', url: '/adm_user/1', admin: true, child: [
+    //                            {name: '管理员列表', url: '/adm_user/1', admin: true},
+    //                            {name: '权限管理', url: '/adm_pri', admin: true},
+    //                            {name: '数据同步', url: '/adm_sync', admin: true},
+    //                            {name: '登录日志', url: '/adm_log/1', admin: true}
+    //                        ]}
+    //
+    //                    ],
+                user:User,
+                navbar:Menu,
+                search: '',
+                total: 0
+            };
+        },
+        created(){
+            this.getNotReadCount();
+        },
+        ready(){
+        },
+        events:{
+            count(){
+                this.getNotReadCount();
+            }
+        },
+        replace: false,
+        methods:{
+            url() {
+                location.href = '/admin/agreement';
+            },
+            logout(){
+                location.href = '/logout';
+            },
+            getNotReadCount(){
+                this.$http.get('operation/count').then(function(res){
+
+                   this.$set('total',res.data);
+                   
+                });
+            },
+            gosearch(){
+                this.search = this.search.replace(/(^\s*)|(\s*$)/g, "");
+                if (this.search == '') {
+                    layer.msg('输入内容不能为空！');
+                    return false;
+                }
+                location.href = "/admin/search?" + encodeURI(this.search);
+            }
+        }
+    }

@@ -1,0 +1,58 @@
+//物流状态
+template
+    .modal.fade#dealnote
+        .modal-dialog
+            .modal-content
+                .modal-header
+                    button.close(type='button', data-dismiss='modal', aria-label='Close')
+                        span(aria-hidden='true') ×
+                    h4.modal-title 备注
+                .modal-body
+                    form.form-horizontal(role='form')
+                        .form-group
+                            .col-sm-10
+                                textarea.form-control(v-model="info.note")
+                .modal-footer
+                    button.btn.btn-default(type='button', data-dismiss='modal') 取消
+                    button.btn.btn-primary(type='button',@click="addNote(info)") 添加
+
+block js
+    script(type="text/javascript").
+        export default {
+            props: ['id'],
+            created(){
+                this.id = this.$route.params.id;
+            },
+            data(){
+                return {
+                    info: {},
+                };
+            },
+
+            methods: {
+                getDetail(id){
+                    if (id > 0) {
+                        this.$http.get('deal/sendetail/' + id).then(function (res) {
+                            this.$set('info', res.data.data);
+                        });
+                    }
+                },
+                addNote(info){
+                    info.id = this.id;
+                    this.$http.post('deal/add', info).then(function (res) {
+                        if (res.data.status == 1) {
+                            layer.msg(res.data.msg);
+                            $("#dealnote").modal("hide");
+                            this.$dispatch("update");
+                        }
+                    });
+                }
+
+            },
+            watch: {
+                id(newValue){
+                    this.getDetail(newValue);
+                },
+            }
+
+        }

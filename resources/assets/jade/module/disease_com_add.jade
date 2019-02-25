@@ -1,0 +1,92 @@
+template
+    .modal.fade#diseasecomadd
+        .modal-dialog
+            .modal-content
+                .modal-header
+                    button.close(type='button', data-dismiss='modal', aria-label='Close')
+                        span(aria-hidden='true') ×
+
+                .modal-body
+                    form.form-horizontal(role='form')
+                        .form-group
+                            .col-sm-2(v-for="val in data",@click="getDisease(val.id)")
+                                span(class="checked_f{{val.id}}") {{val.name}}
+
+                        .form-group
+                            .col-sm-4(v-for="val in childDisease",@click="checkAttr(val.id)")
+                                input(class="checked{{val.id}}",type="checkbox" name="checkboxName")
+                                span {{val.name}}
+                                //ssss
+                .modal-footer
+                     button.btn.btn-primary(type='button',@click="store()") 保存
+                     button.btn.btn-default(type='button', data-dismiss='modal') 取消
+
+
+script(type='text/javascript').
+    export default {
+        data(){
+            return {
+                data:{},
+                childDisease:{},
+                diseaseArr : []
+            };
+        },
+        ready(){
+            this.getDetail();
+        },
+        methods:{
+            getDetail(){
+                this.$http({url: 'section', params: {id: 1}}).then(function (res) {
+                    this.data = res.data.data;
+                    this.getDisease(this.data[0].id);
+                });
+            },
+            getDisease(id){
+                var _this = this;
+                this.$http({url: 'disease/' + id}).then(function (res) {
+                    this.childDisease = res.data.data;
+                    $('span').attr('style',"color:#333");
+                    $(".checked_f"+id).attr("style","color:red");
+                    this.$nextTick(function () {
+                        _this.changeProp()
+                    });
+                });
+            },
+            changeProp(){
+                var _this = this;
+                $.each(this.childDisease,function (k,v) {
+                    var index = $.inArray(v.id,_this.diseaseArr);
+                    if(index != -1){
+                        $(".checked"+v.id).prop("checked",true);
+                    }
+                })
+            },
+            checkAttr(id){
+                var _this = this;
+                var index = $.inArray(id,_this.diseaseArr);
+                if (index == -1) {
+                    $(".checked" + id).prop("checked", true);
+                    this.diseaseArr.push(id);
+                }else{
+                    $(".checked" + id).prop("checked", false);
+                    this.diseaseArr.splice(index, 1);
+                }
+            },
+            store(){
+                this.$http({
+                    url:'disease_common',
+                    method:'post',
+                    params:{disease:this.diseaseArr}
+                }).then(
+                        function (res) {
+                            if(res.data.status ==1){
+                                this.$dispatch('update');
+                                $("#diseasecomadd").modal("hide");
+                            }else{
+                                layer.msg(res.data.msg);
+                            }
+                        }
+                );
+            }
+        }
+    }

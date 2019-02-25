@@ -1,0 +1,66 @@
+//部门管理新建
+template
+    .modal.fade#logdetail
+        .modal-dialog.modal-lg
+            .modal-content
+                .modal-header
+                    button.close(type='button', data-dismiss='modal', aria-label='Close')
+                        span(aria-hidden='true') ×
+                    h4.modal-title 日志详情
+                .modal-body
+                    form.form-horizontal(role='form' , v-for="log in logs")
+                        .form-group
+                            label.col-sm-2.control-label 登录账号：
+                            .col-sm-10
+                                input.form-control(type="text" v-model="log.user_name",readonly="readonly")
+                        .form-group
+                            label.col-sm-2.control-label 真实姓名：
+                            .col-sm-10
+                                input.form-control(type="text" v-model="log.user_realname",readonly="readonly")
+                        .form-group
+                            label.col-sm-2.control-label ip：
+                            .col-sm-10
+                                input.form-control(type="text" v-model="log.ip",readonly="readonly")
+                        .form-group
+                            label.col-sm-2.control-label 登录地址：
+                            .col-sm-10
+                                input.form-control(type="text" v-model="log.address",readonly="readonly")
+                        .form-group
+                            label.col-sm-2.control-label 登录设备：
+                            .col-sm-10
+                                input.form-control(type="text" v-model="log.useragent",readonly="readonly")
+                        .form-group
+                            label.col-sm-2.control-label 登录时间：
+                            .col-sm-10
+                                input.form-control(type="text" v-model="log.created_at",readonly="readonly")
+
+                .modal-footer
+                    button.btn.btn-default(type='button', data-dismiss='modal') 取消
+block js
+    script(type="text/javascript").
+        import {errorMsg} from '../../common.js';
+        export default {
+            props: ['id'],
+            ready(){
+                this.getLog(this.id);
+            },
+            data(){
+                return {
+                    logs:{},
+                };
+            },
+            methods: {
+                //aaa
+                getLog(id){
+                    if(id>0){
+                        this.$http.get('logs/' + id).then(function (res) {
+                            this.$set('logs',res.data);
+                        })
+                    }
+                }
+            }, watch: {
+                id(newValue, oldValue){
+                    this.getLog(newValue);
+                }
+            }
+        }

@@ -1,0 +1,142 @@
+extends ../layout/layout
+block nav
+block body
+    .tit_nav
+        .container.clearfix
+            .pull-left 疗效统计
+            .pull-right
+                a.btn.btn-primary.btn-sm(@click="exports()")
+                    i.icon-plus
+                    span 导出表格
+    .search_box
+        dl
+            dt 筛选
+            dd.row
+                .col-sm-2
+                    .input-group
+                        input.form-control.auto_inp(type="search" v-model="name" placeholder="输入疾病名称")
+                .col-sm-2
+                    .input-group
+                        input.form-control.auto_inp(type="date",v-model="time.startTime")
+                .col-sm-2
+                    .input-group
+                        input.form-control.auto_inp(type="date",v-model="time.endTime")
+                        .input-group-btn(@click="getData()")
+                            .btn.btn-default
+                                i.icon-search
+                .col-sm-2
+                    span 共 {{total}} 条记录
+
+
+    .user_table_box.table-responsive
+        table.table.table-bordered.check_list
+            thead
+                tr
+                    th.col-sm-1 病名
+                    th.col-sm-1 总计（例）
+                    th.col-sm-1 医生（位）
+                    th.col-sm-1 痊愈数
+                    th.col-sm-1 好转数
+                    th.col-sm-1 无效数
+                    th.col-sm-1 恶化数
+                    th.col-sm-1 操作
+
+            tbody
+                tr(v-for="val in data")
+                    td {{val.name}}
+                    td {{val.num}}
+                    td {{val.doc_count ? val.doc_count : 0}}
+                    td {{val.cure ? val.cure: 0}}
+                    td  {{val.valid ? val.valid : 0}}
+                    td  {{val.invalid ? val.invalid : 0}}
+                    td  {{val.worsen ? val.worsen : 0}}
+                    td
+                        span(@click="detail(val.id)") 查看
+        nav
+            ul.pagination
+                paginate(:cur.sync="cur",:all.sync="all",v-on:btn-click="listen",v-if="cur",v-on:gopage="listen")
+
+block js
+    script(type="text/javascript").
+        export default{
+            created(){
+                this.page = this.$route.params.id;
+                this.getData();
+            },
+            ready(){
+                headNav(2);
+            },
+            data(){
+                return{
+                    data:{},
+                    cur: 0,
+                    all: 0,
+                    total: 0,
+                    title: [
+                        '病名',
+                        '总计（例）',
+                        '医生（位）',
+                        '痊愈数',
+                        '好转数',
+                        '无效数',
+                        '恶化数',
+                    ],
+                    time:{
+                        startTime: '',
+                        endTime: ''
+                    },
+                    name: ''
+                }
+            },
+            events: {
+                update(){
+                    this.getData();
+                }
+            },
+            methods:{
+                getData(page=''){
+                    if(page){
+                        this.page = page;
+                    }
+                    this.$http({url:'count/curative',method:'GET',params:{page:this.page,name:this.name,time:this.time}}).then(function (res) {
+                        this.$set('data',res.data.data.data);
+                        this.$set('cur', res.data.data.current_page);
+                        this.$set('all', res.data.data.last_page);
+                        this.$set('total', res.data.data.total);
+                    })
+                },
+                exports(){
+                    var title = '疗效统计';
+                    var width = {'A': 10, 'B': 10, 'C': 10, 'D': 10, 'E': 10, 'F': 10, 'G': 10, 'H': 10, 'I': 10};
+                    var obj = {};
+                    for (var i=0; i< this.data.length;i++){
+                        var name = this.data[i].name;
+                        var num = this.data[i].num;
+                        var doc_count = this.data[i].doc_count;
+                        var cure = this.data[i].cure ?  this.data[i].cure  : 0;
+                        var valid = this.data[i].valid ?  this.data[i].valid  : 0;
+                        var invalid = this.data[i].invalid ?  this.data[i].invalid  : 0;
+                        var worsen = this.data[i].worsen ?  this.data[i].worsen  : 0;
+                        obj[i] = [name,num,doc_count,cure,valid,invalid,worsen];
+                    }
+                    this.$http({
+                        url: 'count/exports',
+                        method: 'GET',
+                        params: {title: title, head: this.title, data: obj, width: width}
+                    }).then(function (res) {
+                        if (res.data.errcode == 200) {
+                            location.href = "/api/upload/download/" + res.data.data;
+                        } else {
+                            layer.msg(res.data.msg);
+                        }
+                    });
+                },
+                listen(data){
+                    this.getData(data);
+                    this.$router.go({name: 'count_curative', params: {id: data}});
+                },
+                detail(id){
+                    this.$router.go({name: 'count_curative_detail', params: {id: id,page:1}});
+                }
+            }
+        }

@@ -1,0 +1,69 @@
+extends ../layout/layout
+block nav
+    .tit_nav
+        .container.clearfix
+            .pull-left 诊所管理
+block body
+    .item_list
+        .list
+            .user_table_box.table-responsive
+                table.table.table-bordered
+                    thead
+                        tr
+                            th 门店名
+                            th 所在城市
+                            th 电话
+                            th 地址
+                            th 经度
+                            th 纬度
+                            th 操作
+                    tbody
+                        tr(v-for="val in data")
+                            td {{val.name}}
+                            td {{val.address}}
+                            td {{val.telephone}}
+                            td {{val.content.address}}
+                            td {{val.content.longitude}}
+                            td {{val.content.latitude}}
+                            td
+                                span(@click="save(val)") 修改
+
+        clinique(:val.sync="val")
+block js
+    script(type="text/javascript").
+        import clinique from  './module/clinique.vue'
+        export default {
+            components:{
+                clinique
+            },
+            data(){ //页面用到的数据
+                return {
+                    cur:0,
+                    all:0,
+                    data:{},
+                    val:{
+                        content:{}
+                    }
+                };
+            },
+            created(){//实例创建后调用
+                headNav(4);
+                this.getData();
+            },
+            events: {
+                userupdate(){
+                    this.getData();
+                }
+            },
+            methods:{
+                getData(){
+                    this.$http({url:'clinique/index',method:'GET'}).then(function(res){
+                        this.$set('data', res.data.data);
+                    });
+                },
+                save(val){
+                    this.$set('val', val);
+                    $("#clinique").modal("show");
+                }
+            }
+        }

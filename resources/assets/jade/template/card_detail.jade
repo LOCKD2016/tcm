@@ -1,0 +1,89 @@
+extends ../layout/layout
+block nav
+    .tit_nav
+        .container.clearfix
+            .pull-left 问诊单详情
+block body
+    ///ctype 1:个性化问诊单|2:普通问诊单|3:处方|4:已回答个性化问诊单
+    form.form-horizontal(role='form',v-if="ctype ==2")
+        .form-group
+            .col-sm-8
+                label 病名:
+                span {{data.user_clinic_title}}
+            .col-sm-8
+                label 描述:
+                span {{data.user_clinic_content}}
+
+    form.form-horizontal(role='form',v-if="ctype ==1")
+        .form-group.sel_ti(v-for="ddd in data.options")
+            label.col-sm-2.control-label(v-if="ddd.type =='radio'") 单选题 ：
+            label.col-sm-2.control-label(v-if="ddd.type =='checkbox'") 复选题 ：
+            label.col-sm-2.control-label(v-if="ddd.type =='text'") 问答题 ：
+            label.col-sm-2.control-label(v-if="ddd.type =='photo'") 图片题 ：
+            .itemss
+                span {{ddd.title}}
+            template(v-if="ddd.type == 'checkbox' || ddd.type =='radio'",track-by="$index")
+                p(v-for="answer in ddd.option").result
+                    span  {{answer.val}}
+            template(v-if="ddd.type == 'photo'")
+                p(v-for="val in ddd.option").result
+                    img(v-bind:src="val")
+    form.form-horizontal(role='form',v-if="ctype ==3")
+        label.modal-title 处方 {{data.recipe_head}} 副
+        .form-group
+            .col-sm-8
+                span(v-for="val in data.recipe")
+                    p {{val.name}} {{val.g}}g  {{val.other}}
+            .col-sm-8
+                label 医嘱:
+                span {{data.recipe_remark}}
+
+    form.form-horizontal(role='form',v-if="ctype ==4")
+        .form-group.sel_ti(v-for="ddd in data.options")
+            label.col-sm-2.control-label(v-if="ddd.type =='radio'") 单选题 ：
+            label.col-sm-2.control-label(v-if="ddd.type =='checkbox'") 复选题 ：
+            label.col-sm-2.control-label(v-if="ddd.type =='text'") 问答题 ：
+            label.col-sm-2.control-label(v-if="ddd.type =='photo'") 图片题 ：
+            .itemss
+                span {{ddd.title}}
+            template(v-if="ddd.type == 'checkbox' || ddd.type =='radio'",track-by="$index")
+                p(v-for="answer in ddd.option").result
+                    span  {{answer.val}}
+            template(v-if="ddd.type == 'photo'")
+                p(v-for="val in ddd.option").result
+                    img(v-bind:src="val")
+
+block js
+    script(type="text/javascript").
+        export default {
+            created(){
+                console.log(1);
+                this.ctype = this.$route.params.ctype;
+                this.id = this.$route.params.id;
+                this.family_id = this.$route.params.family_id;
+                this.getData();
+            },
+            ready(){
+                headNav(0);
+            },
+            data(){
+                return {
+                    data: {},
+                    ctype:0,
+                    id:0,
+                    family_id:0
+                }
+            },
+
+            methods: {
+                getData(){
+                    this.$http({
+                        url: 'card_detail',
+                        method: 'get',
+                        params: {ctype: this.ctype, id: this.id, family_id: this.family_id}
+                    }).then(function (res) {
+                        this.$set('data', res.data.data);
+                    })
+                },
+            }
+        }

@@ -1,0 +1,179 @@
+extends ../layout/layout
+block head
+    -var bodyclass='p_doctor'
+block banner
+    #head
+        header
+            a.left(href="index.html")
+                i.icon-arrow-left
+            .center
+                span 在线咨询
+                sub
+                    span 北京
+                    i.icon-arrow-down
+            a.right(href="search.html")
+                i.icon-search
+        .top_nav
+            -var nv = ['医馆','诊费','专科','时间']
+            .calendars
+            ul
+                each vm,i in nv
+                    li
+                        .tog_btn(onclick="navTog(#{i})")
+                            span=vm
+                            i.icon-triangle-down
+                        .drop
+                            .bg(onclick="navClose()")
+                            -if(i==0)
+                                .box
+                                    .hosp_li(v-bind:class="hospital_set==null?'active':''" @click="hospital_set=null")
+                                        h3 不限
+                                        i.icon-check-c
+                                    .hosp_li(v-for="(it,ind) in hospital" v-bind:class="ind==hospital_set?'active':''" @click="hospital_set=ind")
+                                        h3 {{it.name}}
+                                        p {{it.addr}}
+                                        i.icon-check-c
+                            -else if(i==1)
+                                .box.clearfix
+                                    .prices(v-bind:class="prices_set==null?'active':''" @click="prices_set=null") 不限
+                                    .prices(v-for="(it,ind) in prices" v-bind:class="ind==prices_set?'active':''" @click="prices_set=ind") {{it}}
+                            -else if(i==2)
+                                .box.clearfix
+                                    .department(v-bind:class="department_set==null?'active':''" @click="department_set=null") 不限
+                                    .department(v-for="(it,ind) in department" v-bind:class="ind==department_set?'active':''" @click="department_set=ind") {{it}}
+
+
+block body
+    .panel
+        .doctor_list(v-for="(it,ind) in lists")
+            .link(@click="det(it.id)")
+                .avatar(v-bind:style="bg(it.img)")
+                h3
+                    span {{it.doctors}}
+                    sub {{it.doctors_title}}
+                    label(v-bind:class="it.online_a==1?'active':''") 门诊预约
+                    label(v-bind:class="it.online_b==1?'active':''") 在线咨询
+                h5 {{it.hospital}}
+                p 擅长：{{it.adept}}
+                .price ￥{{it.price}}
+                h6
+                    span 患者推荐指数
+                    .stars(v-bind:show="it.star")
+                        i.icon-nav1
+                        i.icon-nav1
+                        i.icon-nav1
+                        i.icon-nav1
+                        i.icon-nav1
+            .btn.btn-jv(@click="order(it.id)") 预约
+
+
+
+block js
+    script(type='text/javascript' src="../js/datepicker.js")
+    script(type='text/javascript' src="../js/calendar.js")
+    script(type='text/javascript').
+        function navTog(i){
+            if(i==3&&!$('.top_nav li').eq(3).hasClass('active')){
+                $('.calendar').addClass('active')
+            }else{
+                $('.calendar').removeClass('active')
+            }
+            $('.top_nav li').eq(i).toggleClass('active').siblings().removeClass('active');
+        }
+        function navClose(){
+            $('.calendar').removeClass('active');
+            $('.top_nav li').removeClass('active');
+        }
+        function goSearch(){
+            var parm={
+                hospital: vTopNav.hospital_set,
+                prices: vTopNav.prices_set,
+                times: vTopNav.times
+            };
+            console.log(parm)
+        }
+        var vTopNav = new Vue({
+            el: '#head',
+            data: {
+                hospital_set:0,
+                hospital:[
+                    {
+                        id:124,
+                        name:'北京市朝阳区高碑店华膳园国际传媒文化产业园3号楼A3',
+                        addr:'北京市朝阳区高碑化产业园3号楼A3'
+                    },
+                    {
+                        id:124,
+                        name:'北京市朝阳区高碑店华膳园国际传媒文化产业园3号楼A3',
+                        addr:'北京市朝阳区高碑店华膳园国际传媒文化产业园3号楼A3'
+                    }
+                ],
+                prices_set:0,
+                prices:['100-199','200-299','300-399','400+'],
+                department_set:0,
+                department:['内科','外科','全科','蒙人科'],
+                times:[]
+            },
+            methods:{
+            }
+        });
+        var vOrder = new Vue({
+            el: '#wrap',
+            data: {
+                lists:[
+                    {
+                        id:1,
+                        doctors:'陈余良',
+                        doctors_title:'医师',
+                        hospital:'北京市朝阳区高碑店华膳园国际传媒文化产业园3号楼A3',
+                        hospital_addr:'北京市朝阳区高碑店华膳园国际传媒文化产业园3号楼A3',
+                        price:1231,
+                        online_a:1,
+                        online_b:0,
+                        star:4,
+                        adept:'心脏病、骨折、头痛',
+                        img:'http://wx3.sinaimg.cn/mw690/a8d43f7egy1ff00w56nvxj20p00dwjve.jpg'
+                    },
+                    {
+                        id:2,
+                        doctors:'崇敏',
+                        doctors_title:'主治医师',
+                        hospital:'北京市朝阳区高碑店华膳园国际传媒文化产业园3号楼A3',
+                        hospital_addr:'北京市朝阳区高碑店华膳园国际传媒文化产业园3号楼A3',
+                        price:1231,
+                        online_a:1,
+                        online_b:0,
+                        star:4,
+                        adept:'心脏病、骨折、头痛',
+                        img:''
+                    }
+                ]
+            },
+            methods:{
+                det:function(id){
+                    location.href = 'doctor_det.html?id='+id
+                },
+                order:function(id){
+                    location.href = 'new_order.html?id='+id
+                },
+                bg:function(url){
+                    if(url) return 'background-image:url('+url+')'
+                },
+                cT:function(i){
+                    switch (i){
+                        case 1:
+                            return '已完成';
+                            break;
+                        case 2:
+                            return '不在线';
+                            break;
+                        case 3:
+                            return '商城';
+                            break;
+                        case 4:
+                            return '推荐';
+                            break;
+                    }
+                }
+            }
+        });

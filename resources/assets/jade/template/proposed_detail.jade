@@ -1,0 +1,184 @@
+extends ../layout/layout
+block nav
+    .tit_nav
+        .container.clearfix
+            .pull-left 问诊单详情
+
+block body
+    .new_item
+        form.form-horizontal(role='form')
+            .form-group
+                label.col-sm-1.control-label(for='')
+                    span(style="margin-right:33px;") 就诊人信息
+                    span(v-if="info.status != 3")
+                        select.btn.btn-primary(v-model="info.type",v-on:change="setChange(info.id,info.type,info.status)" style="margin-right:20px;")
+                            option(value=0) 未选择
+                            option(value=1) 温和型
+                            option(value=2) 增强型
+                    span.btn.btn-primary(v-if="info.status != 3",@click="point(info.id)" style="margin-right:20px;") 方案
+                    span.btn.btn-primary(v-if="info.status != 3",@click="note(info.id)" style="margin-right:20px;") 备注
+                    span.btn.btn-primary(v-if="info.status != 3",@click="send(info.id,info.status)") 发送
+            .form-group
+                label.col-sm-1.control-label(for='')
+                    h3 真实姓名：
+                .col-sm-5
+                    h3 {{family.realname}}
+            .form-group
+                label.col-sm-1.control-label(for='')
+                    h3 性别：
+                .col-sm-5
+                    h3 {{family.sex}}
+            .form-group
+                label.col-sm-1.control-label(for='')
+                    h3 年龄：
+                .col-sm-5
+                    h3 {{family.age}}
+            .form-group
+                label.col-sm-1.control-label(for='')
+                    h3 手机号码：
+                .col-sm-5
+                    h3 {{family.mobile}}
+            .form-group
+                label.col-sm-1.control-label(for='')
+                    h3 身份证号：
+                .col-sm-5
+                    h3 {{family.pincode}}
+            .form-group
+                label.col-sm-1.control-label(for='')
+                    h3 身高：
+                .col-sm-5
+                    h3 {{family.height}}
+            .form-group
+                label.col-sm-1.control-label(for='')
+                    h3 体重：
+                .col-sm-5
+                    h3 {{family.weight}}
+            .form-group
+                label.col-sm-1.control-label(for='')
+                    h3 国籍：
+                .col-sm-5
+                    h3 {{family.country}}
+            .form-group
+                label.col-sm-1.control-label(for='')
+                    h3 常居住地：
+                .col-sm-5
+                    h3 {{family.province}}{{family.city}}{{family.area}}
+
+        form.form-horizontal
+            .form-group
+                label.col-sm-1.control-label(for='')
+                    span  问诊单
+        form.form-horizontal(v-for="(index,list) in lists")
+            .form-group
+                label.col-sm-1.control-label(for='')
+                    h3 {{$index+1}}、 {{list.question}}
+            .form-group(v-for="a in list.aid")
+                ul
+                    li(v-if="list.type == 0")
+                        input(type="radio"  checked style="margin-left:33px;")
+                        span(style="margin-left:8px;") {{a}}
+                    li(v-if="list.type == 1")
+                        input(type="checkbox"   checked style="margin-left:33px;")
+                        span(style="margin-left:8px;") {{a}}
+                    li(v-if="list.type == 2")
+                        span(style="margin-left: 35px;") {{a}}
+                        div(v-if="list.qid ==1" style="overflow hidden")
+                            img(v-bind:src="list.face_img",style="width:20%;margin-left:33px;")
+                            img(v-bind:src="list.tongue_img",style="width:20%;margin-left:20px;")
+
+    pop-point(:id.sync="id")
+    pop-Addnote(:id.sync="id")
+
+block js
+    script(type="text/javascript").
+        export default {
+            ready(){
+                headNav(2);
+            },
+            created(){
+                this.id = this.$route.params.id;
+                this.getInfo(this.id);
+                this.getDetail(this.id);
+            },
+            data(){
+                return {
+                    family: {},
+                    lists: {},
+                    id: 0,
+                    info: {},
+                    question:'',
+                }
+            },
+            events: {
+                lndetail(){
+                    this.getInfo(this.id);
+                }
+            },
+            methods: {
+                setChange(id, type, status) {
+                    if (status == 3) {
+                        layer.msg('已发送 不可修改');
+                        return;
+                    }
+                    var obj = {};
+                    obj.system = 'type';
+                    obj.param = {type: type};
+                    this.$http.post('law/update/' + id, obj).then(function (res) {
+                        layer.msg(res.data.msg);
+                    })
+                },
+                send(id, status){
+                    if (status == 3) {
+                        layer.msg('已发送');
+                        return;
+                    }
+                    var obj = {};
+                    obj.system = 'send';
+                    obj.param = {status: 3};
+                    this.$http.post('law/update/' + id, obj).then(function (res) {
+                        layer.msg(res.data.msg);
+                        if (res.data.status == 200) {
+                            this.$dispatch('refreshln');
+                        }
+                    })
+                },
+                getInfo(id){
+                    this.$http.get('law/detail/'+id).then(function (res){
+                        this.$set('lists', res.data.data);
+                        this.$set('family', res.data.family);
+                    })
+                },
+                getDetail(id){
+                    this.$http.get('law/note/' + id).then(function (res) {
+                        this.$set('info', res.data.data);
+                    })
+                },
+                point(id){
+                    this.$http.get('law/forbid/' + id).then(function (res) {
+                        if (res.data.status) {
+                            this.$set('id', id);
+                            $("#point").modal("show");
+                        } else {
+                            layer.msg(res.data.msg);
+                        }
+                    });
+
+                },
+                note(id){
+                    this.$http.get('law/forbid/' + id).then(function (res) {
+                        if (res.data.status) {
+                            this.$set('id', id);
+                            $("#addnote").modal("show");
+                        } else {
+                            layer.msg(res.data.msg);
+                        }
+                    });
+
+                },
+                goback(){
+                    this.$router.go('/lnquiry_list');
+                },
+
+            }
+        }
+

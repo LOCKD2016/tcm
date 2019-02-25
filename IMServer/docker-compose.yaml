@@ -1,0 +1,18 @@
+version: "2"
+services:
+    tcm_webim:
+        container_name: tcm_webim
+        image: lbbniu/php7
+        restart: always
+        ports:
+            - "9504:9503"
+            - "8081:8080"
+        expose:
+            - "9000"
+        volumes:
+            - /data:/data
+        working_dir: /data/www/sina/tcm/IMServer
+        entrypoint: ["php"]
+        command: ['server.php','start']
+        environment:
+            - "IM_PWD=/data/www/sina/tcm/IMServer"

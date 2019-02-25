@@ -1,0 +1,90 @@
+extends ../layout/layout
+block head
+    -var bodyclass='p_my_order_det'
+block banner
+    header
+        a.left(href="order.html")
+            i.icon-arrow-left
+        .center 订单详情
+
+block body
+    .tips(onclick="$('.pop').fadeIn()")
+        i.icon-sound
+        span 订单已快递，快递公司为申通快递，单号：433888888888
+    .pop
+        .box
+            .head
+                i.icon-warning
+                span 物流状态：已快递
+            .main
+                ul
+                    li 快递公司：申通快递
+                    li 快递单号：433222552877
+
+            .foot(onclick="$('.pop').fadeOut()") 我知道了
+
+    .panel.user
+        i.icon-location
+        .phone 13023243432
+        h3 权志龙
+        p 需要奇才奇葩魂牵梦萦城枯需要工载震荡魂牵梦萦夺
+    .panel
+    .panel.order_sta
+        dl
+            dt 订单编号：
+            dd 201704115001
+        dl
+            dt 支付时间：
+            dd 2017-04-11 19:39
+        dl
+            dt 支付方式：
+            dd 微信支付
+
+
+
+block js
+    script(type='text/javascript').
+        var vMyOrder = new Vue({
+            el: '#wrap',
+            data: {
+                id: 1,
+                type: 1,
+                c_type: 1,
+                status: 1,
+                patient: '压顶',
+                doctors: '陈余良',
+                doctors_title: '医师',
+                hospital: '北京市朝阳区高碑店华膳园国际传媒文化产业园3号楼A3',
+                hospital_addr: '北京市朝阳区高碑店华膳园国际传媒文化产业园3号楼A3',
+                price: 1231,
+                price_a: 123,
+                price_b: 131,
+                commodity: null,
+                img: 'http://wx3.sinaimg.cn/mw690/a8d43f7egy1ff00w56nvxj20p00dwjve.jpg'
+
+            },
+            methods:{
+                det:function(id){
+                    location.href = 'my_order_det.html?id='+id
+                },
+                bg:function(url){
+                    if(url) return 'background-image:url('+url+')'
+                },
+                cT:function(i){
+                    switch (i){
+                        case 1:
+                            return '已完成';
+                        break;
+                        case 2:
+                            return '不在线';
+                        break;
+                        case 3:
+                            return '商城';
+                        break;
+                        case 4:
+                            return '推荐';
+                        break;
+                    }
+                }
+            }
+        });

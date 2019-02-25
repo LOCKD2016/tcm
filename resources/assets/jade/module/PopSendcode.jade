@@ -1,0 +1,109 @@
+//物流状态
+template
+    .modal.fade#sendcode
+        .modal-dialog
+            .modal-content
+                .modal-header
+                    button.close(type='button', data-dismiss='modal', aria-label='Close')
+                        span(aria-hidden='true') ×
+                    h4.modal-title 物流状态
+                .modal-body
+                    form.form-horizontal(role='form')
+                        .form-group
+                            label.col-sm-2.control-label(for='')
+                                span 优惠码类型：
+                            .col-sm-10
+                                input.form-control(type="text",value="字母+数字" readonly)
+                        .form-group
+                            label.col-sm-2.control-label(for='')
+                                span 优惠码长度：
+                            .col-sm-10
+                                input.form-control(type="text",value="6位" readonly)
+                        .form-group
+                            label.col-sm-2.control-label(for='')
+                                span 优惠码数量：
+                            .col-sm-10
+                                input.form-control(name="total" type="text", v-model="code.total")
+                        .form-group
+                            label.col-sm-2.control-label(for='')
+                                span 优惠金额：
+                            .col-sm-10
+                                input.form-control(name="discount" type="text", v-model="code.discount")
+                        //.form-group
+                        //    label.col-sm-2.control-label(for='')
+                        //        span 活动链接：
+                        //    .col-sm-10
+                        //        input.form-control(name="url" type="text", v-model="code.url")
+                        .form-group
+                            label.col-sm-2.control-label(for='')
+                                span 开始时间：
+                            .col-sm-10
+                                input.form-control(name="url" type="text",v-model="code.start_time")
+
+                        .form-group
+                            label.col-sm-2.control-label(for='')
+                                span 截止时间：
+                            .col-sm-10
+                                input.form-control(name="url" type="text", v-model="code.end_time")
+                        .form-group
+                            label.col-sm-2.control-label(for='')
+                                span 目标用户：
+                            .col-sm-10
+                                input#aaaa(type="file" name="file")
+
+block js
+    script(type="text/javascript").
+        export default {
+            props: ['id'],
+            created(){
+                this.id = this.$route.params.id;//2
+            },
+            data(){
+                return {
+                    send: {},//
+                    exp:{},
+                    reason:{},
+                    code:{},
+                    iid:2,
+                };
+            },
+            ready(){
+
+            },
+            methods: {
+                getSendDetail(id){
+                    if (id > 0) {
+                        this.$http.get('promo/detail/' + id).then(function (res) {//
+                            this.$set('code', res.data.data);
+                        });
+                    }
+                },
+                daoru(){
+                    var self = this;
+                    layui.use('upload', function () {
+                        layui.upload({
+                            url: '/api/promo/addfile/'+self.id,
+                            title: '发放优惠码',
+                            elem: '#aaaa', //指定原始元素，默认直接查找class="layui-upload-file"
+                            method: 'post',
+                            type: 'file',
+                            success: function (res) {
+                                if (res.status == 1) {
+                                    layer.msg(res.msg);
+                                    window.location.href = "promocode_mobile";
+                                }else{
+                                    layer.msg(res.msg);
+                                }
+                            }
+                        });
+                    });
+                },
+            },
+            watch: {
+                id(newValue){
+                    this.getSendDetail(newValue);
+                    this.daoru();
+                },
+            }
+
+        }

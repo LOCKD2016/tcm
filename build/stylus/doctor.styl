@@ -1,0 +1,215 @@
+.doctor_list
+    padding .2rem .3rem .2rem 1.3rem
+    bor(relative,auto,.01rem,$bor)
+    &:after
+        left 1.3rem
+    .avatar
+        position absolute
+        left .3rem
+    .price
+        position absolute
+        top .25rem
+        right .3rem
+        font-size .24rem
+        color $he
+    h3
+        font-size .28rem
+        sub
+            margin 0 .1rem
+            font-size .2rem
+    label
+        font-size .18rem
+        padding 0 .15rem
+        border-radius .3rem
+        background #c6c6c6
+        color #fff
+        &.active
+            background $he
+    h5
+        color $hui
+    h5,h6
+        font-size .17rem
+    .stars
+        font-size .2rem
+    .btn
+        position absolute
+        right .3rem
+        bottom .3rem
+    p
+        padding .05rem 0
+.p_doctor
+    #wrap
+        padding-top 1.3rem
+
+.top_nav
+    bor(fixed,auto,.01rem,$bor)
+    top $head_h
+    background #fff
+    z-index 3
+    width 100%
+    ul
+        ul()
+        line-height .36rem
+        height .6rem
+        padding .1rem 0
+        li
+            width 25%
+            float left
+            .tog_btn
+                text-align center
+                font-size .22rem
+                color #999
+            &:not(:last-child)
+                border-right .5px solid $bor
+            &.active
+                .tog_btn
+                    color #333
+                .icon-triangle-down:before
+                    content "\e93a"
+                .drop
+                    bottom 0
+                    .bg
+                        opacity 1
+    .drop
+        bor(fixed,auto,.01rem,$bor)
+        z-index 5
+        left 0
+        top $head_h + .6rem
+        bottom 100%
+        width 100%
+        transition all .3s
+        overflow hidden
+        .bg
+            background $tmh
+            transition opacity .3s .3s
+            position absolute
+            width 100%
+            height 100%
+            opacity 0
+        .box
+            position relative
+            z-index 2
+            background #fff
+            padding .2rem
+    .hosp_li
+        padding .12rem 0
+        position relative
+        height .9rem
+        &:not(:last-child)
+            bor(relative,auto,.01rem,$bor)
+        h3
+            font-size .3rem
+        p
+            opacity .5
+        i
+            position absolute
+            font-size .3rem
+            right 0
+            top .3rem
+            color #fff
+
+        &.active i
+            color $jv
+    .prices
+    .department
+        width 2.8rem
+        margin .1rem
+        float left
+        line-height .5rem
+        border .5px solid $bor
+        color #666
+        text-align center
+        &.active
+            border-color $jv
+            color $jv
+
+.p_doctor_det
+    #wrap
+        padding-top 0
+        padding-bottom 1rem
+        background #fcfcfc
+    .btn-fix .left
+        font-size .3rem
+        color #777
+        span
+            font-size .26rem
+.doc_banner
+    height 4rem
+    img()
+    background-image url("../img/banner_u.jpg")
+    text-align center
+    color #fff
+    padding .2rem
+    .avatar
+        width 1.6rem
+        height 1.6rem
+        margin .4rem auto
+        border 1px solid #fff
+    h1
+        font-size .5rem
+        margin .2rem 0
+        ft()
+        sub
+            font-size .3rem
+            color #bbb
+    p
+        color #bbb
+
+.doc_main
+    padding .2rem
+    font-size .24rem
+    color #666
+    .conts
+        max-height 3.5rem
+        overflow hidden
+        transition all .4s
+    &.open
+        .conts
+            max-height 20rem
+        .icon-triangle-down:before
+            content "\e93a"
+    .btn_toggle
+        text-align center
+        padding .1rem
+        opacity .6
+    h3
+        padding-left .15rem
+        margin .2rem 0 .05rem 0
+        color $he
+        font-size .24rem
+        border-left 3px solid $he
+
+#dComment
+    .hr
+        bor(relative,0.01rem,auto,$bor)
+        bor(relative,auto,0.01rem,$bor)
+        padding .1rem 0
+.comments
+    bor(relative,auto,0.01rem,$bor)
+    padding .2rem 0
+    margin-left .8rem
+    min-height 1.4rem
+    .avatar
+        position absolute
+        left -.8rem
+        width .64rem
+        height .64rem
+    h2
+        font-size .3rem
+        color $he
+    h6
+        font-size .18rem
+        color $hui
+        margin-bottom .1rem
+    .right
+        position absolute
+        top .25rem
+        right 0
+        font-size .2rem
+        b
+            margin-right .2rem
+            color $jv
+            border 1px solid $jv
+            border-radius .3rem
+            padding 0 .1rem
+            font-size .16rem

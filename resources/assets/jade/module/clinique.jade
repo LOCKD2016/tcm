@@ -1,0 +1,50 @@
+//覆盖
+template
+    .modal.fade#clinique
+        .modal-dialog
+            .modal-content
+                .modal-header
+                    button.close(type='button', data-dismiss='modal', aria-label='Close')
+                        span(aria-hidden='true') ×
+                    h4.modal-title 修改门店
+                .modal-body
+                    form.form-horizontal(role='form')
+                        .form-group
+                            label.col-sm-3.control-label(for='') 地址：
+                            .col-sm-8
+                                input.form-control(type='text' ,v-model="val.content.address")
+                        .form-group
+                            label.col-sm-3.control-label(for='') 电话：
+                            .col-sm-8
+                                input.form-control(type='text' ,v-model="val.telephone")
+                        .form-group
+                            label.col-sm-3.control-label(for='') 经度：
+                            .col-sm-8
+                                input.form-control(type='text' ,v-model="val.content.longitude")
+                        .form-group
+                            label.col-sm-3.control-label(for='') 纬度：
+                            .col-sm-8
+                                input.form-control(type='text' ,v-model="val.content.latitude")
+                .modal-footer
+                    button.btn.btn-default(type='button', data-dismiss='modal') 取消
+                    button.btn.btn-primary(type='button', v-on:click="save()") 保存
+
+script(type='text/javascript').
+    export default {
+        props:['val'],
+        data(){
+            return {
+                data:{},
+            };
+        },
+        methods:{
+            save(){
+                this.$http.post('clinique/update',this.val).then(function(res){
+                    if(res.data.status){
+                        this.$dispatch('userupdate');
+                        $('#clinique').modal('hide');
+                    }
+                })
+            },
+        }
+    }

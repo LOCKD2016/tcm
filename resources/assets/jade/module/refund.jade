@@ -1,0 +1,56 @@
+//覆盖
+template
+    .modal.fade#refund
+        .modal-dialog
+            .modal-content
+                .modal-header
+                    button.close(type='button', data-dismiss='modal', aria-label='Close')
+                        span(aria-hidden='true') ×
+                    h4.modal-title 退款
+                .modal-body
+                    form.form-horizontal(role='form')
+                        .form-group
+                            label.col-sm-3.control-label(for='') 实付金额：
+                            .col-sm-8
+                                input.form-control(type='text' ,v-model="order.pay_amount",readonly)
+                        .form-group
+                            label.col-sm-3.control-label(for='') 退款金额：
+                            .col-sm-8
+                                input.form-control(type='text' ,v-model="price")
+                .modal-footer
+                    button.btn.btn-default(type='button', data-dismiss='modal') 取消
+                    button.btn.btn-primary(type='button', v-on:click="enter()") 自定义退款
+
+script(type='text/javascript').
+    export default {
+        props: ['order'],
+        data(){
+            return {
+                price: ''
+            }
+        },
+        methods: {
+            enter(){
+                var params = {};
+                var preg = /(^[1-9]([0-9]+)?(\.[0-9]{1,2})?$)|(^(0){1}$)|(^[0-9]\.[0-9]([0-9])?$)/;
+                if (!preg.test(this.price)) {
+                    layer.msg('请输入正确的金额格式');
+                    return;
+                }
+                if(this.price < 0){
+                    layer.msg('金额不能少于0元');
+                    return;
+                }
+                params.refund_amount = this.price;
+                params.order_id = this.order.id;
+                this.$http({url: 'order/refund', method: 'get', params:params}).then(function (res) {
+                    layer.msg(res.data.msg);
+                    if (res.data.status) {
+                        this.$dispatch('update');
+                        this.price = '';
+                        $('#refund').modal('hide');
+                    }
+                });
+            },
+        }
+    }

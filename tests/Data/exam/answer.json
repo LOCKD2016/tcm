@@ -1,0 +1,43 @@
+[
+  {
+    "title": "姓名",
+    "type": "text",
+    "sort": "1",
+    "must": "1"
+  },
+  {
+    "title": "年龄",
+    "type": "text",
+    "sort": "2",
+    "must": "1"
+  },
+  {
+    "title": "性别",
+    "type": "radio",
+    "option": [
+      "男",
+      "女"
+    ],
+    "sort": "2",
+    "must": "1"
+  },
+  {
+    "title": "之前有没有在其他地方看过",
+    "type": "radio",
+    "option": [
+      "有",
+      "没有"
+    ],
+    "sort": "3"
+  },
+  {
+    "title": "医生怎么说?(如果看过的话)",
+    "type": "text",
+    "sort": "4"
+  },
+  {
+    "title": "传几张图片我看看吧!(如果需要的话)",
+    "type": "photo",
+    "sort": "4"
+  }
+]

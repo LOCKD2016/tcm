@@ -1,0 +1,73 @@
+
+<template>
+  <div id="exportcheck" class="modal fade">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" data-dismiss="modal" aria-label="Close" class="close"><span aria-hidden="true">×</span></button>
+        </div>
+        <div class="modal-body">
+          <form role="form" class="form-horizontal">
+            <div class="form-group">
+              <div class="col-sm-6"><span>输入擅长疾病，并用中文逗号分隔</span>
+                <input v-model="diseaseStr" type="text" name="checkboxName"/>
+              </div>
+            </div>
+          </form>
+        </div>
+        <div class="modal-footer">
+          <button type="button" @click="store()" class="btn btn-primary">保存</button>
+          <button type="button" data-dismiss="modal" class="btn btn-default">取消</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</template>
+<script type="text/javascript">
+  export default {
+      props:['id'],
+      data(){
+          return {
+              data:{},
+              allDisease:{},
+              name:'',
+              sid:0,
+              diseaseArr : [],
+              diseaseStr : '',
+          };
+      },
+      ready(){
+          this.getDisease();
+      },
+      methods:{
+          getDisease() {
+              this.$http({url: 'disease/index',method:'GET',params:{noPage:true}}).then(function (res) {
+                  this.allDisease = res.data.diseases;
+              });
+          },
+          checkAttr(id) {
+              var _this = this;
+              var index = $.inArray(id, _this.diseaseArr);
+              if (index == -1) {
+                  $(".checked" + id).prop("checked", true);
+                  this.diseaseArr.push(id);
+              } else {
+                  $(".checked" + id).prop("checked", false);
+                  this.diseaseArr.splice(index, 1);
+              }
+              console.log(this.diseaseArr);
+          },
+          store() {
+              this.$http({url: 'doctor/addisease2/' + this.id, method: 'PUT', params: {data: this.diseaseStr, type:'disease'}}).then(function (res) {
+                  if (res.data.status == 1) {
+                          $("#exportcheck").modal("hide");
+                          this.diseaseArr = [];
+                          this.$dispatch("refreshList");
+                      } else {
+                          layer.msg(res.data.msg);
+                  }
+              });
+          }
+      }
+  }
+</script>

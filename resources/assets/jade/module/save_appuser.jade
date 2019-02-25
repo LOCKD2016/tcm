@@ -1,0 +1,71 @@
+template
+    .modal.fade#save_appuser
+        .modal-dialog.modal-lg
+            .modal-content
+                .modal-header
+                    button.close(type='button', data-dismiss='modal', aria-label='Close')
+                        span(aria-hidden='true') ×
+                    h4.modal-title 修改信息
+                .modal-body
+                    form.form-horizontal(role='form')
+                        .form-group
+                            label.col-sm-2.control-label 真实姓名：
+                            .col-sm-10
+                                input.form-control(type="text" v-model="item.realname")
+                        .form-group
+                            label.col-sm-2.control-label 手机号：
+                            .col-sm-10
+                                input.form-control(type="text" v-model="item.mobile")
+                        .form-group
+                            label.col-sm-2.control-label 生日：
+                            .col-sm-10
+                                input.form-control(type="date" v-model="item.birthday")
+                        .form-group
+                            label.col-sm-2.control-label 性别：
+                            .col-sm-10
+                                select.form-control(type="text" v-model="item.sex" )
+                                    option(selected) 未知
+                                    option 男
+                                    option 女
+                        .form-group
+                            label.col-sm-2.control-label 身高：
+                            .col-sm-10
+                                input.form-control(type="number" v-model="item.height" placeholder='cm')
+                        .form-group
+                            label.col-sm-2.control-label 体重：
+                            .col-sm-10
+                                input.form-control(type="number" v-model="item.weight" placeholder='kg')
+                        .form-group
+                            label.col-sm-2.control-label 身份证号：
+                            .col-sm-10
+                                input.form-control(type="number" v-model="item.pincode")
+                .modal-footer
+                    button.btn.btn-default(type='button', data-dismiss='modal') 取消
+                    button.btn.btn-primary(type='button', v-on:click="sub()") 添加
+block js
+    script(type="text/javascript").
+        export default {
+            props: ['item'],
+            data(){
+                return {
+                    item: {},
+                };
+            },
+            computed: {
+                _sex: function () {
+                    return this.item.sex == '未知' ? 0 : (this.item.sex == '男' ? 1 : 2)
+                }
+            },
+            methods: {
+                sub(){
+                    this.$http.post('appuser/edit', this.item).then(function (res) {
+                        if(res.data.status){
+                            this.$dispatch("refreshList");
+                            $('#save_appuser').modal('hide');
+                        }
+                    }, function (res) {
+
+                    });
+                },
+            }
+        }

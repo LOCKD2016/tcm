@@ -1,0 +1,304 @@
+$c_lw = 5.7rem;
+$c_lh = 4.8rem;
+
+
+.silde
+    -webkit-transition .5s
+    transition .5s
+
+.calendar-content
+    font-size 10px
+    color #303030
+    overflow hidden
+
+.calendar
+    display none
+    position fixed
+    top 100%
+    height $c_lh
+    -webkit-transition .3s
+    font-size .26rem
+    transition .3s
+    background #fff
+    opacity 1
+    width 100%
+    left 0
+    right .1rem
+    box-shadow -1rem 0 0 #fff,1rem 0 0 #fff
+    &.active
+        display block
+        top 2.4rem
+        z-index 100
+
+
+    &.close
+        opacity 0
+
+    a
+        text-decoration none
+        color inherit
+
+    span
+        float left
+        width 14.28%
+        text-align center
+        position relative
+
+
+.calendar-header
+    line-height .5rem
+    overflow hidden
+    text-align center
+    .calendar-year
+        position absolute
+        left 38%
+        top .01rem
+        line-height 0.8rem
+    .calendar-month .calendar-title
+        padding-left 1.2rem
+
+
+    a:first-of-type
+        float left
+    a:last-of-type
+        float right
+.calendar-month
+    background #e8e8e8
+    height 0.8rem
+    line-height 0.8rem
+    margin-bottom 0.26rem
+.switch-btn,.calendar-title
+    display inline-block
+    border-radius 4px
+
+
+.switch-btn
+    width .45rem
+    height .45rem
+    line-height .45rem
+    margin .1rem
+    //background $tmh
+    color #42b689 !important
+    font-size 0.24rem
+    font-weight bold
+    margin-top 0.2rem
+
+
+
+.calendar-title
+    padding 0 6%
+    color $slan
+    font-size .3rem
+.switch-btn:active,
+.calendar-title:active,
+.calendar-header a.active
+    background-color $slan
+    color #fff
+
+.calendar-week
+    overflow hidden
+    color #699772
+
+.calendar-list
+    position relative
+    display -webkit-box
+    display -moz-box
+    display box
+    width 300%
+    z-index 5
+    -webkit-transform translateX(-33.3333%)
+    transform translateX(-33.3333%)
+    > div
+        width 33.3333%
+        overflow hidden
+
+    &.prev-to
+        -webkit-transform translateX(0)
+        transform translateX(0)
+
+    &.next-to
+        -webkit-transform translateX(-66.6666%)
+        transform translateX(-66.6666%)
+
+    span
+        padding .05rem 0
+    a
+        display inline-block
+        width .5rem
+        height .5rem
+        line-height .45rem
+        border-radius 50%
+        color #333
+        position relative
+        z-index 3
+        border 1px solid transparent
+    .today
+        a
+            background #42b689
+            color #fff
+            border-color #42b689
+
+    .active
+    .start
+    .end
+    .select
+    .select
+    .select_day
+        a
+            border-color #42b689
+            color #42b689
+            background #fff
+
+    .start:after
+        content ''
+        position absolute
+        z-index 3
+        border .1rem solid transparent
+        border-left-color $lv
+        right 0
+        bottom 0
+    .end:after
+        content ''
+        position absolute
+        z-index 3
+        border .07rem solid $lv
+        right 0
+        bottom 0
+    .start.end:after
+        display none
+
+    .youke a:before
+        content ''
+        position absolute
+        z-index 3
+        border 2px solid #fff
+        width .1rem
+        height .1rem
+        background $jv
+        border-radius 50%
+        right -.1rem
+        top .05rem
+
+
+    .weekend
+        opacity .8
+
+
+    .expire,.expire.pasted
+        a
+            color #B5B5B5
+
+    .expire:active
+        color #B5B5B5
+        background-color #eee
+
+    .pasted.shield
+        position relative
+
+    .pasted.shield:active
+        color #333
+
+    .expire.pasted.shield:active
+        color #B5B5B5
+
+    .weekend.pasted.shield:active
+        color #E59313
+
+    .pasted.shield:before,
+    .pasted.shield:after
+        position absolute
+        content ""
+        left 0
+        top 0
+        width 100%
+
+    .pasted.shield:before
+        height 100%
+        border 1px solid #FFA0A0
+        border-radius 50%
+        -webkit-box-sizing border-box
+        box-sizing border-box
+
+    .pasted.shield:after
+        top 50%
+        height 1px
+        background-color #FFA0A0
+        -webkit-transform rotate(40deg)
+        transform rotate(40deg)
+
+
+    .prev-m,
+    .next-m
+        color #DBDBDB
+
+    .next-m.pasted.shield:before,
+    .prev-m.pasted.shield:before
+        border-color #D2D2D2
+
+    .next-m.pasted.shield:after,
+    .prev-m.pasted.shield:after
+        background-color #D2D2D2
+
+
+
+    .prev-m:active,
+    .next-m:active
+        background-color #e3e2e2
+
+
+
+
+
+.calendar-months,
+.calendar-years,
+.calendar-time
+    display none
+    position absolute
+    bottom 0
+    width 100%
+    height 210px
+    background-color #fff
+    overflow hidden
+    -webkit-box-shadow 0 -1px 6px #eee
+    box-shadow 0 -1px 6px #eee
+    z-index 8
+
+    &.active
+        display block
+
+    span
+        float left
+        width 33.3333%
+        padding 11px 0
+        height 52px
+        text-align center
+        -webkit-box-sizing border-box
+        box-sizing border-box
+
+
+    a
+        display inline-block
+        width 80%
+        font-size 1.6em
+        line-height 30px
+        color #333
+        letter-spacing 2px
+        border-radius 4px
+
+        &:active
+        &.active
+            background-color $lan
+            color #fff
+
+
+
+.calendar-time .expire.pasted:active,
+.calendar-list .expire.pasted:active,
+.calendar-list .pasted.shield:active
+    background none
+
+.calendar-years.active
+    display -webkit-box
+    display box
+    -webkit-transition .4s
+    transition .4s

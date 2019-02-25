@@ -1,0 +1,103 @@
+version: "2"
+services:
+    vming:
+        container_name: nginx_min
+        image: lbbniu/nginx
+        restart: always
+        ports:
+            - "80:80"
+            - "443:443"
+        volumes:
+            - ./config:/data
+            - ../:/data/www/tcm
+        working_dir: /data/www/tcm
+        links:
+            - php7:php7
+            - imserver:imserver
+    php7:
+        container_name: php7_min
+        image: lbbniu/php7:new
+        restart: always
+        expose:
+            - "9000"
+        volumes:
+            - ./config:/data
+            - ../:/data/www/tcm
+        working_dir: /data/www/tcm
+        links:
+            - memcached:memcached
+            - beanstalkd:beanstalkd
+            - redis:redis
+        environment:
+            - "DB_HOST=rm-2ze0cy58uoa36itm6.mysql.rds.aliyuncs.com"
+            - "DB_PORT=3306"
+            - "DB_USERNAME=root"
+            - "CACHE_DRIVER=memcached"
+            - "QUEUE_DRIVER=beanstalkd"
+            - "MEMCACHED_HOST=memcached"
+            - "MEMCACHED_PORT=11211"
+            - "APP_URL=https://app.taiheguoyi.com"
+        dns:
+            - 119.29.29.29
+
+    push_queue:
+        container_name: push_queue
+        image: lbbniu/php7:new
+        restart: always
+        volumes:
+            - ./config:/data
+            - ../:/data/www/tcm
+        working_dir: /data/www/tcm
+        links:
+            - memcached:memcached
+            - beanstalkd:beanstalkd
+            - redis:redis
+        entrypoint: ["php"]
+        command: ["artisan","queue:work","--timeout=3000"]
+        environment:
+            - "DB_HOST=rm-2ze0cy58uoa36itm6.mysql.rds.aliyuncs.com"
+            - "DB_PORT=3306"
+            - "DB_USERNAME=root"
+            - "CACHE_DRIVER=memcached"
+            - "QUEUE_DRIVER=beanstalkd"
+            - "MEMCACHED_HOST=memcached"
+            - "MEMCACHED_PORT=11211"
+            - "APP_URL=https://app.taiheguoyi.com"
+
+    memcached:
+        container_name: memcached_min
+        image: lbbniu/memcached
+        restart: always
+        expose:
+            - "11211"
+        command: ["-m","800"]
+
+    beanstalkd:
+        container_name: beanstalkd_min
+        image: lbbniu/beanstalkd
+        restart: always
+        expose:
+            - "11300"
+
+    imserver:
+        container_name: imserver
+        image: lbbniu/php7:new
+        restart: always
+        expose:
+            - "9503"
+        volumes:
+            - ./config:/data
+            - ../:/data/www/tcm
+        working_dir: /data/www/tcm/IMServer
+        links:
+            - redis:redis
+        entrypoint: ["php"]
+        command: ["server.php","start"]
+        environment:
+            - "IM_PWD=pro"
+    redis:
+        container_name: redis
+        image: daocloud.io/library/redis
+        restart: always
+        ports:
+            - "6379:6379"

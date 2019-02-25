@@ -1,0 +1,644 @@
+@charset "utf-8"
+
+.h_box
+    padding 10px 0
+    text-align center
+    h4
+        padding-bottom 5px
+        border-bottom 1px dotted #ddd
+        margin-bottom 20px
+        color #3f2f66
+    .icobox
+        padding-bottom 20px
+        a
+            display inline-block
+            width 120px
+            height 160px
+            border 1px solid rgba(0,0,0,.1)
+            margin 0 10px
+            border-radius 5px
+            color #777
+            text-decoration none
+            &:hover
+                opacity .7
+            i
+                font-size 75px
+                margin 10px 0
+                display block
+                color #ddd
+            p
+                white-space nowrap
+                background #999
+                padding 5px 0
+                color #fff
+                margin-bottom 5px
+            h3
+                color #386
+
+    &.h_sm .icobox a
+        margin 0 5px
+        width 110px
+        p
+            font-size 12px
+
+.h_col
+    .h_box
+        width 48%
+        float left
+        &:last-child
+            margin-left 4%
+
+
+//admin.html--锟斤拷锟斤拷员锟斤拷锟斤拷
+//锟斤拷目统锟斤拷
+.standard
+    padding 15px 0 0 15px
+    border-radius 4px
+    background #fff
+    margin-bottom 20px
+    .form-group
+        label
+            text-align center
+        label,.col-sm-4
+            padding-left 0
+            padding-right 0
+    .col-sm-4
+        span
+           line-height 34px
+
+.ad_table_box
+    table
+        font-size 12px
+        thead
+            tr
+                background #eee
+        th
+            &:nth-child(4)
+                background #deecdb
+            &:nth-child(5)
+                background #ecebdb
+            &:nth-child(6)
+                background #ecdbe4
+        td
+            &:nth-child(4)
+            &:nth-child(5)
+            &:nth-child(6)
+            &:nth-child(7)
+            &:nth-child(8)
+                background #ecf9e9
+            &:nth-child(9)
+            &:nth-child(10)
+            &:nth-child(11)
+            &:nth-child(12)
+            &:nth-child(13)
+            &:nth-child(14)
+            &:nth-child(15)
+                background #f9f8e9
+            &:nth-child(16)
+            &:nth-child(17)
+            &:nth-child(18)
+                background #f9e9f1
+        td,th
+            text-align center
+    table,td,th
+        border-color #bbbbda !important
+
+
+//admin.html--锟斤拷锟斤拷员锟斤拷锟斤拷
+//锟解部锟斤拷锟斤拷
+.find_tit
+    font-size 18px
+    font-weight bold
+    border-bottom 1px solid #000
+    line-height 30px
+    padding-left 10px
+    margin-bottom 10px
+.find_box
+    font-size 14px
+    margin-bottom 10px
+    background #fff
+    h2
+        font-size 12px
+        line-height 30px
+        padding-left 10px
+
+.search_box
+    border-top 1px solid #ccc
+    margin-bottom 10px
+    background #fff
+    display table
+    position relative
+    width 100%
+    dl
+        display table-row
+        &.active
+            border 1px solid #6b739f
+            a
+                color #6b739f
+                border 1px solid #6b739f
+
+
+        dt,dd
+            display table-cell
+            line-height 30px
+            padding 5px 20px
+        dt
+            background #eee
+            white-space nowrap
+            border-bottom 1px solid rgba(0,0,0,.12)
+            width 100px
+            font-weight normal
+        dd
+            width 99%
+            border-bottom 1px solid rgba(0,0,0,.1)
+            position relative
+            &.open
+                .box
+                    position relative
+                    left 0
+                    white-space normal
+                .icon-arrow-up2
+                    display inline-block
+                .icon-ellipsis
+                    display none
+            &.n_over
+                .icon-ellipsis
+                .icon-arrow-up2
+                    display none
+            .box
+                white-space nowrap
+                overflow hidden
+                text-overflow ellipsis
+                position absolute
+                left 20px
+                right 40px
+            .lab
+                margin-right 5px
+            .icon-arrow-up2
+                display none
+            .icon-ellipsis
+            .icon-arrow-up2
+                position absolute
+                z-index 1
+                right 0
+                padding 10px
+                color #999
+                background #fff
+                box-shadow -15px 0 10px #fff
+
+        .more
+            position absolute
+            z-index 3
+            right 10px
+            top 3px
+            min-height 40px
+
+            .btn
+                position relative
+                z-index 2
+
+            h2
+                border-bottom 1px solid #ddd
+                background #f8f8f8
+                font-size 20px
+                line-height 40px
+                text-align center
+                i
+                    font-weight normal
+                    font-size 16px
+                    cursor pointer
+                span
+                    padding 0 23px 0 20px
+            &:hover
+                .btn
+                    background #f8f8f8
+                    height 38px
+                    border-bottom 0
+                    border-radius 2px 2px 0 0
+                .calendar
+                    display block
+            .calendar
+                position absolute
+                right 0
+                top 36px
+                border 1px solid #ccc
+                background #fff
+                width 500px
+                min-height 200px
+                max-height 400px
+                overflow auto
+                display none
+                .month
+                    list-style none
+                    padding-left 25px
+                    li
+                        margin 10px 15px
+                        padding 5px 5px
+                        float left
+                        cursor pointer
+                        &.cur
+                            background #58c
+                            color #fff
+                        &:first-child:empty:before
+                            content '...'
+                            display block
+                            font-size 24px
+                            padding 30px 0
+                            text-align center
+                            color #ccc
+
+
+    .over
+        .icon-ellipsis
+            display block
+    .open
+        .icon-ellipsis
+            display none
+        .icon-arrow-up2
+            display block
+    .search_txt:not(:empty)
+        padding-right 120px
+        font-size 12px
+        color #999
+        &:before
+            content '筛选条件：“'
+            font-weight 100
+        &:after
+            content '”'
+            font-weight 100
+    .search_num:not(:empty)
+        position absolute
+        top 0
+        right 20px
+        color #f70
+        &:before
+            content '共'
+            margin-right 4px
+        &:after
+            content '条查询结果'
+            margin-left 4px
+        &:before
+        &:after
+            color #497
+
+
+
+
+.search_condition
+    display table
+    width 100%
+    margin-bottom 10px
+    .condition,.result
+        display table-cell
+        padding 0
+    .result
+        text-align right
+
+
+
+.table-bordered
+    >thead
+        >tr
+            background #eee
+            &:not(:last-child)
+                >th
+                >td
+                    border-bottom-width 1px
+    th,td
+        text-align center
+
+
+    .btn_group
+        .btn
+            margin-left 10px
+
+//admin.html--锟斤拷锟斤拷员锟斤拷锟斤拷
+//锟矫伙拷锟斤拷锟斤拷
+//admin.html--锟斤拷锟斤拷员锟斤拷锟斤拷
+.user_table_box
+    thead
+        tr
+            background #eee
+
+    th,td
+        text-align center
+    td
+        span
+            padding 0 5px
+            color #5cb85c
+            &.col
+                color blue
+            &:hover
+                text-decoration underline
+                cursor pointer
+
+//admin.html--锟斤拷锟斤拷员锟斤拷锟斤拷
+//系统锟斤拷锟斤拷
+.find_tit
+    span
+        padding 0 5px
+.syt
+    .syt_tit
+        line-height 30px
+        .tit
+            padding-left 10px
+
+    td
+        vertical-align middle !important
+nav
+    text-align right
+
+//锟斤拷锟斤拷
+//锟杰伙拷
+.meeting
+    .find_tit
+        padding-bottom 10px
+        clearfix()
+        span
+            float left
+        .btn-group
+            float right
+
+    .find_table_box
+        tr
+            th
+                border none
+            td
+                vertical-align middle
+                &:last-child
+                    text-align left
+        .com_old
+            white-space normal
+            *
+                vertical-align middle
+            strong
+                color #3a7
+                font-size 20px
+                padding 0 5px
+                cursor pointer
+            .rm
+                opacity .001
+            span
+                display inline-block
+                text-align left
+                min-width 300px
+                max-width 600px
+                padding 0 10px
+                position relative
+                &:before
+                    content ''
+                    position absolute
+                    height 3px
+                    width 14px
+                    background red
+                    right -15px
+                    top 50%
+                    margin-top -1px
+                &:empty:before
+                    display none
+                    opacity 0
+
+        .com_new
+            display none
+            td
+                white-space normal
+                position relative
+                height 50px
+            textarea
+                width 80%
+                height 70px
+                padding 10px
+            .btn_com
+                text-align center
+                position absolute
+                width 18%
+                top 8px
+                right 10px
+                .btn
+                    width 100%
+                    margin-bottom 10px
+
+
+
+//Update
+#update
+    .alert
+        clearfix()
+        .item-name
+            float left
+            margin-top 5px
+        .item-time
+            float right
+    .icon-plus
+        color red
+        margin-left 10px
+table
+    th,td
+        text-align center
+    td
+        vertical-align middle !important
+//锟斤拷目锟斤拷锟斤拷
+#export
+    .modal-body
+        .form-inline
+            margin-bottom 10px
+            .form-group
+                &:not(:first-child)
+                    margin-left 24px
+//锟斤拷锟斤拷专锟斤拷
+.albums-box
+    button
+        margin-bottom 20px
+        margin-right 20px
+        width 94px
+    input
+        width 94px
+        height 34px
+        vertical-align top
+
+.ins_por
+    td
+        &:last-child
+            text-align left
+
+
+//专锟斤拷
+.spe_box
+    float left
+    width 30%
+    margin-left 0
+    li
+        line-height 30px
+        position relative
+        display block
+        cursor pointer
+        .pos_box
+            border 1px solid #ccc
+            background #fff
+            //width 40%
+            margin-bottom 20px
+            padding 20px 20px
+            .spe_tit
+                clearfix()
+                span
+                    float left
+                p
+                    display inline-block
+                    float right
+                    a
+                        margin-left 10px
+                        cursor pointer
+            .spe_po
+                clearfix()
+                span
+                    float left
+                    &:last-child
+                       float right
+.spe
+    position relative
+    background #fff
+.details_spe
+    width 65%
+    float right
+    margin-right 20px
+    margin-top 20px
+
+
+
+//锟斤拷锟斤拷锟斤拷目
+.new_item
+    form
+        background #fff
+        padding 20px 20px
+    .tit_nav
+        margin-bottom 20px
+
+        span
+            text-align right
+            font-weight bold
+            padding-right 15px
+        ul
+            border none
+            margin-top 4px
+    .dropdown
+        display inline-block
+        margin-right 10px
+    .form-group
+        p
+            margin-top 15px
+    .team
+        .js
+            margin-top 15px
+    .btn_box
+        text-align center
+        margin-top 20px
+    .staus
+        display inline-block
+        margin-right 10px
+        label
+            position relative
+            .radios
+                width 15px
+                height 15px
+                border 1px solid #aaa
+                border-radius 50%
+                display inline-block
+                vertical-align middle
+                background #fff
+            input
+                vertical-align middle
+            span
+                font-weight normal
+                margin-left 5px
+                vertical-align middle
+        label.active
+            .radios
+                background #58c
+                position relative
+                &:after
+                    width 6px
+                    trans(rotate(45deg))
+                    left 1px
+                    bottom 5px
+
+                &:before
+                    width 8px
+                    trans(rotate(-45deg))
+                    left 4px
+                    bottom 6px
+                &:after
+                &:before
+                    content ''
+                    position absolute
+                    background #fff
+                    height 2px
+.none
+    position absolute
+    left 0
+    top 0
+.same_item
+    span
+        margin-right 20px
+
+#chart1
+    height 500px
+#chart2
+    height 400px
+#chart3
+#chart4
+    height 300px
+
+.home_panel1
+    .btn
+        margin 5px
+    .dk_box
+        margin 10px 0 0 0
+        width 100%
+        display table
+        dl
+            display table-cell
+            padding 10px
+            border  1px dashed #eee
+            dd
+                color #999
+                font-size 12px
+
+
+.pull-left
+    .more_item
+        display inline-block
+        padding 0 10px
+        cursor pointer
+        position relative
+        i
+            cursor pointer
+        ul
+            top 47px
+            left -40px
+.fl_c
+    span
+        .label-primary
+            background-color #a6c6ee
+
+#outside
+    #previews
+        margin-left 30px
+.calendar
+    z-index 999
+.data-row
+    input
+        width 17%
+    label
+        padding 0 10px
+.img-face-t
+    height 120px
+    width 120px
+    border-radius 50%
+    margin-top 10px
+    background-position center center
+    background-repeat no-repeat
+    background-size cover
+.txt
+    line-height 32px
+.btn-box
+    text-align center

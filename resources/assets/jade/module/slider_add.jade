@@ -1,0 +1,80 @@
+//增加月报
+template
+    .modal.fade#slider_add
+        .modal-dialog.modal-lg
+            .modal-content
+                .modal-header
+                    button.close(type='button', data-dismiss='modal', aria-label='Close')
+                        span(aria-hidden='true') ×
+                    h4.modal-title 添加轮播
+                .modal-body
+                    form.form-horizontal(role='form')
+                        .form-group
+                            label.col-sm-2.control-label 名称：
+                            .col-sm-10
+                                input.form-control(type="text" v-model="data.title")
+                        .form-group
+                            label.col-sm-2.control-label 描述：
+                            .col-sm-10
+                                input.form-control(type="text" v-model="data.desc")
+                        .form-group
+                            label.col-sm-2.control-label 链接地址：
+                            .col-sm-10
+                                input.form-control(type="text" v-model="data.url")
+                        .form-group
+                            label.col-sm-2.control-label(for='') 图片上传：
+                            .col-sm-10
+                                input(type="file" name='image' v-on:change="uploadFile($event)")
+                                img(v-bind:src="filePath")
+                        p 上传图片尺寸大小为：640*300
+                .modal-footer
+                    button.btn.btn-primary(type='button',@click="add()") 保存
+
+
+block js
+    script(type="text/javascript").
+        export default {
+            ready(){
+            },
+            data(){
+                return {
+                    data: {},
+                    filePath:''
+                };
+            },
+            methods: {
+                add: function () {
+                    this.data.image = this.filePath;
+                    this.$http.post('slider/add',this.data).then(function (res) {
+                        if(res.data.status){
+                            $('#slider_add').modal('hide');
+                            this.filePath = '';
+                            this.data = {};
+                            this.$dispatch('refreshList');
+                        }else{
+                            layer.msg(res.data.msg);
+                        }
+                    });
+                },
+                uploadFile(e){
+                    var self = this;
+                    //dosomthing
+                    var that = e.target;
+                    var fd = new FormData();
+                    fd.append("image", that.files[0]);
+                    $.ajax({
+                        url: "/api/upload/qiniu",
+                        type: "POST",
+                        processData: false,
+                        contentType: false,
+                        data: fd,
+                        success: function (ret) {
+                            console.log(ret.data.image_thumb_url);
+                            self.filePath = 'http://static.taiheguoyi.com/'+ret.data.image_thumb_url;
+                            console.log(self.filePath);
+                        }
+                    });
+
+                }
+            }
+        }

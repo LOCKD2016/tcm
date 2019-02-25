@@ -1,0 +1,271 @@
+@charset "utf-8";
+.item_list
+    background #fff
+    .list
+        padding 20px 20px
+        position relative
+        &:not(:last-child)
+            border-bottom 1px dashed #eee
+        h2
+            margin-bottom 10px
+            position relative
+            a
+                font-size 20px
+                font-weight bold
+                color #539
+                &:before
+                    content ''
+                    position absolute
+                    background #f7f9f0
+                    width 10px
+                    height 24px
+                    border-radius 0 50% 50% 0
+                    left -20px
+                    top 8px
+                &:hover
+                    text-decoration none
+                    cursor pointer
+            span
+                position absolute
+                bottom 0
+                left 360px
+                right 420px
+                font-size 12px
+                color #999
+                vertical-align middle
+            .sel_box
+                b
+                    font-weight normal
+                    font-size 12px
+                    width 100px
+                    height 30px
+                    display inline-block
+                    border 1px solid #ccc
+                    text-align center
+                    line-height 30px
+                    border-radius 3px
+                    cursor pointer
+                ul
+                    list-style none
+                    position absolute
+                    top 40px
+                    left 0
+                    padding-left 0
+                    border 1px solid #ccc
+                    width 100%
+                    background #fff
+                    z-index 3
+                    li
+                        text-align center
+                        padding 0px 10px
+                        line-height 30px
+                        cursor pointer
+                        i
+                            font-style normal
+                            margin-left 5px
+                            font-size 14px
+                            vertical-align middle
+                .sanjiao
+                    top 20px
+            .no
+                 left 520px
+
+        dl
+            overflow hidden
+            white-space nowrap
+            font-size 14px
+            margin-bottom 5px
+            dt,dd
+                display inline-block
+                overflow hidden
+                text-overflow ellipsis
+            dd
+                max-width 1000px
+        .fl_r
+        .fl_c
+            position absolute
+            top 20px
+            right 300px
+        .fl_c
+            top 25px
+        .fl_r
+            left auto
+            right 20px
+            select
+                width 100px
+                height 30px
+                display inline-block
+                vertical-align middle
+
+        .label
+        .t_cover
+            display none
+        &.s_tag_discuss .label-primary
+        &.s_tag_follow .label-warning
+        &.s_tag_talk .label-success
+        &.s_cover .t_cover
+        &.s_tag_finance .label-success
+            display inline-block
+
+
+        .t_cover span:not(:empty)
+            margin-left 4px
+            background #eee
+            padding 0 5px
+            color #666
+            font-size 12px
+            &:before
+                content '原因：'
+        td
+            //white-space pre-wrap
+            &:first-child
+                font-size 14px
+                padding-left 0
+                padding-right 0
+.ins_por
+    table
+        tr
+            td
+                &:nth-child(odd)
+                    background #eee
+                    font-weight bold
+
+#finance_dropdown
+    display none
+
+.clone
+    label
+        position relative
+        padding-right 20px
+        i
+            position absolute
+            z-index 3
+            color #3a7
+            cursor pointer
+            right -10px
+            top 0
+            padding 9px
+
+    .icon-minus
+        color #f60
+    .icon-plus
+    span
+        display none
+    .form-group
+        &:first-child
+            span
+                display inline-block
+        &:last-child
+            .icon-minus
+                display none
+            .icon-plus
+                display block
+.form-horizontal
+    .btn-lg
+        margin-top 30px
+    .control-label
+        white-space nowrap
+
+.check_list
+
+    .checkbox
+        border 1px solid rgba(0,0,0,.2)
+        width 15px
+        height 15px
+        display inline-block
+        margin 0
+    tr.active
+        background #f5f5f5
+        .checkbox
+            background #58c
+            position relative
+            &:after
+                width 6px
+                trans(rotate(45deg))
+                left 1px
+                bottom 5px
+
+            &:before
+                width 10px
+                trans(rotate(-45deg))
+                left 4px
+                bottom 6px
+            &:after
+            &:before
+                content ''
+                position absolute
+                background #fff
+                height 2px
+.syt
+    .checkbox
+        border 1px solid rgba(0,0,0,.2)
+        width 15px
+        height 15px
+        display inline-block
+        margin 0
+        margin-right 5px
+        min-height 0
+
+    .active
+        background #58c
+        .checkbox
+            background #58c
+            position relative
+            &:after
+                width 6px
+                trans(rotate(45deg))
+                left 1px
+                bottom 5px
+
+            &:before
+                width 10px
+                trans(rotate(-45deg))
+                left 4px
+                bottom 6px
+            &:after
+            &:before
+                content ''
+                position absolute
+                background #fff
+                height 2px
+.contedir
+    padding 0 5px
+    color #FF4040
+.control
+    padding 0 5px
+    color #5cb85c
+.sub_tabs,.sel_box
+    .checkbox
+        border 1px solid rgba(0,0,0,.2)
+        width 5px
+        height 5px
+        display inline-block
+        margin 0
+        vertical-align middle
+    .active
+        .checkbox
+            background #58c
+            position relative
+
+            &:after
+                width 6px
+                trans(rotate(45deg))
+                left 1px
+                bottom 5px
+
+            &:before
+                width 10px
+                trans(rotate(-45deg))
+                left 4px
+                bottom 6px
+            &:after
+            &:before
+                content ''
+                position absolute
+                background #fff
+                height 2px
+.img_mar
+    margin-right 10px
+.layui-box
+    form
+        padding 0

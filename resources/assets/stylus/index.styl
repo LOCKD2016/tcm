@@ -1,0 +1,501 @@
+@charset "utf-8";
+body
+    margin 0
+    padding-top 140px
+
+@import 'com'
+@import 'icon'
+@import 'doctor'
+
+bgs($s,$v,$d)
+    background: -moz-linear-gradient($s,$v,$d)
+    background: -webkit-linear-gradient($s,$v,$d)
+
+trans($s)
+    transform $s
+    -o-transform $s
+    -ms-transform $s
+    -moz-transform $s
+    -wbekit-transform $s
+
+
+.btn-primary
+    background #6b739f
+    border-color #6b739f
+
+.header
+    position fixed
+    height 70px
+    top 0
+    left 0
+    right 0
+    z-index 5
+    background #402d65
+    color #fff
+    a
+        color #fff
+    .logo
+        display inline-block
+        //width 140px
+        width 100px
+        float left
+        height 60px
+        background url("/img/logo.png") no-repeat center left
+        //background-size auto 53px
+        background-size contain
+        margin 0 -10px
+        position absolute
+        top 5px
+        left 0
+        border-radius 4px
+    .text-right
+        //padding-top 25px
+        i
+            margin 0 2px 0 20px
+            font-size 18px
+        .icon-bell
+            margin 0 2px 0 20px
+            font-size 18px
+            position relative
+            cursor pointer
+            b
+                font-size 10px
+                position absolute
+                padding 2px
+                background red
+                border-radius 50%
+                top -8px
+                right -8px
+    .input-group
+        padding-top 18px
+        .form-control
+            background rgba(140,160,200,.3)
+            border 0
+            box-shadow none
+            color #fff
+    .navbar-nav
+        position absolute
+        left 190px
+        white-space nowrap
+        > li
+            display inline-block
+        li
+            height 70px
+            float none
+            &:hover
+                background rgba(140,160,200,.1)
+            &.active
+            .v-link-active
+                background #1688af
+            &:hover ul
+                top 70px
+                opacity 1
+            ul
+                position absolute
+                transition top .3s .1s, opacity .3s .3s
+                left 0
+                top -400px
+                opacity 0
+                width 100%
+                background #343b66
+                margin 0
+                padding 0
+                list-style none
+                li
+                    text-align center
+                    height 40px
+                    border-top 1px solid rgba(140,160,200,.1)
+                    &:hover
+                    &.active
+                    .v-link-active
+                        background #1688af
+                a
+                    line-height 20px
+                    padding 10px 0
+            a
+                display block
+                padding 0 25px
+                line-height 70px
+                background none
+
+.tit_nav
+    position fixed
+    z-index 4
+    top 70px
+    left 0
+    width 100%
+    background #fff
+    line-height 50px
+    box-shadow 0 2px 4px rgba(0,0,0,.1)
+    border-bottom 1px solid #aeabc9
+    .pull-left
+        font-size 20px
+        color #6ba72a
+    .pull-right
+        > a
+            margin-left 20px
+
+
+
+.main_warp
+    padding-bottom 50px
+
+.sub_tabs
+    border 1px solid #eee
+    line-height 50px
+    height 52px
+    background #fff
+    position relative
+    > ul
+        display inline-block
+        margin 0 20px 0 0
+        height 50px
+        li
+            padding 0 20px
+            border-right 1px solid #eee
+            cursor pointer
+            float left
+
+    .pull-right
+        position absolute
+        right 20px
+        top 0
+
+    ul
+    label
+        vertical-align top
+    label
+        font-weight normal
+        input
+            margin 0
+            vertical-align middle
+        span
+            margin-left 5px
+            vertical-align middle
+.btn-lg
+    min-width 180px
+.btn i
+    margin-right 5px
+.dropdown-menu
+    min-width 100px
+    a
+        cursor pointer
+.pagination li
+
+    a
+        color #999
+
+    i
+        font-style normal
+
+
+table
+    background #fff
+
+.label
+    display inline-block
+    cursor pointer
+    border-radius 15px
+    font-weight 100
+    line-height 24px
+    padding 0 15px
+    position relative
+    font-size 12px
+    &:hover
+        opacity .8
+.lab
+    display inline-block
+    cursor pointer
+    border-radius 15px
+    font-weight 100
+    line-height 24px
+    padding 0 25px 0 15px
+    position relative
+    font-size 12px
+    background #f5f5f5
+    color #444
+    &:hover
+        opacity .8
+    &:after
+    &:before
+        content ''
+        width 8px
+        height 2px
+        background #999
+        position absolute
+        top 11px
+        right 9px
+    &:before
+        trans(rotate(90deg))
+    &.active
+        background #58c
+        color #fff
+        &:after
+        &:before
+            background #fff
+            width 10px
+            height 1px
+        &:after
+            trans(rotate(45deg))
+        &:before
+            trans(rotate(-45deg))
+
+for $i in 1 ... 4
+    .sub_tabs ul[show=\" {$i}\"]
+        li:nth-child( {$i})
+            background #f7f7f7
+
+clearfix()
+    &:after
+        content ''
+        display table
+        clear both
+        visibility hidden
+        line-height 0
+        height 0
+body.homepage
+    background #594a79 url("/img/bg-min.jpg") no-repeat center
+    background-size 100% 100%
+    padding-top 0
+    .navbar-default
+        background none
+        border-color rgba(200,200,200,0)
+    > form
+        position absolute
+        width 400px
+        left 50%
+        top 40%
+        trans(translate(-50%,-50%))
+        color #fff
+        .logo
+            width 260px
+            height 90px
+            background url("/img/logo.png") no-repeat center left
+            background-size 100% 100%
+            margin 0 auto 30px
+        .form-control
+            display inline-block
+            background none
+            border-color transparent
+            box-shadow none
+            height auto
+            padding 0
+            color #fff
+        .msg
+        .verify
+            background rgba(0,0,0,.4)
+            border 1px solid #aa8ece
+            box-shadow 0 0 5px rgba(0,20,50,.8) inset
+            border-radius 8px
+            padding 0 16px
+            position relative
+        .msg
+            .form-group
+                padding 22px 0
+                margin-right 0
+                margin-left 0
+                margin-bottom 0
+                position relative
+                &:first-child
+                    border-bottom 1px solid rgba(114,198,235,.1)
+                label
+                    position absolute
+                    top 50%
+                    left 10px
+                    trans(translateY(-50%))
+                    font-size 30px
+                    color #8c94ff
+                    padding-top 0
+                .form-control
+                    margin-left 40px
+        .verify
+            padding 15px 0
+            margin-top 10px
+            height 60px
+            .form-control
+                width 70%
+                padding-left 20px
+            .get_verify img
+                position absolute
+                top 0
+                right 1px
+                text-align center
+                border-radius 0 6px 6px 0
+                background rgba(52,59,102,1)
+                width 40%
+                height 58px
+                cursor pointer
+        .login_btn
+            width 100%
+            line-height 45px
+            bgs(left, #402d65 1%,#463bb0 100%)
+            box-shadow 3px 8px 10px rgba(70,50,160,.7)
+            border none
+            border-radius 50px
+            margin-top 14px
+            outline none
+
+@media(max-width: 400px)
+    body.homepage > form
+        top 35%
+        width 300px
+        .logo
+            width 200px
+            height 75px
+
+@media(max-width: 1200px)
+    .header .navbar-nav
+        width 600px
+        li
+            &:first-child
+                display none
+            > a
+                padding 0 18px
+
+//����
+.index_nr
+    width 100%
+    background #fff
+    border 1px solid #eee
+    .nav-tabs
+        width 100%
+        background #eee
+        border-bottom 0
+        li
+            padding 0
+            margin-bottom 0
+            a
+                color #333
+                border none
+                border-radius 0
+                margin-right 0
+                line-height 30px
+                text-align center
+            &.active
+                a
+                    border none
+
+    .tab-content
+        padding 20px 20px
+        .cur
+            color #70a535
+            width 100%
+            border-bottom 1px solid #eee
+            line-height 50px
+            position relative
+            &:after
+                content ""
+                border-bottom 1px solid #70a535
+                width 300px
+                position absolute
+                left 0
+                bottom -1px
+        .sub_tabs
+            border none
+
+.dropdown-menu
+    top 30px
+
+.table_mar
+    margin-top 44px
+.item_list
+    .list
+        td
+            a
+                cursor pointer
+                padding 0 5px
+#amend
+    .form-group
+        margin-bottom 10px
+
+//select������
+.sel_box
+    position relative
+    background #fff
+    display inline-block
+
+    select
+        background transparent
+        position relative
+        z-index 1
+        min-width 100px
+    .sanjiao
+        position absolute
+        right 10px
+        top 14px
+        border 4px solid transparent
+        border-top-color #333
+        opacity 0.4
+a
+    cursor pointer
+
+.user
+    position relative
+    display inline-block
+    height 70px
+    padding-top 25px
+    &:hover ul
+        top 45px
+        opacity 1
+    ul
+        position absolute
+        transition top .3s .1s, opacity .3s .3s
+        left -24px
+        top -400px
+        opacity 0
+        background #343b66
+        margin 0
+        padding 0
+        list-style none
+        width 120px
+
+        li
+            height 40px
+            border-top 1px solid rgba(140,160,200,.1)
+            text-align center
+            line-height 40px
+            &:hover
+                background rgba(140,160,200,.1)
+
+            a
+                line-height 20px
+                padding 10px 25px
+                vertical-align middle
+
+.details_item
+    .form-group
+        .col-sm-11
+            span
+                display inline-block
+                width 100%
+                //border 1px solid #ccc
+                border-radius 6px
+                min-height 32px
+                line-height 32px
+                padding 0 20px
+
+//导出表格式周会
+.export
+    line-height 20px
+    margin-bottom 20px
+    h1
+        font-size 20px
+        font-weight bold
+    span
+        font-weight bold
+.toleft
+    text-align left
+
+.islook
+    display none
+
+.backcolor
+    background-color inherit
+    min-height 20px
+    min-width  200px
+
+
+
+@import 'home'
+@import 'insider'
+@import 'adm'
